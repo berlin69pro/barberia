@@ -8,6 +8,13 @@ const router = express.Router();
 
 
 // ========================================
+// DETECTAR ENTORNO
+// ========================================
+
+const esVercel = process.env.VERCEL === "1";
+
+
+// ========================================
 // CARPETA DE SUBIDA
 // ========================================
 
@@ -16,12 +23,23 @@ const carpetaUploads = path.join(
     "../uploads"
 );
 
-if (!fs.existsSync(carpetaUploads)) {
 
-    fs.mkdirSync(
-        carpetaUploads,
-        { recursive: true }
-    );
+// ========================================
+// CREAR CARPETA SOLO EN LOCAL
+// ========================================
+
+if (!esVercel) {
+
+    if (!fs.existsSync(carpetaUploads)) {
+
+        fs.mkdirSync(
+            carpetaUploads,
+            {
+                recursive: true
+            }
+        );
+
+    }
 
 }
 
@@ -30,40 +48,66 @@ if (!fs.existsSync(carpetaUploads)) {
 // CONFIGURACIÓN DE MULTER
 // ========================================
 
-const almacenamiento = multer.diskStorage({
+let almacenamiento;
 
-    destination: (req, file, cb) => {
+if (esVercel) {
 
-        cb(
-            null,
-            carpetaUploads
-        );
+    // En Vercel usamos memoria.
+    // No intentamos escribir en /uploads.
 
-    },
+    almacenamiento =
+        multer.memoryStorage();
 
-    filename: (req, file, cb) => {
+} else {
 
-        const extension =
-            path.extname(
-                file.originalname
-            ).toLowerCase();
+    almacenamiento =
+        multer.diskStorage({
 
-        const prefijo =
-            file.fieldname === "qr_pago"
-                ? "qr"
-                : "logo";
+            destination: (
+                req,
+                file,
+                cb
+            ) => {
 
-        const nombre =
-            `${prefijo}-${Date.now()}${extension}`;
+                cb(
+                    null,
+                    carpetaUploads
+                );
 
-        cb(
-            null,
-            nombre
-        );
+            },
 
-    }
+            filename: (
+                req,
+                file,
+                cb
+            ) => {
 
-});
+                const extension =
+                    path.extname(
+                        file.originalname
+                    ).toLowerCase();
+
+
+                const prefijo =
+                    file.fieldname === "qr_pago"
+                        ? "qr"
+                        : "logo";
+
+
+                const nombre =
+                    `${prefijo}-${Date.now()}${extension}`;
+
+
+                cb(
+                    null,
+                    nombre
+                );
+
+            }
+
+        });
+
+}
 
 
 const subirArchivos = multer({
@@ -73,7 +117,6 @@ const subirArchivos = multer({
 
     limits: {
 
-        // Permitimos imágenes de hasta 10 MB.
         fileSize:
             10 * 1024 * 1024
 
@@ -82,18 +125,21 @@ const subirArchivos = multer({
     fileFilter:
         (req, file, cb) => {
 
-            const extensiones =
-                [
-                    ".jpg",
-                    ".jpeg",
-                    ".png",
-                    ".webp"
-                ];
+            const extensiones = [
+
+                ".jpg",
+                ".jpeg",
+                ".png",
+                ".webp"
+
+            ];
+
 
             const extension =
                 path.extname(
                     file.originalname
                 ).toLowerCase();
+
 
             if (
                 extensiones.includes(
@@ -199,10 +245,6 @@ router.get(
                 }
 
 
-                // ========================================
-                // SI NO EXISTE CONFIGURACIÓN
-                // ========================================
-
                 if (
                     resultados.length === 0
                 ) {
@@ -301,7 +343,6 @@ router.put(
     ]),
 
     (req, res) => {
-
 
         const {
 
@@ -469,10 +510,6 @@ router.put(
                 }
 
 
-                // ========================================
-                // VALORES ACTUALES
-                // ========================================
-
                 let logo =
 
                     resultados.length > 0
@@ -499,6 +536,18 @@ router.put(
                     archivoLogo
                 ) {
 
+                    if (esVercel) {
+
+                        return res.status(503).json({
+
+                            error:
+                                "La carga de imágenes necesita almacenamiento externo en producción."
+
+                        });
+
+                    }
+
+
                     logo =
                         `/uploads/${archivoLogo.filename}`;
 
@@ -512,6 +561,18 @@ router.put(
                 if (
                     archivoQR
                 ) {
+
+                    if (esVercel) {
+
+                        return res.status(503).json({
+
+                            error:
+                                "La carga de imágenes necesita almacenamiento externo en producción."
+
+                        });
+
+                    }
+
 
                     qrPago =
                         `/uploads/${archivoQR.filename}`;
@@ -882,14 +943,12 @@ router.use(
 
     (error, req, res, next) => {
 
-
         if (
 
             error instanceof
             multer.MulterError
 
         ) {
-
 
             if (
 
