@@ -1,4 +1,5 @@
 require("dotenv").config();
+
 const express = require("express");
 const path = require("path");
 const conexion = require("./database");
@@ -13,12 +14,7 @@ const galeriaRoutes = require("./galeria");
 const promocionesRoutes = require("./promociones");
 const configuracionRoutes = require("./configuracion");
 const estadisticasRoutes = require("./estadisticas");
-
-// ========================================
-// PAGOS
-// ========================================
 const pagosRoutes = require("./pagos");
-
 
 const app = express();
 
@@ -261,13 +257,27 @@ app.use(
 // SERVIDOR
 // ========================================
 
-app.listen(
-    PORT,
-    () => {
+// En local inicia el servidor.
+// En Vercel se exporta la aplicación.
 
-        console.log(
-            `Servidor funcionando en http://localhost:${PORT}`
-        );
+if (require.main === module) {
 
-    }
-);
+    app.listen(
+        PORT,
+        () => {
+
+            console.log(
+                `Servidor funcionando en http://localhost:${PORT}`
+            );
+
+        }
+    );
+
+}
+
+
+// ========================================
+// EXPORTAR APLICACIÓN
+// ========================================
+
+module.exports = app;
