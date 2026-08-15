@@ -8,8 +8,22 @@ const router = express.Router();
 
 
 // ========================================
-// CONFIGURACIÓN DE CARPETA
+// DETECTAR ENTORNO
 // ========================================
+
+const esVercel = process.env.VERCEL === "1";
+
+
+// ========================================
+// CONFIGURACIÓN DE ALMACENAMIENTO
+// ========================================
+
+// EN LOCAL:
+// Guarda las imágenes en /uploads normalmente.
+//
+// EN VERCEL:
+// No intentamos crear /uploads porque el sistema
+// de archivos del despliegue no permite hacerlo.
 
 const carpetaUploads = path.join(
     __dirname,
@@ -17,14 +31,18 @@ const carpetaUploads = path.join(
 );
 
 
-if (!fs.existsSync(carpetaUploads)) {
+if (!esVercel) {
 
-    fs.mkdirSync(
-        carpetaUploads,
-        {
-            recursive: true
-        }
-    );
+    if (!fs.existsSync(carpetaUploads)) {
+
+        fs.mkdirSync(
+            carpetaUploads,
+            {
+                recursive: true
+            }
+        );
+
+    }
 
 }
 
@@ -33,56 +51,71 @@ if (!fs.existsSync(carpetaUploads)) {
 // CONFIGURACIÓN MULTER
 // ========================================
 
-const almacenamiento =
-    multer.diskStorage({
+let almacenamiento;
 
-        destination:
-            function (
-                req,
-                file,
-                cb
-            ) {
+if (esVercel) {
 
-                cb(
-                    null,
-                    carpetaUploads
-                );
+    // En Vercel usamos memoria temporal.
+    // Esto evita que la aplicación falle al iniciar.
 
-            },
+    almacenamiento = multer.memoryStorage();
+
+} else {
+
+    // En local seguimos utilizando /uploads.
+
+    almacenamiento = multer.diskStorage({
+
+        destination: function (
+            req,
+            file,
+            cb
+        ) {
+
+            cb(
+                null,
+                carpetaUploads
+            );
+
+        },
+
+        filename: function (
+            req,
+            file,
+            cb
+        ) {
+
+            const extension =
+                path.extname(
+                    file.originalname
+                ).toLowerCase();
 
 
-        filename:
-            function (
-                req,
-                file,
-                cb
-            ) {
-
-                const extension =
-                    path.extname(
-                        file.originalname
-                    ).toLowerCase();
+            const nombre =
+                "foto-" +
+                Date.now() +
+                "-" +
+                Math.round(
+                    Math.random() * 100000
+                ) +
+                extension;
 
 
-                const nombre =
-                    "foto-" +
-                    Date.now() +
-                    "-" +
-                    Math.round(
-                        Math.random() * 100000
-                    ) +
-                    extension;
+            cb(
+                null,
+                nombre
+            );
 
-
-                cb(
-                    null,
-                    nombre
-                );
-
-            }
+        }
 
     });
 
+}
+
+
+// ========================================
+// FILTRO DE IMÁGENES
+// ========================================
 
 const filtroImagen =
     function (
@@ -110,9 +143,7 @@ const filtroImagen =
                 true
             );
 
-        }
-
-        else {
+        } else {
 
             cb(
                 new Error(
@@ -124,6 +155,10 @@ const filtroImagen =
 
     };
 
+
+// ========================================
+// UPLOAD
+// ========================================
 
 const upload =
     multer({
@@ -175,7 +210,6 @@ router.get(
                         "❌ Error al obtener galería:",
                         error
                     );
-
 
                     return res
                         .status(500)
@@ -292,6 +326,23 @@ router.post(
             }
 
 
+            // En Vercel todavía no guardamos físicamente
+            // la imagen porque /uploads no es permanente.
+
+            if (esVercel) {
+
+                return res
+                    .status(503)
+                    .json({
+
+                        error:
+                            "La carga de fotografías necesita almacenamiento externo en producción."
+
+                    });
+
+            }
+
+
             const titulo =
                 req.body.titulo
                     ? req.body.titulo.trim()
@@ -306,9 +357,18 @@ router.post(
 
             if (!titulo) {
 
-                fs.unlinkSync(
-                    req.file.path
-                );
+                if (
+                    req.file.path &&
+                    fs.existsSync(
+                        req.file.path
+                    )
+                ) {
+
+                    fs.unlinkSync(
+                        req.file.path
+                    );
+
+                }
 
 
                 return res
@@ -353,12 +413,20 @@ router.post(
 
                         try {
 
-                            fs.unlinkSync(
-                                req.file.path
-                            );
+                            if (
+                                req.file.path &&
+                                fs.existsSync(
+                                    req.file.path
+                                )
+                            ) {
 
-                        }
-                        catch (e) {}
+                                fs.unlinkSync(
+                                    req.file.path
+                                );
+
+                            }
+
+                        } catch (e) {}
 
 
                         console.error(
@@ -583,9 +651,11 @@ router.delete(
                         }
 
 
-                        // Intentar eliminar archivo físico
+                        // Solo intentamos borrar el archivo
+                        // cuando estamos trabajando localmente.
 
                         if (
+                            !esVercel &&
                             ruta &&
                             ruta.startsWith(
                                 "/uploads/"
