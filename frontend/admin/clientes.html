@@ -1,0 +1,3338 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+    CLUB PONTE PERRO | Clientes
+</title>
+
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+
+body{
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    background:#111;
+
+    color:#fff;
+
+    min-height:100vh;
+
+}
+
+
+header{
+
+    min-height:70px;
+
+    background:#181818;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:0 30px;
+
+    border-bottom:
+        1px solid #333;
+
+}
+
+
+.logo{
+
+    font-size:23px;
+
+    font-weight:900;
+
+}
+
+
+.logo span{
+
+    color:#d4af37;
+
+}
+
+
+.volver{
+
+    color:#aaa;
+
+    text-decoration:none;
+
+    font-weight:bold;
+
+}
+
+
+.volver:hover{
+
+    color:#d4af37;
+
+}
+
+
+main{
+
+    max-width:1450px;
+
+    margin:auto;
+
+    padding:
+        35px 30px 60px;
+
+}
+
+
+.titulo{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:20px;
+
+    margin-bottom:25px;
+
+}
+
+
+.titulo h1{
+
+    font-size:32px;
+
+    margin-bottom:7px;
+
+}
+
+
+.titulo p{
+
+    color:#888;
+
+}
+
+
+.btn-agregar{
+
+    border:none;
+
+    background:#d4af37;
+
+    color:#111;
+
+    padding:
+        13px 20px;
+
+    border-radius:7px;
+
+    font-weight:900;
+
+    cursor:pointer;
+
+}
+
+
+.btn-agregar:hover{
+
+    background:#e5c451;
+
+}
+
+
+/* =====================================
+   ESTADÍSTICAS
+===================================== */
+
+.estadisticas{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(5,1fr);
+
+    gap:12px;
+
+    margin-bottom:20px;
+
+}
+
+
+.estadistica{
+
+    background:#181818;
+
+    border:
+        1px solid #333;
+
+    border-radius:10px;
+
+    padding:18px;
+
+}
+
+
+.numero{
+
+    color:#d4af37;
+
+    font-size:28px;
+
+    font-weight:900;
+
+}
+
+
+.texto{
+
+    color:#999;
+
+    margin-top:5px;
+
+    font-size:11px;
+
+    text-transform:uppercase;
+
+}
+
+
+/* =====================================
+   BUSCADOR
+===================================== */
+
+.buscador{
+
+    background:#181818;
+
+    border:
+        1px solid #333;
+
+    border-radius:10px;
+
+    padding:18px;
+
+    margin-bottom:20px;
+
+}
+
+
+.buscador input{
+
+    width:100%;
+
+    padding:13px;
+
+    background:#222;
+
+    color:#fff;
+
+    border:
+        1px solid #444;
+
+    border-radius:7px;
+
+    outline:none;
+
+    font-size:15px;
+
+}
+
+
+.buscador input:focus{
+
+    border-color:#d4af37;
+
+}
+
+
+/* =====================================
+   TABLA
+===================================== */
+
+.tabla-container{
+
+    background:#181818;
+
+    border:
+        1px solid #333;
+
+    border-radius:10px;
+
+    overflow-x:auto;
+
+}
+
+
+table{
+
+    width:100%;
+
+    min-width:1250px;
+
+    border-collapse:collapse;
+
+}
+
+
+th{
+
+    background:#222;
+
+    color:#d4af37;
+
+    padding:14px;
+
+    text-align:left;
+
+    font-size:11px;
+
+    white-space:nowrap;
+
+}
+
+
+td{
+
+    padding:13px;
+
+    border-top:
+        1px solid #333;
+
+    color:#ddd;
+
+    vertical-align:middle;
+
+}
+
+
+tr:hover{
+
+    background:#202020;
+
+}
+
+
+.nombre{
+
+    font-weight:bold;
+
+    color:#fff;
+
+}
+
+
+.telefono{
+
+    color:#ddd;
+
+}
+
+
+.correo,
+.fecha{
+
+    color:#999;
+
+}
+
+
+.fin{
+
+    font-weight:bold;
+
+    color:#ddd;
+
+}
+
+
+.adelanto{
+
+    color:#d4af37;
+
+    font-weight:bold;
+
+}
+
+
+.saldo{
+
+    color:#f0cb6b;
+
+    font-weight:bold;
+
+}
+
+
+.reservas{
+
+    color:#aaa;
+
+}
+
+
+.completadas{
+
+    color:#72d987;
+
+}
+
+
+.acciones{
+
+    display:flex;
+
+    gap:6px;
+
+    flex-wrap:wrap;
+
+}
+
+
+.btn{
+
+    border:none;
+
+    padding:
+        8px 10px;
+
+    border-radius:5px;
+
+    cursor:pointer;
+
+    font-weight:bold;
+
+    font-size:11px;
+
+}
+
+
+.btn-ver{
+
+    background:#333;
+
+    color:#fff;
+
+}
+
+
+.btn-editar{
+
+    background:#d4af37;
+
+    color:#111;
+
+}
+
+
+.btn-eliminar{
+
+    background:#8b2020;
+
+    color:#fff;
+
+}
+
+
+.btn-wa{
+
+    background:#1d7040;
+
+    color:#fff;
+
+}
+
+
+.btn:hover{
+
+    opacity:.82;
+
+}
+
+
+.mensaje{
+
+    text-align:center;
+
+    padding:40px!important;
+
+    color:#777;
+
+}
+
+
+/* =====================================
+   MODALES
+===================================== */
+
+.modal{
+
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    background:
+        rgba(0,0,0,.84);
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:20px;
+
+    z-index:2000;
+
+}
+
+
+.modal.mostrar{
+
+    display:flex;
+
+}
+
+
+.modal-contenido{
+
+    width:760px;
+
+    max-width:100%;
+
+    max-height:92vh;
+
+    overflow-y:auto;
+
+    background:#181818;
+
+    border:
+        1px solid #444;
+
+    border-radius:12px;
+
+    padding:28px;
+
+}
+
+
+.modal-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:22px;
+
+}
+
+
+.modal-header h2{
+
+    color:#d4af37;
+
+    font-size:22px;
+
+}
+
+
+.cerrar{
+
+    border:none;
+
+    background:none;
+
+    color:#aaa;
+
+    font-size:28px;
+
+    cursor:pointer;
+
+}
+
+
+.cerrar:hover{
+
+    color:#fff;
+
+}
+
+
+.campo{
+
+    margin-bottom:18px;
+
+}
+
+
+.campo label{
+
+    display:block;
+
+    color:#ccc;
+
+    font-size:14px;
+
+    font-weight:bold;
+
+    margin-bottom:7px;
+
+}
+
+
+.campo input{
+
+    width:100%;
+
+    padding:12px;
+
+    background:#222;
+
+    color:#fff;
+
+    border:
+        1px solid #444;
+
+    border-radius:7px;
+
+    outline:none;
+
+}
+
+
+.campo input:focus{
+
+    border-color:#d4af37;
+
+}
+
+
+.acciones-modal{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:10px;
+
+    margin-top:25px;
+
+}
+
+
+.btn-cancelar,
+.btn-guardar{
+
+    border:none;
+
+    padding:
+        12px 18px;
+
+    border-radius:7px;
+
+    cursor:pointer;
+
+    font-weight:bold;
+
+}
+
+
+.btn-cancelar{
+
+    background:#333;
+
+    color:#fff;
+
+}
+
+
+.btn-guardar{
+
+    background:#d4af37;
+
+    color:#111;
+
+}
+
+
+.btn-guardar:disabled{
+
+    opacity:.6;
+
+    cursor:not-allowed;
+
+}
+
+
+/* =====================================
+   DETALLE
+===================================== */
+
+.detalle{
+
+    padding:12px 0;
+
+    border-bottom:
+        1px solid #333;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    gap:20px;
+
+}
+
+
+.detalle strong{
+
+    color:#888;
+
+    font-size:11px;
+
+}
+
+
+.detalle span{
+
+    text-align:right;
+
+    color:#fff;
+
+}
+
+
+.resumen-cliente{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:8px;
+
+    margin:18px 0;
+
+}
+
+
+.resumen-box{
+
+    background:#111;
+
+    border:
+        1px solid #303030;
+
+    padding:13px;
+
+    text-align:center;
+
+}
+
+
+.resumen-box span{
+
+    display:block;
+
+    color:#777;
+
+    font-size:9px;
+
+    text-transform:uppercase;
+
+}
+
+
+.resumen-box strong{
+
+    display:block;
+
+    color:#d4af37;
+
+    font-size:18px;
+
+    margin-top:5px;
+
+}
+
+
+/* =====================================
+   HISTORIAL
+===================================== */
+
+.historial{
+
+    margin-top:25px;
+
+}
+
+
+.historial h3{
+
+    font-size:17px;
+
+    color:#d4af37;
+
+    margin-bottom:10px;
+
+}
+
+
+.historial-container{
+
+    overflow:auto;
+
+    border:
+        1px solid #303030;
+
+}
+
+
+.historial table{
+
+    min-width:700px;
+
+}
+
+
+.historial th{
+
+    font-size:9px;
+
+}
+
+
+.historial td{
+
+    font-size:11px;
+
+    padding:10px;
+
+}
+
+
+.estado{
+
+    display:inline-block;
+
+    padding:
+        5px 8px;
+
+    border-radius:15px;
+
+    font-size:9px;
+
+    text-transform:uppercase;
+
+    font-weight:bold;
+
+}
+
+
+.estado.pendiente{
+
+    background:#332d16;
+
+    color:#e8ca62;
+
+}
+
+
+.estado.confirmada{
+
+    background:#172c3c;
+
+    color:#65bce9;
+
+}
+
+
+.estado.completada{
+
+    background:#16351e;
+
+    color:#65db80;
+
+}
+
+
+.estado.cancelada{
+
+    background:#381919;
+
+    color:#ed7474;
+
+}
+
+
+.vacio{
+
+    padding:25px;
+
+    text-align:center;
+
+    color:#777;
+
+}
+
+
+/* =====================================
+   TOAST
+===================================== */
+
+.toast{
+
+    position:fixed;
+
+    right:20px;
+
+    bottom:20px;
+
+    background:#171717;
+
+    color:#eee;
+
+    border:
+        1px solid #333;
+
+    padding:
+        13px 18px;
+
+    display:none;
+
+    z-index:3000;
+
+}
+
+
+.toast.mostrar{
+
+    display:block;
+
+}
+
+
+.toast.error{
+
+    border-color:#7b2929;
+
+    color:#ff8a8a;
+
+}
+
+
+/* =====================================
+   RESPONSIVE
+===================================== */
+
+@media(max-width:1100px){
+
+    .estadisticas{
+
+        grid-template-columns:
+            repeat(3,1fr);
+
+    }
+
+}
+
+
+@media(max-width:700px){
+
+    header{
+
+        padding:15px;
+
+    }
+
+
+    .titulo{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+    }
+
+
+    .btn-agregar{
+
+        width:100%;
+
+    }
+
+
+    main{
+
+        padding:
+            25px 15px 50px;
+
+    }
+
+
+    .estadisticas{
+
+        grid-template-columns:
+            1fr 1fr;
+
+    }
+
+
+    .resumen-cliente{
+
+        grid-template-columns:
+            1fr 1fr;
+
+    }
+
+
+    .detalle{
+
+        flex-direction:column;
+
+        gap:5px;
+
+    }
+
+
+    .detalle span{
+
+        text-align:left;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+
+        CLUB
+        <span>PONTE PERRO</span>
+
+    </div>
+
+
+    <a
+        href="/admin/dashboard.html"
+        class="volver"
+    >
+
+        ← Volver al Dashboard
+
+    </a>
+
+</header>
+
+
+<main>
+
+
+<div class="titulo">
+
+    <div>
+
+        <h1>
+            👥 Clientes
+        </h1>
+
+        <p>
+            Administra clientes, reservas,
+            adelantos y saldos pendientes.
+        </p>
+
+    </div>
+
+
+    <button
+        class="btn-agregar"
+        onclick="abrirModalAgregar()"
+    >
+
+        ＋ AGREGAR CLIENTE
+
+    </button>
+
+</div>
+
+
+<!-- =====================================
+     ESTADÍSTICAS
+===================================== -->
+
+<section class="estadisticas">
+
+
+    <div class="estadistica">
+
+        <div
+            id="totalClientes"
+            class="numero"
+        >
+            0
+        </div>
+
+        <div class="texto">
+            Clientes registrados
+        </div>
+
+    </div>
+
+
+    <div class="estadistica">
+
+        <div
+            id="totalReservas"
+            class="numero"
+        >
+            0
+        </div>
+
+        <div class="texto">
+            Reservas
+        </div>
+
+    </div>
+
+
+    <div class="estadistica">
+
+        <div
+            id="totalServicios"
+            class="numero"
+        >
+            Bs 0.00
+        </div>
+
+        <div class="texto">
+            Servicios
+        </div>
+
+    </div>
+
+
+    <div class="estadistica">
+
+        <div
+            id="totalAdelantos"
+            class="numero"
+        >
+            Bs 0.00
+        </div>
+
+        <div class="texto">
+            Adelantos
+        </div>
+
+    </div>
+
+
+    <div class="estadistica">
+
+        <div
+            id="totalSaldos"
+            class="numero"
+        >
+            Bs 0.00
+        </div>
+
+        <div class="texto">
+            Saldos pendientes
+        </div>
+
+    </div>
+
+
+</section>
+
+
+<!-- =====================================
+     BUSCADOR
+===================================== -->
+
+<div class="buscador">
+
+    <input
+        type="text"
+        id="buscar"
+        placeholder="🔎 Buscar por nombre, teléfono o correo..."
+        autocomplete="off"
+    >
+
+</div>
+
+
+<!-- =====================================
+     TABLA CLIENTES
+===================================== -->
+
+<div class="tabla-container">
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+    <th>
+        CLIENTE
+    </th>
+
+    <th>
+        TELÉFONO
+    </th>
+
+    <th>
+        CORREO
+    </th>
+
+    <th>
+        RESERVAS
+    </th>
+
+    <th>
+        SERVICIOS
+    </th>
+
+    <th>
+        ADELANTOS
+    </th>
+
+    <th>
+        SALDO
+    </th>
+
+    <th>
+        REGISTRO
+    </th>
+
+    <th>
+        ACCIONES
+    </th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="tablaClientes">
+
+<tr>
+
+<td
+    colspan="9"
+    class="mensaje"
+>
+
+    Cargando clientes...
+
+</td>
+
+</tr>
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</main>
+
+
+<!-- =====================================
+     MODAL AGREGAR / EDITAR
+===================================== -->
+
+<div
+    id="modalFormulario"
+    class="modal"
+>
+
+
+<div class="modal-contenido">
+
+
+<div class="modal-header">
+
+<h2 id="tituloModal">
+
+    ➕ Nuevo cliente
+
+</h2>
+
+
+<button
+    class="cerrar"
+    onclick="cerrarModalFormulario()"
+>
+
+    ×
+
+</button>
+
+</div>
+
+
+<form id="formCliente">
+
+
+<div class="campo">
+
+<label>
+    Nombre completo *
+</label>
+
+
+<input
+    type="text"
+    id="clienteNombre"
+    required
+    maxlength="150"
+    placeholder="Nombre del cliente"
+>
+
+
+</div>
+
+
+<div class="campo">
+
+<label>
+    Teléfono
+</label>
+
+
+<input
+    type="text"
+    id="clienteTelefono"
+    maxlength="30"
+    placeholder="70000000"
+>
+
+
+</div>
+
+
+<div class="campo">
+
+<label>
+    Correo
+</label>
+
+
+<input
+    type="email"
+    id="clienteCorreo"
+    maxlength="150"
+    placeholder="cliente@email.com"
+>
+
+
+</div>
+
+
+<div class="acciones-modal">
+
+
+<button
+    type="button"
+    class="btn-cancelar"
+    onclick="cerrarModalFormulario()"
+>
+
+    CANCELAR
+
+</button>
+
+
+<button
+    type="submit"
+    class="btn-guardar"
+    id="btnGuardarCliente"
+>
+
+    💾 GUARDAR CLIENTE
+
+</button>
+
+
+</div>
+
+
+</form>
+
+
+</div>
+
+</div>
+
+
+<!-- =====================================
+     MODAL DETALLE
+===================================== -->
+
+<div
+    id="modalDetalle"
+    class="modal"
+>
+
+
+<div class="modal-contenido">
+
+
+<div class="modal-header">
+
+<h2>
+    👤 Información del cliente
+</h2>
+
+
+<button
+    class="cerrar"
+    onclick="cerrarModalDetalle()"
+>
+
+    ×
+
+</button>
+
+</div>
+
+
+<div class="detalle">
+
+<strong>
+    NOMBRE
+</strong>
+
+<span id="detalleNombre">
+    -
+</span>
+
+</div>
+
+
+<div class="detalle">
+
+<strong>
+    TELÉFONO
+</strong>
+
+<span id="detalleTelefono">
+    -
+</span>
+
+</div>
+
+
+<div class="detalle">
+
+<strong>
+    CORREO
+</strong>
+
+<span id="detalleCorreo">
+    -
+</span>
+
+</div>
+
+
+<div class="detalle">
+
+<strong>
+    FECHA DE REGISTRO
+</strong>
+
+<span id="detalleFecha">
+    -
+</span>
+
+</div>
+
+
+<div class="resumen-cliente">
+
+
+<div class="resumen-box">
+
+<span>
+    Reservas
+</span>
+
+<strong id="detalleReservas">
+    0
+</strong>
+
+</div>
+
+
+<div class="resumen-box">
+
+<span>
+    Servicios
+</span>
+
+<strong id="detalleServicios">
+    Bs 0.00
+</strong>
+
+</div>
+
+
+<div class="resumen-box">
+
+<span>
+    Adelantos
+</span>
+
+<strong id="detalleAdelantos">
+    Bs 0.00
+</strong>
+
+</div>
+
+
+<div class="resumen-box">
+
+<span>
+    Saldo
+</span>
+
+<strong id="detalleSaldo">
+    Bs 0.00
+</strong>
+
+</div>
+
+
+</div>
+
+
+<!-- =====================================
+     HISTORIAL
+===================================== -->
+
+<div class="historial">
+
+
+<h3>
+    📋 Historial de reservas
+</h3>
+
+
+<div class="historial-container">
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+<th>
+    FECHA
+</th>
+
+<th>
+    HORA
+</th>
+
+<th>
+    SERVICIO
+</th>
+
+<th>
+    BARBERO
+</th>
+
+<th>
+    TOTAL
+</th>
+
+<th>
+    ADELANTO
+</th>
+
+<th>
+    SALDO
+</th>
+
+<th>
+    ESTADO
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="historialCliente">
+
+<tr>
+
+<td
+    colspan="8"
+    class="vacio"
+>
+
+    Cargando...
+
+</td>
+
+</tr>
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<div
+    id="toast"
+    class="toast"
+>
+</div>
+
+
+<script>
+
+"use strict";
+
+
+if(
+    !localStorage.getItem(
+        "usuario"
+    )
+){
+
+    window.location.href =
+        "/admin/login.html";
+
+}
+
+
+let clientes = [];
+
+let clienteEditando = null;
+
+let toastTimer = null;
+
+
+// =====================================
+// SEGURIDAD HTML
+// =====================================
+
+function escapeHTML(texto){
+
+    return String(
+        texto ?? ""
+    )
+
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+
+    .replace(
+        /</g,
+        "&lt;"
+    )
+
+    .replace(
+        />/g,
+        "&gt;"
+    )
+
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
+
+// =====================================
+// NÚMEROS
+// =====================================
+
+function numero(valor){
+
+    const n =
+        Number(valor);
+
+    return Number.isFinite(n)
+        ? n
+        : 0;
+
+}
+
+
+function dinero(valor){
+
+    return (
+        "Bs " +
+        numero(valor)
+            .toFixed(2)
+    );
+
+}
+
+
+// =====================================
+// FECHAS
+// =====================================
+
+function formatearFecha(fecha){
+
+    if(!fecha){
+
+        return "-";
+
+    }
+
+
+    const partes =
+        String(fecha)
+            .substring(0,10)
+            .split("-");
+
+
+    if(
+        partes.length === 3
+    ){
+
+        return (
+            partes[2] +
+            "/" +
+            partes[1] +
+            "/" +
+            partes[0]
+        );
+
+    }
+
+
+    return String(fecha);
+
+}
+
+
+function formatearFechaHora(fecha){
+
+    if(!fecha){
+
+        return "-";
+
+    }
+
+
+    const d =
+        new Date(fecha);
+
+
+    if(
+        Number.isNaN(
+            d.getTime()
+        )
+    ){
+
+        return String(fecha);
+
+    }
+
+
+    return d.toLocaleString(
+        "es-BO",
+        {
+            day:"2-digit",
+            month:"2-digit",
+            year:"numeric",
+            hour:"2-digit",
+            minute:"2-digit"
+        }
+    );
+
+}
+
+
+// =====================================
+// CARGAR CLIENTES
+// =====================================
+
+async function cargarClientes(){
+
+    try{
+
+        const respuesta =
+            await fetch(
+                "/api/clientes"
+            );
+
+
+        if(!respuesta.ok){
+
+            const data =
+                await respuesta
+                    .json()
+                    .catch(
+                        () => ({})
+                    );
+
+
+            throw new Error(
+                data.error ||
+                "No se pudieron obtener los clientes"
+            );
+
+        }
+
+
+        clientes =
+            await respuesta.json();
+
+
+        actualizarResumenGeneral();
+
+        mostrarClientes(
+            clientes
+        );
+
+
+    }
+    catch(error){
+
+        console.error(
+            error
+        );
+
+
+        document
+            .getElementById(
+                "tablaClientes"
+            )
+            .innerHTML = `
+
+                <tr>
+
+                    <td
+                        colspan="9"
+                        class="mensaje"
+                    >
+
+                        ❌
+                        ${escapeHTML(
+                            error.message
+                        )}
+
+                    </td>
+
+                </tr>
+
+            `;
+
+    }
+
+}
+
+
+// =====================================
+// RESUMEN GENERAL
+// =====================================
+
+function actualizarResumenGeneral(){
+
+    let reservas = 0;
+
+    let servicios = 0;
+
+    let adelantos = 0;
+
+    let saldos = 0;
+
+
+    clientes.forEach(
+        cliente => {
+
+            reservas +=
+                numero(
+                    cliente.total_reservas
+                );
+
+
+            servicios +=
+                numero(
+                    cliente.total_servicios
+                );
+
+
+            adelantos +=
+                numero(
+                    cliente.total_adelantos
+                );
+
+
+            saldos +=
+                numero(
+                    cliente.saldo_pendiente
+                );
+
+        }
+    );
+
+
+    document
+        .getElementById(
+            "totalClientes"
+        )
+        .textContent =
+            clientes.length;
+
+
+    document
+        .getElementById(
+            "totalReservas"
+        )
+        .textContent =
+            reservas;
+
+
+    document
+        .getElementById(
+            "totalServicios"
+        )
+        .textContent =
+            dinero(
+                servicios
+            );
+
+
+    document
+        .getElementById(
+            "totalAdelantos"
+        )
+        .textContent =
+            dinero(
+                adelantos
+            );
+
+
+    document
+        .getElementById(
+            "totalSaldos"
+        )
+        .textContent =
+            dinero(
+                saldos
+            );
+
+}
+
+
+// =====================================
+// MOSTRAR CLIENTES
+// =====================================
+
+function mostrarClientes(
+    lista
+){
+
+    const tabla =
+        document.getElementById(
+            "tablaClientes"
+        );
+
+
+    tabla.innerHTML = "";
+
+
+    if(!lista.length){
+
+        tabla.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="9"
+                    class="mensaje"
+                >
+
+                    No se encontraron clientes.
+
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+    lista.forEach(
+        cliente => {
+
+            const fila =
+                document.createElement(
+                    "tr"
+                );
+
+
+            fila.innerHTML = `
+
+                <td>
+
+                    <div
+                        class="nombre"
+                    >
+
+                        ${escapeHTML(
+                            cliente.nombre
+                        )}
+
+                    </div>
+
+                </td>
+
+
+                <td>
+
+                    <div
+                        class="telefono"
+                    >
+
+                        ${escapeHTML(
+                            cliente.telefono ||
+                            "-"
+                        )}
+
+                    </div>
+
+                </td>
+
+
+                <td>
+
+                    <div
+                        class="correo"
+                    >
+
+                        ${escapeHTML(
+                            cliente.correo ||
+                            "-"
+                        )}
+
+                    </div>
+
+                </td>
+
+
+                <td>
+
+                    <span
+                        class="reservas"
+                    >
+
+                        ${numero(
+                            cliente.total_reservas
+                        )}
+
+                    </span>
+
+                    <span
+                        class="completadas"
+                    >
+
+                        /
+                        ${numero(
+                            cliente.reservas_completadas
+                        )}
+
+                    </span>
+
+                </td>
+
+
+                <td
+                    class="fin"
+                >
+
+                    ${dinero(
+                        cliente.total_servicios
+                    )}
+
+                </td>
+
+
+                <td
+                    class="adelanto"
+                >
+
+                    ${dinero(
+                        cliente.total_adelantos
+                    )}
+
+                </td>
+
+
+                <td
+                    class="saldo"
+                >
+
+                    ${dinero(
+                        cliente.saldo_pendiente
+                    )}
+
+                </td>
+
+
+                <td
+                    class="fecha"
+                >
+
+                    ${formatearFechaHora(
+                        cliente.fecha_registro
+                    )}
+
+                </td>
+
+
+                <td>
+
+                    <div
+                        class="acciones"
+                    >
+
+
+                        <button
+                            class="btn btn-ver"
+                            onclick="
+                                verCliente(
+                                    ${Number(
+                                        cliente.id_cliente
+                                    )}
+                                )
+                            "
+                        >
+
+                            👁️ Ver
+
+                        </button>
+
+
+                        ${
+                            cliente.telefono
+                            ?
+
+                            `
+
+                            <button
+                                class="btn btn-wa"
+                                onclick="
+                                    abrirWhatsApp(
+                                        '${escapeHTML(
+                                            cliente.telefono
+                                        )}',
+                                        '${escapeHTML(
+                                            cliente.nombre
+                                        )}'
+                                    )
+                                "
+                            >
+
+                                WhatsApp
+
+                            </button>
+
+                            `
+
+                            :
+
+                            ""
+
+                        }
+
+
+                        <button
+                            class="btn btn-editar"
+                            onclick="
+                                editarCliente(
+                                    ${Number(
+                                        cliente.id_cliente
+                                    )}
+                                )
+                            "
+                        >
+
+                            ✏️ Editar
+
+                        </button>
+
+
+                        <button
+                            class="btn btn-eliminar"
+                            onclick="
+                                eliminarCliente(
+                                    ${Number(
+                                        cliente.id_cliente
+                                    )}
+                                )
+                            "
+                        >
+
+                            🗑️
+
+                        </button>
+
+
+                    </div>
+
+                </td>
+
+            `;
+
+
+            tabla.appendChild(
+                fila
+            );
+
+        }
+    );
+
+}
+
+
+// =====================================
+// BUSCAR
+// =====================================
+
+document
+    .getElementById(
+        "buscar"
+    )
+    .addEventListener(
+        "input",
+        function(){
+
+            const texto =
+                this.value
+                    .toLowerCase()
+                    .trim();
+
+
+            const filtrados =
+                clientes.filter(
+                    cliente => {
+
+                        const nombre =
+                            String(
+                                cliente.nombre ||
+                                ""
+                            )
+                            .toLowerCase();
+
+
+                        const telefono =
+                            String(
+                                cliente.telefono ||
+                                ""
+                            )
+                            .toLowerCase();
+
+
+                        const correo =
+                            String(
+                                cliente.correo ||
+                                ""
+                            )
+                            .toLowerCase();
+
+
+                        return (
+                            nombre.includes(
+                                texto
+                            )
+                            ||
+                            telefono.includes(
+                                texto
+                            )
+                            ||
+                            correo.includes(
+                                texto
+                            )
+                        );
+
+                    }
+                );
+
+
+            mostrarClientes(
+                filtrados
+            );
+
+        }
+    );
+
+
+// =====================================
+// AGREGAR
+// =====================================
+
+function abrirModalAgregar(){
+
+    clienteEditando =
+        null;
+
+
+    document
+        .getElementById(
+            "tituloModal"
+        )
+        .textContent =
+            "➕ Nuevo cliente";
+
+
+    document
+        .getElementById(
+            "clienteNombre"
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            "clienteTelefono"
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            "clienteCorreo"
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            "btnGuardarCliente"
+        )
+        .textContent =
+            "💾 GUARDAR CLIENTE";
+
+
+    document
+        .getElementById(
+            "modalFormulario"
+        )
+        .classList
+        .add(
+            "mostrar"
+        );
+
+
+    setTimeout(
+        () => {
+
+            document
+                .getElementById(
+                    "clienteNombre"
+                )
+                .focus();
+
+        },
+        100
+    );
+
+}
+
+
+// =====================================
+// EDITAR
+// =====================================
+
+function editarCliente(
+    id
+){
+
+    const cliente =
+        clientes.find(
+            c =>
+                Number(
+                    c.id_cliente
+                ) === Number(id)
+        );
+
+
+    if(!cliente){
+
+        mostrarToast(
+            "Cliente no encontrado.",
+            true
+        );
+
+        return;
+
+    }
+
+
+    clienteEditando =
+        id;
+
+
+    document
+        .getElementById(
+            "tituloModal"
+        )
+        .textContent =
+            "✏️ Editar cliente";
+
+
+    document
+        .getElementById(
+            "clienteNombre"
+        )
+        .value =
+            cliente.nombre || "";
+
+
+    document
+        .getElementById(
+            "clienteTelefono"
+        )
+        .value =
+            cliente.telefono || "";
+
+
+    document
+        .getElementById(
+            "clienteCorreo"
+        )
+        .value =
+            cliente.correo || "";
+
+
+    document
+        .getElementById(
+            "btnGuardarCliente"
+        )
+        .textContent =
+            "💾 ACTUALIZAR CLIENTE";
+
+
+    document
+        .getElementById(
+            "modalFormulario"
+        )
+        .classList
+        .add(
+            "mostrar"
+        );
+
+}
+
+
+// =====================================
+// GUARDAR
+// =====================================
+
+document
+    .getElementById(
+        "formCliente"
+    )
+    .addEventListener(
+        "submit",
+        async function(evento){
+
+            evento.preventDefault();
+
+
+            const nombre =
+                document
+                    .getElementById(
+                        "clienteNombre"
+                    )
+                    .value
+                    .trim();
+
+
+            const telefono =
+                document
+                    .getElementById(
+                        "clienteTelefono"
+                    )
+                    .value
+                    .trim();
+
+
+            const correo =
+                document
+                    .getElementById(
+                        "clienteCorreo"
+                    )
+                    .value
+                    .trim();
+
+
+            if(!nombre){
+
+                mostrarToast(
+                    "El nombre del cliente es obligatorio.",
+                    true
+                );
+
+                return;
+
+            }
+
+
+            const boton =
+                document
+                    .getElementById(
+                        "btnGuardarCliente"
+                    );
+
+
+            const editando =
+                Boolean(
+                    clienteEditando
+                );
+
+
+            boton.disabled =
+                true;
+
+
+            boton.textContent =
+                "⏳ GUARDANDO...";
+
+
+            try{
+
+                const datos = {
+
+                    nombre:
+                        nombre,
+
+                    telefono:
+                        telefono,
+
+                    correo:
+                        correo
+
+                };
+
+
+                const respuesta =
+                    await fetch(
+
+                        editando
+
+                        ?
+
+                        `/api/clientes/${clienteEditando}`
+
+                        :
+
+                        "/api/clientes",
+
+                        {
+
+                            method:
+                                editando
+                                ? "PUT"
+                                : "POST",
+
+                            headers:{
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(
+                                    datos
+                                )
+
+                        }
+
+                    );
+
+
+                const resultado =
+                    await respuesta
+                        .json()
+                        .catch(
+                            () => ({})
+                        );
+
+
+                if(!respuesta.ok){
+
+                    throw new Error(
+                        resultado.error ||
+                        "No se pudo guardar el cliente"
+                    );
+
+                }
+
+
+                cerrarModalFormulario();
+
+
+                mostrarToast(
+
+                    editando
+
+                    ?
+
+                    "✅ Cliente actualizado correctamente."
+
+                    :
+
+                    "✅ Cliente creado correctamente."
+
+                );
+
+
+                await cargarClientes();
+
+
+            }
+            catch(error){
+
+                console.error(
+                    error
+                );
+
+
+                mostrarToast(
+                    "❌ " +
+                    error.message,
+                    true
+                );
+
+            }
+            finally{
+
+                boton.disabled =
+                    false;
+
+
+                boton.textContent =
+                    editando
+
+                    ?
+
+                    "💾 ACTUALIZAR CLIENTE"
+
+                    :
+
+                    "💾 GUARDAR CLIENTE";
+
+            }
+
+        }
+    );
+
+
+// =====================================
+// VER CLIENTE
+// =====================================
+
+async function verCliente(
+    id
+){
+
+    const cliente =
+        clientes.find(
+            c =>
+                Number(
+                    c.id_cliente
+                ) === Number(id)
+        );
+
+
+    if(!cliente){
+
+        mostrarToast(
+            "Cliente no encontrado.",
+            true
+        );
+
+        return;
+
+    }
+
+
+    document
+        .getElementById(
+            "detalleNombre"
+        )
+        .textContent =
+            cliente.nombre || "-";
+
+
+    document
+        .getElementById(
+            "detalleTelefono"
+        )
+        .textContent =
+            cliente.telefono || "-";
+
+
+    document
+        .getElementById(
+            "detalleCorreo"
+        )
+        .textContent =
+            cliente.correo || "-";
+
+
+    document
+        .getElementById(
+            "detalleFecha"
+        )
+        .textContent =
+            formatearFechaHora(
+                cliente.fecha_registro
+            );
+
+
+    document
+        .getElementById(
+            "detalleReservas"
+        )
+        .textContent =
+            numero(
+                cliente.total_reservas
+            );
+
+
+    document
+        .getElementById(
+            "detalleServicios"
+        )
+        .textContent =
+            dinero(
+                cliente.total_servicios
+            );
+
+
+    document
+        .getElementById(
+            "detalleAdelantos"
+        )
+        .textContent =
+            dinero(
+                cliente.total_adelantos
+            );
+
+
+    document
+        .getElementById(
+            "detalleSaldo"
+        )
+        .textContent =
+            dinero(
+                cliente.saldo_pendiente
+            );
+
+
+    const historial =
+        document
+            .getElementById(
+                "historialCliente"
+            );
+
+
+    historial.innerHTML = `
+
+        <tr>
+
+            <td
+                colspan="8"
+                class="vacio"
+            >
+
+                Cargando historial...
+
+            </td>
+
+        </tr>
+
+    `;
+
+
+    document
+        .getElementById(
+            "modalDetalle"
+        )
+        .classList
+        .add(
+            "mostrar"
+        );
+
+
+    try{
+
+        const respuesta =
+            await fetch(
+                `/api/clientes/${id}`
+            );
+
+
+        const data =
+            await respuesta.json();
+
+
+        if(!respuesta.ok){
+
+            throw new Error(
+                data.error ||
+                "No se pudo obtener el historial"
+            );
+
+        }
+
+
+        mostrarHistorial(
+            data.historial || []
+        );
+
+
+    }
+    catch(error){
+
+        console.error(
+            error
+        );
+
+
+        historial.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="8"
+                    class="vacio"
+                >
+
+                    ❌
+                    ${escapeHTML(
+                        error.message
+                    )}
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+}
+
+
+// =====================================
+// HISTORIAL
+// =====================================
+
+function mostrarHistorial(
+    lista
+){
+
+    const tbody =
+        document
+            .getElementById(
+                "historialCliente"
+            );
+
+
+    tbody.innerHTML =
+        "";
+
+
+    if(!lista.length){
+
+        tbody.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="8"
+                    class="vacio"
+                >
+
+                    Este cliente todavía
+                    no tiene reservas.
+
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+    lista.forEach(
+        reserva => {
+
+            const tr =
+                document
+                    .createElement(
+                        "tr"
+                    );
+
+
+            tr.innerHTML = `
+
+                <td>
+
+                    ${formatearFecha(
+                        reserva.fecha
+                    )}
+
+                </td>
+
+
+                <td>
+
+                    ${escapeHTML(
+                        String(
+                            reserva.hora || ""
+                        )
+                        .substring(
+                            0,
+                            5
+                        )
+                    )}
+
+                </td>
+
+
+                <td>
+
+                    ${escapeHTML(
+                        reserva.servicio_nombre ||
+                        "-"
+                    )}
+
+                </td>
+
+
+                <td>
+
+                    ${escapeHTML(
+                        reserva.barbero_nombre ||
+                        "-"
+                    )}
+
+                </td>
+
+
+                <td>
+
+                    ${dinero(
+                        reserva.total_servicio
+                    )}
+
+                </td>
+
+
+                <td>
+
+                    ${dinero(
+                        reserva.adelanto
+                    )}
+
+                </td>
+
+
+                <td>
+
+                    ${dinero(
+                        reserva.saldo
+                    )}
+
+                </td>
+
+
+                <td>
+
+                    <span
+                        class="
+                            estado
+                            ${escapeHTML(
+                                reserva.estado ||
+                                "pendiente"
+                            )}
+                        "
+                    >
+
+                        ${escapeHTML(
+                            reserva.estado ||
+                            "pendiente"
+                        )}
+
+                    </span>
+
+                </td>
+
+            `;
+
+
+            tbody.appendChild(
+                tr
+            );
+
+        }
+    );
+
+}
+
+
+// =====================================
+// CERRAR MODALES
+// =====================================
+
+function cerrarModalFormulario(){
+
+    document
+        .getElementById(
+            "modalFormulario"
+        )
+        .classList
+        .remove(
+            "mostrar"
+        );
+
+
+    clienteEditando =
+        null;
+
+}
+
+
+function cerrarModalDetalle(){
+
+    document
+        .getElementById(
+            "modalDetalle"
+        )
+        .classList
+        .remove(
+            "mostrar"
+        );
+
+}
+
+
+// =====================================
+// ELIMINAR
+// =====================================
+
+async function eliminarCliente(
+    id
+){
+
+    const cliente =
+        clientes.find(
+            c =>
+                Number(
+                    c.id_cliente
+                ) === Number(id)
+        );
+
+
+    if(!cliente){
+
+        return;
+
+    }
+
+
+    if(
+        !confirm(
+            `¿Seguro que deseas eliminar a "${cliente.nombre}"?`
+        )
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+        const respuesta =
+            await fetch(
+                `/api/clientes/${id}`,
+                {
+                    method:"DELETE"
+                }
+            );
+
+
+        const resultado =
+            await respuesta
+                .json()
+                .catch(
+                    () => ({})
+                );
+
+
+        if(!respuesta.ok){
+
+            throw new Error(
+                resultado.error ||
+                "No se pudo eliminar el cliente"
+            );
+
+        }
+
+
+        mostrarToast(
+            "🗑️ Cliente eliminado correctamente."
+        );
+
+
+        await cargarClientes();
+
+
+    }
+    catch(error){
+
+        console.error(
+            error
+        );
+
+
+        mostrarToast(
+            "❌ " +
+            error.message,
+            true
+        );
+
+    }
+
+}
+
+
+// =====================================
+// WHATSAPP
+// =====================================
+
+function abrirWhatsApp(
+    telefono,
+    nombre
+){
+
+    let numeroWA =
+        String(
+            telefono || ""
+        )
+        .replace(
+            /\D/g,
+            ""
+        );
+
+
+    if(
+        numeroWA.length === 8
+    ){
+
+        numeroWA =
+            "591" +
+            numeroWA;
+
+    }
+
+
+    if(!numeroWA){
+
+        mostrarToast(
+            "El teléfono no es válido.",
+            true
+        );
+
+        return;
+
+    }
+
+
+    const mensaje =
+        `Hola ${nombre || ""}, ` +
+        `te escribimos de CLUB PONTE PERRO.`;
+
+
+    window.open(
+
+        "https://wa.me/" +
+        numeroWA +
+        "?text=" +
+        encodeURIComponent(
+            mensaje
+        ),
+
+        "_blank"
+
+    );
+
+}
+
+
+// =====================================
+// MENSAJE
+// =====================================
+
+function mostrarToast(
+    mensaje,
+    error = false
+){
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    toast.textContent =
+        mensaje;
+
+
+    toast.classList.toggle(
+        "error",
+        error
+    );
+
+
+    toast.classList.add(
+        "mostrar"
+    );
+
+
+    clearTimeout(
+        toastTimer
+    );
+
+
+    toastTimer =
+        setTimeout(
+            () => {
+
+                toast.classList.remove(
+                    "mostrar"
+                );
+
+            },
+            3200
+        );
+
+}
+
+
+// =====================================
+// CERRAR AL HACER CLICK AFUERA
+// =====================================
+
+window.addEventListener(
+    "click",
+    function(evento){
+
+        if(
+            evento.target ===
+            document.getElementById(
+                "modalFormulario"
+            )
+        ){
+
+            cerrarModalFormulario();
+
+        }
+
+
+        if(
+            evento.target ===
+            document.getElementById(
+                "modalDetalle"
+            )
+        ){
+
+            cerrarModalDetalle();
+
+        }
+
+    }
+);
+
+
+// =====================================
+// INICIAR
+// =====================================
+
+cargarClientes();
+
+</script>
+
+
+</body>
+
+</html>

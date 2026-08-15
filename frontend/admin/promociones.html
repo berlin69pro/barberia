@@ -1,0 +1,1831 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>CLUB PONTE PERRO | Promociones</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: white;
+    min-height: 100vh;
+}
+
+header {
+    height: 70px;
+    background: #181818;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    border-bottom: 1px solid #333;
+}
+
+.logo {
+    font-size: 23px;
+    font-weight: 900;
+}
+
+.logo span {
+    color: #d4af37;
+}
+
+.volver {
+    color: #aaa;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.volver:hover {
+    color: #d4af37;
+}
+
+main {
+    max-width: 1400px;
+    margin: auto;
+    padding: 40px;
+}
+
+.titulo {
+    margin-bottom: 25px;
+}
+
+.titulo h1 {
+    font-size: 32px;
+}
+
+.titulo p {
+    color: #888;
+    margin-top: 8px;
+}
+
+/* =====================================
+   FORMULARIO
+===================================== */
+
+.formulario {
+    background: #181818;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 35px;
+}
+
+.formulario h2 {
+    color: #d4af37;
+    margin-bottom: 20px;
+}
+
+.campos {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.campo-completo {
+    grid-column: 1 / -1;
+}
+
+.campo label {
+    color: #ddd;
+    font-weight: bold;
+}
+
+.campo input,
+.campo textarea {
+    width: 100%;
+    padding: 13px;
+    background: #222;
+    color: white;
+    border: 1px solid #444;
+    border-radius: 7px;
+    font-family: Arial;
+}
+
+.campo input:focus,
+.campo textarea:focus {
+    outline: none;
+    border-color: #d4af37;
+}
+
+.campo textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+.campo input[type="file"] {
+    cursor: pointer;
+}
+
+/* =====================================
+   PREVIEW
+===================================== */
+
+.preview {
+    display: none;
+    width: 300px;
+    height: 190px;
+    margin-top: 20px;
+    border-radius: 9px;
+    overflow: hidden;
+    border: 1px solid #444;
+}
+
+.preview.mostrar {
+    display: block;
+}
+
+.preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* =====================================
+   BOTONES
+===================================== */
+
+.botones {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn {
+    border: none;
+    padding: 11px 18px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn:hover {
+    opacity: .85;
+}
+
+.btn:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.btn-guardar {
+    background: #d4af37;
+    color: #111;
+}
+
+.btn-limpiar {
+    background: #333;
+    color: white;
+}
+
+/* =====================================
+   MENSAJES
+===================================== */
+
+#mensaje {
+    display: none;
+    padding: 13px;
+    border-radius: 7px;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+#mensaje.mostrar {
+    display: block;
+}
+
+#mensaje.exito {
+    background: #173e26;
+    color: #72e59b;
+}
+
+#mensaje.error {
+    background: #4a1e1e;
+    color: #ff8d8d;
+}
+
+/* =====================================
+   CABECERA
+===================================== */
+
+.cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.cabecera h2 {
+    font-size: 22px;
+}
+
+.total {
+    color: #d4af37;
+    font-weight: bold;
+}
+
+/* =====================================
+   PROMOCIONES
+===================================== */
+
+.promociones {
+    display: grid;
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(280px, 1fr)
+        );
+    gap: 20px;
+}
+
+.promocion {
+    background: #181818;
+    border: 1px solid #333;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: .2s;
+}
+
+.promocion:hover {
+    border-color: #d4af37;
+    transform: translateY(-3px);
+}
+
+.imagen {
+    width: 100%;
+    height: 210px;
+    background: #222;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.imagen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.sin-imagen {
+    font-size: 50px;
+    color: #666;
+}
+
+.contenido {
+    padding: 18px;
+}
+
+.contenido h3 {
+    margin-bottom: 8px;
+    font-size: 20px;
+}
+
+.descripcion {
+    color: #999;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 40px;
+    margin-bottom: 15px;
+}
+
+.precios {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.precio-anterior {
+    color: #777;
+    text-decoration: line-through;
+}
+
+.precio-promocion {
+    color: #d4af37;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.fechas {
+    background: #222;
+    padding: 10px;
+    border-radius: 6px;
+    color: #aaa;
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+
+.fechas strong {
+    color: #ddd;
+}
+
+.info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.estado {
+    padding: 5px 9px;
+    border-radius: 15px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.activo {
+    background: #174d2a;
+    color: #62dc86;
+}
+
+.inactivo {
+    background: #4d2525;
+    color: #ff8585;
+}
+
+.acciones {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-estado {
+    background: #333;
+    color: white;
+}
+
+.btn-eliminar {
+    background: #8b2020;
+    color: white;
+}
+
+.vacio {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #777;
+    padding: 40px;
+}
+
+/* =====================================
+   MODAL
+===================================== */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.82);
+    z-index: 5000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal.mostrar {
+    display: flex;
+}
+
+.modal-contenido {
+    width: 450px;
+    max-width: 100%;
+    background: #181818;
+    border: 1px solid #444;
+    border-radius: 12px;
+    padding: 28px;
+    text-align: center;
+}
+
+.modal-icono {
+    font-size: 50px;
+    margin-bottom: 15px;
+}
+
+.modal-contenido h2 {
+    margin-bottom: 10px;
+}
+
+.modal-contenido p {
+    color: #999;
+    line-height: 1.5;
+    margin-bottom: 25px;
+}
+
+.modal-botones {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-cancelar {
+    background: #333;
+    color: white;
+}
+
+.btn-confirmar {
+    background: #8b2020;
+    color: white;
+}
+
+@media (max-width: 700px) {
+
+    main {
+        padding: 25px 15px;
+    }
+
+    header {
+        padding: 0 15px;
+    }
+
+    .campos {
+        grid-template-columns: 1fr;
+    }
+
+    .campo-completo {
+        grid-column: auto;
+    }
+
+    .cabecera {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+
+        CLUB
+        <span>PONTE PERRO</span>
+
+    </div>
+
+
+    <a
+        href="/admin/dashboard.html"
+        class="volver"
+    >
+
+        ← Volver al Dashboard
+
+    </a>
+
+</header>
+
+
+<main>
+
+
+<div class="titulo">
+
+    <h1>
+        🔥 Promociones
+    </h1>
+
+    <p>
+        Administra las promociones de CLUB PONTE PERRO.
+    </p>
+
+</div>
+
+
+<!-- =====================================
+     CREAR PROMOCIÓN
+===================================== -->
+
+<div class="formulario">
+
+    <h2>
+        ➕ Crear promoción
+    </h2>
+
+
+    <div class="campos">
+
+
+        <div class="campo">
+
+            <label>
+                Título *
+            </label>
+
+            <input
+                type="text"
+                id="titulo"
+                maxlength="150"
+                placeholder="Ej. Corte + Barba"
+            >
+
+        </div>
+
+
+        <div class="campo">
+
+            <label>
+                Imagen *
+            </label>
+
+            <input
+                type="file"
+                id="imagen"
+                accept="image/jpeg,image/png,image/webp"
+            >
+
+        </div>
+
+
+        <div class="campo campo-completo">
+
+            <label>
+                Descripción
+            </label>
+
+            <textarea
+                id="descripcion"
+                placeholder="Describe la promoción..."
+            ></textarea>
+
+        </div>
+
+
+        <div class="campo">
+
+            <label>
+                Precio anterior
+            </label>
+
+            <input
+                type="number"
+                id="precioAnterior"
+                min="0"
+                step="0.01"
+                placeholder="Ej. 50"
+            >
+
+        </div>
+
+
+        <div class="campo">
+
+            <label>
+                Precio promocional *
+            </label>
+
+            <input
+                type="number"
+                id="precioPromocion"
+                min="0"
+                step="0.01"
+                placeholder="Ej. 40"
+            >
+
+        </div>
+
+
+        <div class="campo">
+
+            <label>
+                Fecha de inicio *
+            </label>
+
+            <input
+                type="date"
+                id="fechaInicio"
+            >
+
+        </div>
+
+
+        <div class="campo">
+
+            <label>
+                Fecha de finalización *
+            </label>
+
+            <input
+                type="date"
+                id="fechaFin"
+            >
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="preview"
+        class="preview"
+    >
+
+        <img
+            id="previewImagen"
+            alt="Vista previa"
+        >
+
+    </div>
+
+
+    <div class="botones">
+
+        <button
+            id="btnGuardar"
+            class="btn btn-guardar"
+            onclick="guardarPromocion()"
+        >
+            💾 GUARDAR PROMOCIÓN
+        </button>
+
+
+        <button
+            class="btn btn-limpiar"
+            onclick="limpiarFormulario()"
+        >
+            LIMPIAR
+        </button>
+
+    </div>
+
+
+    <div id="mensaje"></div>
+
+</div>
+
+
+<!-- =====================================
+     LISTA
+===================================== -->
+
+<div class="cabecera">
+
+    <h2>
+        Promociones registradas
+    </h2>
+
+    <div
+        id="totalPromociones"
+        class="total"
+    >
+        0 promociones
+    </div>
+
+</div>
+
+
+<div
+    id="promociones"
+    class="promociones"
+>
+
+    <div class="vacio">
+        Cargando promociones...
+    </div>
+
+</div>
+
+
+</main>
+
+
+<!-- =====================================
+     MODAL ELIMINAR
+===================================== -->
+
+<div
+    id="modalEliminar"
+    class="modal"
+>
+
+    <div class="modal-contenido">
+
+        <div class="modal-icono">
+            🗑️
+        </div>
+
+        <h2>
+            Eliminar promoción
+        </h2>
+
+        <p id="textoEliminar">
+            ¿Seguro que deseas eliminar esta promoción?
+        </p>
+
+
+        <div class="modal-botones">
+
+            <button
+                class="btn btn-cancelar"
+                onclick="cerrarModalEliminar()"
+            >
+                CANCELAR
+            </button>
+
+
+            <button
+                id="btnConfirmarEliminar"
+                class="btn btn-confirmar"
+                onclick="confirmarEliminar()"
+            >
+                🗑️ ELIMINAR
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+// ========================================
+// SESIÓN
+// ========================================
+
+const usuarioGuardado =
+    localStorage.getItem("usuario");
+
+
+if (!usuarioGuardado) {
+
+    window.location.href =
+        "/admin/login.html";
+
+}
+
+
+// ========================================
+// VARIABLES
+// ========================================
+
+let listaPromociones = [];
+
+let promocionEliminarId = null;
+
+
+// ========================================
+// PREVISUALIZACIÓN
+// ========================================
+
+document.getElementById(
+    "imagen"
+).addEventListener(
+    "change",
+    function () {
+
+        const archivo =
+            this.files[0];
+
+        const preview =
+            document.getElementById(
+                "preview"
+            );
+
+        const imagen =
+            document.getElementById(
+                "previewImagen"
+            );
+
+
+        if (!archivo) {
+
+            preview.classList.remove(
+                "mostrar"
+            );
+
+            imagen.src = "";
+
+            return;
+
+        }
+
+
+        const tipos = [
+            "image/jpeg",
+            "image/png",
+            "image/webp"
+        ];
+
+
+        if (!tipos.includes(archivo.type)) {
+
+            mostrarMensaje(
+                "Solo se permiten imágenes JPG, PNG o WEBP.",
+                "error"
+            );
+
+            this.value = "";
+
+            preview.classList.remove(
+                "mostrar"
+            );
+
+            return;
+
+        }
+
+
+        if (
+            archivo.size >
+            5 * 1024 * 1024
+        ) {
+
+            mostrarMensaje(
+                "La imagen no puede superar los 5 MB.",
+                "error"
+            );
+
+            this.value = "";
+
+            preview.classList.remove(
+                "mostrar"
+            );
+
+            return;
+
+        }
+
+
+        const lector =
+            new FileReader();
+
+
+        lector.onload =
+            function (evento) {
+
+                imagen.src =
+                    evento.target.result;
+
+                preview.classList.add(
+                    "mostrar"
+                );
+
+            };
+
+
+        lector.readAsDataURL(
+            archivo
+        );
+
+    }
+);
+
+
+// ========================================
+// CARGAR
+// ========================================
+
+async function cargarPromociones() {
+
+    try {
+
+        const respuesta =
+            await fetch(
+                "/api/promociones"
+            );
+
+
+        if (!respuesta.ok) {
+
+            throw new Error(
+                "No se pudieron cargar las promociones."
+            );
+
+        }
+
+
+        listaPromociones =
+            await respuesta.json();
+
+
+        mostrarPromociones();
+
+    }
+    catch (error) {
+
+        console.error(error);
+
+        document.getElementById(
+            "promociones"
+        ).innerHTML = `
+
+            <div class="vacio">
+
+                ❌ No se pudieron cargar las promociones.
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+// ========================================
+// MOSTRAR
+// ========================================
+
+function mostrarPromociones() {
+
+    const contenedor =
+        document.getElementById(
+            "promociones"
+        );
+
+
+    document.getElementById(
+        "totalPromociones"
+    ).textContent =
+
+        `${listaPromociones.length} promoción${
+            listaPromociones.length === 1
+                ? ""
+                : "es"
+        }`;
+
+
+    contenedor.innerHTML = "";
+
+
+    if (
+        listaPromociones.length === 0
+    ) {
+
+        contenedor.innerHTML = `
+
+            <div class="vacio">
+
+                🔥 Todavía no hay promociones registradas.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    listaPromociones.forEach(
+        promocion => {
+
+            const tarjeta =
+                document.createElement(
+                    "div"
+                );
+
+
+            tarjeta.className =
+                "promocion";
+
+
+            const activo =
+                Number(
+                    promocion.estado
+                ) === 1 ||
+                promocion.estado === true;
+
+
+            const anterior =
+                promocion.precio_anterior !== null &&
+                promocion.precio_anterior !== undefined
+                    ? `Bs ${Number(
+                        promocion.precio_anterior
+                    ).toFixed(2)}`
+                    : "";
+
+
+            const precio =
+                `Bs ${Number(
+                    promocion.precio_promocion
+                ).toFixed(2)}`;
+
+
+            tarjeta.innerHTML = `
+
+                <div class="imagen">
+
+                    ${
+                        promocion.imagen
+
+                        ?
+
+                        `
+
+                        <img
+                            src="${escapeHTML(
+                                promocion.imagen
+                            )}"
+                            alt="${escapeHTML(
+                                promocion.titulo
+                            )}"
+                        >
+
+                        `
+
+                        :
+
+                        `
+
+                        <div class="sin-imagen">
+                            🔥
+                        </div>
+
+                        `
+                    }
+
+                </div>
+
+
+                <div class="contenido">
+
+                    <h3>
+                        ${escapeHTML(
+                            promocion.titulo
+                        )}
+                    </h3>
+
+
+                    <div class="descripcion">
+
+                        ${escapeHTML(
+                            promocion.descripcion ||
+                            "Sin descripción"
+                        )}
+
+                    </div>
+
+
+                    <div class="precios">
+
+                        ${
+                            anterior
+                                ? `
+                                    <span class="precio-anterior">
+                                        ${anterior}
+                                    </span>
+                                `
+                                : ""
+                        }
+
+                        <span class="precio-promocion">
+                            ${precio}
+                        </span>
+
+                    </div>
+
+
+                    <div class="fechas">
+
+                        <strong>
+                            Vigencia:
+                        </strong>
+
+                        ${formatearFecha(
+                            promocion.fecha_inicio
+                        )}
+
+                        →
+
+                        ${formatearFecha(
+                            promocion.fecha_fin
+                        )}
+
+                    </div>
+
+
+                    <div class="info">
+
+                        <span
+                            class="
+                                estado
+                                ${
+                                    activo
+                                        ? "activo"
+                                        : "inactivo"
+                                }
+                            "
+                        >
+
+                            ${
+                                activo
+                                    ? "ACTIVA"
+                                    : "INACTIVA"
+                            }
+
+                        </span>
+
+
+                        <span
+                            style="
+                                color:#777;
+                                font-size:12px;
+                            "
+                        >
+
+                            #${promocion.id_promocion}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="acciones">
+
+                        <button
+                            class="btn btn-estado"
+                            onclick="
+                                cambiarEstado(
+                                    ${promocion.id_promocion},
+                                    ${activo ? 0 : 1}
+                                )
+                            "
+                        >
+
+                            ${
+                                activo
+                                    ? "⏸️ Desactivar"
+                                    : "▶️ Activar"
+                            }
+
+                        </button>
+
+
+                        <button
+                            class="btn btn-eliminar"
+                            onclick="
+                                abrirModalEliminar(
+                                    ${promocion.id_promocion}
+                                )
+                            "
+                        >
+
+                            🗑️ Eliminar
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            contenedor.appendChild(
+                tarjeta
+            );
+
+        }
+    );
+
+}
+
+
+// ========================================
+// GUARDAR
+// ========================================
+
+async function guardarPromocion() {
+
+    ocultarMensaje();
+
+
+    const titulo =
+        document.getElementById(
+            "titulo"
+        ).value.trim();
+
+
+    const descripcion =
+        document.getElementById(
+            "descripcion"
+        ).value.trim();
+
+
+    const precioAnterior =
+        document.getElementById(
+            "precioAnterior"
+        ).value;
+
+
+    const precioPromocion =
+        document.getElementById(
+            "precioPromocion"
+        ).value;
+
+
+    const fechaInicio =
+        document.getElementById(
+            "fechaInicio"
+        ).value;
+
+
+    const fechaFin =
+        document.getElementById(
+            "fechaFin"
+        ).value;
+
+
+    const archivo =
+        document.getElementById(
+            "imagen"
+        ).files[0];
+
+
+    if (!titulo) {
+
+        mostrarMensaje(
+            "El título es obligatorio.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (!precioPromocion) {
+
+        mostrarMensaje(
+            "El precio promocional es obligatorio.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (!fechaInicio) {
+
+        mostrarMensaje(
+            "La fecha de inicio es obligatoria.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (!fechaFin) {
+
+        mostrarMensaje(
+            "La fecha de finalización es obligatoria.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (fechaFin < fechaInicio) {
+
+        mostrarMensaje(
+            "La fecha final no puede ser anterior a la fecha inicial.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (!archivo) {
+
+        mostrarMensaje(
+            "Debes seleccionar una imagen.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const datos =
+        new FormData();
+
+
+    datos.append(
+        "titulo",
+        titulo
+    );
+
+    datos.append(
+        "descripcion",
+        descripcion
+    );
+
+    datos.append(
+        "precio_anterior",
+        precioAnterior
+    );
+
+    datos.append(
+        "precio_promocion",
+        precioPromocion
+    );
+
+    datos.append(
+        "fecha_inicio",
+        fechaInicio
+    );
+
+    datos.append(
+        "fecha_fin",
+        fechaFin
+    );
+
+    datos.append(
+        "imagen",
+        archivo
+    );
+
+
+    const boton =
+        document.getElementById(
+            "btnGuardar"
+        );
+
+
+    boton.disabled = true;
+
+    boton.textContent =
+        "⏳ GUARDANDO...";
+
+
+    try {
+
+        const respuesta =
+            await fetch(
+                "/api/promociones/upload",
+                {
+                    method: "POST",
+                    body: datos
+                }
+            );
+
+
+        const resultado =
+            await respuesta.json();
+
+
+        if (!respuesta.ok) {
+
+            throw new Error(
+                resultado.error ||
+                "No se pudo crear la promoción."
+            );
+
+        }
+
+
+        mostrarMensaje(
+            "✅ Promoción creada correctamente.",
+            "exito"
+        );
+
+
+        limpiarFormulario();
+
+        await cargarPromociones();
+
+    }
+    catch (error) {
+
+        console.error(error);
+
+        mostrarMensaje(
+            "❌ " + error.message,
+            "error"
+        );
+
+    }
+    finally {
+
+        boton.disabled = false;
+
+        boton.textContent =
+            "💾 GUARDAR PROMOCIÓN";
+
+    }
+
+}
+
+
+// ========================================
+// CAMBIAR ESTADO
+// ========================================
+
+async function cambiarEstado(
+    id,
+    estado
+) {
+
+    try {
+
+        const respuesta =
+            await fetch(
+                `/api/promociones/${id}/estado`,
+                {
+
+                    method: "PATCH",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            estado: estado
+                        })
+
+                }
+            );
+
+
+        const resultado =
+            await respuesta.json();
+
+
+        if (!respuesta.ok) {
+
+            throw new Error(
+                resultado.error ||
+                "No se pudo cambiar el estado."
+            );
+
+        }
+
+
+        mostrarMensaje(
+            estado === 1
+                ? "✅ Promoción activada."
+                : "⏸️ Promoción desactivada.",
+            "exito"
+        );
+
+
+        await cargarPromociones();
+
+    }
+    catch (error) {
+
+        mostrarMensaje(
+            "❌ " + error.message,
+            "error"
+        );
+
+    }
+
+}
+
+
+// ========================================
+// MODAL ELIMINAR
+// ========================================
+
+function abrirModalEliminar(
+    id
+) {
+
+    promocionEliminarId =
+        id;
+
+
+    const promocion =
+        listaPromociones.find(
+            item =>
+                Number(
+                    item.id_promocion
+                ) === Number(id)
+        );
+
+
+    document.getElementById(
+        "textoEliminar"
+    ).textContent = promocion
+
+        ? `¿Seguro que deseas eliminar "${promocion.titulo}"? Esta acción no se puede deshacer.`
+
+        : "¿Seguro que deseas eliminar esta promoción?";
+
+
+    document.getElementById(
+        "modalEliminar"
+    ).classList.add(
+        "mostrar"
+    );
+
+}
+
+
+function cerrarModalEliminar() {
+
+    promocionEliminarId =
+        null;
+
+
+    document.getElementById(
+        "modalEliminar"
+    ).classList.remove(
+        "mostrar"
+    );
+
+}
+
+
+// ========================================
+// CONFIRMAR ELIMINACIÓN
+// ========================================
+
+async function confirmarEliminar() {
+
+    if (!promocionEliminarId) {
+        return;
+    }
+
+
+    const boton =
+        document.getElementById(
+            "btnConfirmarEliminar"
+        );
+
+
+    boton.disabled = true;
+
+    boton.textContent =
+        "⏳ ELIMINANDO...";
+
+
+    try {
+
+        const respuesta =
+            await fetch(
+                `/api/promociones/${promocionEliminarId}`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+
+        const resultado =
+            await respuesta.json();
+
+
+        if (!respuesta.ok) {
+
+            throw new Error(
+                resultado.error ||
+                "No se pudo eliminar la promoción."
+            );
+
+        }
+
+
+        cerrarModalEliminar();
+
+
+        mostrarMensaje(
+            "✅ Promoción eliminada correctamente.",
+            "exito"
+        );
+
+
+        await cargarPromociones();
+
+    }
+    catch (error) {
+
+        cerrarModalEliminar();
+
+
+        mostrarMensaje(
+            "❌ " + error.message,
+            "error"
+        );
+
+    }
+    finally {
+
+        boton.disabled = false;
+
+        boton.textContent =
+            "🗑️ ELIMINAR";
+
+    }
+
+}
+
+
+// ========================================
+// LIMPIAR
+// ========================================
+
+function limpiarFormulario() {
+
+    document.getElementById(
+        "titulo"
+    ).value = "";
+
+    document.getElementById(
+        "descripcion"
+    ).value = "";
+
+    document.getElementById(
+        "precioAnterior"
+    ).value = "";
+
+    document.getElementById(
+        "precioPromocion"
+    ).value = "";
+
+    document.getElementById(
+        "fechaInicio"
+    ).value = "";
+
+    document.getElementById(
+        "fechaFin"
+    ).value = "";
+
+    document.getElementById(
+        "imagen"
+    ).value = "";
+
+    document.getElementById(
+        "preview"
+    ).classList.remove(
+        "mostrar"
+    );
+
+    document.getElementById(
+        "previewImagen"
+    ).src = "";
+
+}
+
+
+// ========================================
+// MENSAJES
+// ========================================
+
+function mostrarMensaje(
+    texto,
+    tipo
+) {
+
+    const mensaje =
+        document.getElementById(
+            "mensaje"
+        );
+
+
+    mensaje.textContent =
+        texto;
+
+
+    mensaje.className =
+        `mostrar ${tipo}`;
+
+}
+
+
+function ocultarMensaje() {
+
+    const mensaje =
+        document.getElementById(
+            "mensaje"
+        );
+
+
+    mensaje.textContent =
+        "";
+
+    mensaje.className =
+        "";
+
+}
+
+
+// ========================================
+// FECHA
+// ========================================
+
+function formatearFecha(
+    fecha
+) {
+
+    if (!fecha) {
+        return "";
+    }
+
+
+    const partes =
+        String(fecha)
+            .substring(0, 10)
+            .split("-");
+
+
+    if (
+        partes.length !== 3
+    ) {
+        return fecha;
+    }
+
+
+    return `${partes[2]}/${partes[1]}/${partes[0]}`;
+
+}
+
+
+// ========================================
+// SEGURIDAD
+// ========================================
+
+function escapeHTML(
+    texto
+) {
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+
+    div.textContent =
+        texto ?? "";
+
+
+    return div.innerHTML;
+
+}
+
+
+// ========================================
+// CERRAR MODAL AL HACER CLIC AFUERA
+// ========================================
+
+document.getElementById(
+    "modalEliminar"
+).addEventListener(
+    "click",
+    function(evento) {
+
+        if (
+            evento.target === this
+        ) {
+
+            cerrarModalEliminar();
+
+        }
+
+    }
+);
+
+
+// ========================================
+// INICIAR
+// ========================================
+
+cargarPromociones();
+
+</script>
+
+</body>
+
+</html>

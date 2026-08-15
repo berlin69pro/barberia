@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reservas - CLUB PONTE PERRO</title>
+
+<style>
+:root{
+    --bg:#090909;
+    --panel:#111;
+    --panel2:#161616;
+    --border:#292929;
+    --text:#eee;
+    --muted:#888;
+    --gold:#d4af37;
+    --gold2:#f0d36b;
+    --green:#5bd27a;
+    --red:#ef6262;
+}
+
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+header{
+    height:72px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 32px;
+    border-bottom:1px solid var(--border);
+    background:#0b0b0b;
+    position:sticky;
+    top:0;
+    z-index:20;
+}
+
+.logo{
+    font-size:22px;
+    font-weight:900;
+    letter-spacing:1px;
+}
+
+.logo span{color:var(--gold)}
+
+.volver{
+    color:var(--gold2);
+    text-decoration:none;
+    font-size:13px;
+}
+
+main{
+    max-width:1500px;
+    margin:auto;
+    padding:35px 25px 60px;
+}
+
+.titulo h1{
+    margin:0 0 8px;
+    font-size:34px;
+}
+
+.titulo p{
+    margin:0 0 28px;
+    color:var(--muted);
+}
+
+.estadisticas{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+    margin-bottom:25px;
+}
+
+.tarjeta{
+    background:var(--panel);
+    border:1px solid var(--border);
+    padding:20px;
+    text-align:center;
+}
+
+.tarjeta-numero{
+    font-size:30px;
+    font-weight:900;
+    color:var(--gold2);
+}
+
+.tarjeta-texto{
+    color:#888;
+    font-size:12px;
+    text-transform:uppercase;
+    margin-top:5px;
+}
+
+.filtros{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:15px;
+}
+
+.filtro,
+.filtro-select,
+.filtro-fecha,
+.buscar-cliente{
+    height:40px;
+    border:1px solid var(--border);
+    background:#121212;
+    color:#ddd;
+    padding:0 13px;
+    border-radius:4px;
+}
+
+.filtro{
+    cursor:pointer;
+    font-size:11px;
+    font-weight:bold;
+}
+
+.filtro:hover,
+.filtro.activo{
+    background:var(--gold);
+    color:#080808;
+    border-color:var(--gold);
+}
+
+.filtro-extra{border-color:#705d23}
+
+.filtro-select{min-width:180px}
+.buscar-cliente{min-width:220px}
+
+.limpiar{
+    margin-left:auto;
+}
+
+.resumen-filtrado{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    margin-bottom:18px;
+}
+
+.resumen-filtrado>div{
+    background:var(--panel);
+    border:1px solid var(--border);
+    padding:12px 15px;
+}
+
+.resumen-filtrado span{
+    display:block;
+    color:#777;
+    font-size:10px;
+    text-transform:uppercase;
+}
+
+.resumen-filtrado strong{
+    display:block;
+    color:var(--gold2);
+    font-size:19px;
+    margin-top:4px;
+}
+
+.tabla-container{
+    overflow:auto;
+    border:1px solid var(--border);
+    background:var(--panel);
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:1100px;
+}
+
+th{
+    background:#181818;
+    color:#999;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:.6px;
+    padding:14px 10px;
+    border-bottom:1px solid var(--border);
+    text-align:left;
+    white-space:nowrap;
+}
+
+td{
+    padding:13px 10px;
+    border-bottom:1px solid #202020;
+    font-size:12px;
+    vertical-align:middle;
+}
+
+tr:hover td{background:#151515}
+
+.fecha,.hora{white-space:nowrap}
+.hora{color:var(--gold2);font-weight:bold}
+
+.cliente{font-weight:bold}
+.telefono{color:#777;font-size:10px;margin-top:4px}
+
+.precio,
+.total{
+    color:var(--gold2);
+    font-weight:bold;
+}
+
+.adelanto{
+    color:#d8bd61;
+    font-weight:bold;
+}
+
+.saldo{
+    color:#f0cb6b;
+    font-weight:bold;
+}
+
+.pago-ok,
+.pago-no{
+    display:inline-block;
+    padding:5px 8px;
+    font-size:9px;
+    font-weight:bold;
+    border:1px solid #333;
+    white-space:nowrap;
+}
+
+.pago-ok{
+    color:var(--green);
+    border-color:#315c3b;
+    background:#101a13;
+}
+
+.pago-no{
+    color:#777;
+}
+
+.estado{
+    display:inline-block;
+    padding:6px 9px;
+    border-radius:20px;
+    font-size:9px;
+    text-transform:uppercase;
+    font-weight:bold;
+}
+
+.estado.pendiente{background:#332d16;color:#e8ca62}
+.estado.confirmada{background:#172c3c;color:#65bce9}
+.estado.completada{background:#16351e;color:#65db80}
+.estado.cancelada{background:#381919;color:#ed7474}
+
+.acciones{
+    display:flex;
+    gap:5px;
+    flex-wrap:wrap;
+}
+
+.btn{
+    border:0;
+    padding:8px 9px;
+    border-radius:4px;
+    cursor:pointer;
+    font-size:12px;
+    color:white;
+}
+
+.btn-ver{background:#333}
+.btn-confirmar{background:#245d34}
+.btn-completar{background:#306d3e}
+.btn-cancelar{background:#70401f}
+.btn-eliminar{background:#7b2222}
+.btn-wa{background:#1e6b3c}
+
+.btn:hover{filter:brightness(1.2)}
+
+.mensaje{
+    text-align:center;
+    color:#777;
+    padding:35px !important;
+}
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.78);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+    padding:20px;
+}
+
+.modal.mostrar{display:flex}
+
+.modal-contenido,
+.modal-confirmacion{
+    width:min(600px,100%);
+    max-height:90vh;
+    overflow:auto;
+    background:#111;
+    border:1px solid #333;
+    box-shadow:0 20px 80px #000;
+    padding:25px;
+}
+
+.modal-confirmacion{
+    max-width:440px;
+    text-align:center;
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.modal-header h2{
+    margin:0;
+    font-size:22px;
+}
+
+.cerrar{
+    background:none;
+    color:#aaa;
+    border:0;
+    font-size:28px;
+    cursor:pointer;
+}
+
+.detalle{
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    padding:11px 0;
+    border-bottom:1px solid #242424;
+}
+
+.detalle strong{
+    color:#777;
+    font-size:10px;
+}
+
+.detalle span{
+    text-align:right;
+    font-size:13px;
+}
+
+.finanzas-detalle{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:8px;
+    margin:18px 0;
+}
+
+.fin-box{
+    background:#181818;
+    border:1px solid #2c2c2c;
+    padding:12px 8px;
+    text-align:center;
+}
+
+.fin-box span{
+    display:block;
+    color:#777;
+    font-size:9px;
+    text-transform:uppercase;
+}
+
+.fin-box strong{
+    display:block;
+    margin-top:6px;
+    font-size:16px;
+    color:var(--gold2);
+}
+
+.confirmacion-icono{
+    font-size:40px;
+    margin-bottom:10px;
+}
+
+.confirmacion-botones{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin-top:22px;
+}
+
+.btn-modal{
+    padding:11px 22px;
+    border:0;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.btn-no{background:#333;color:#ddd}
+.btn-si{background:var(--gold);color:#111}
+
+.toast{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    background:#171717;
+    color:#eee;
+    border:1px solid #333;
+    padding:13px 18px;
+    display:none;
+    z-index:200;
+}
+
+.toast.mostrar{display:block}
+.toast.error{border-color:#7b2929;color:#ff8a8a}
+
+@media(max-width:900px){
+    .estadisticas{grid-template-columns:repeat(2,1fr)}
+    .resumen-filtrado{grid-template-columns:repeat(2,1fr)}
+}
+
+@media(max-width:600px){
+    header{padding:0 15px}
+    main{padding:25px 12px}
+    .titulo h1{font-size:28px}
+    .estadisticas{grid-template-columns:1fr 1fr}
+    .resumen-filtrado{grid-template-columns:1fr}
+    .limpiar{margin-left:0}
+    .filtros>*{width:100%}
+    .filtro{width:auto}
+    .finanzas-detalle{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">CLUB <span>PONTE PERRO</span></div>
+    <a href="/admin/dashboard.html" class="volver">← Volver al Dashboard</a>
+</header>
+
+<main>
+
+    <div class="titulo">
+        <h1>📅 Reservas</h1>
+        <p>Administra las citas de CLUB PONTE PERRO</p>
+    </div>
+
+    <div class="estadisticas">
+
+        <div class="tarjeta">
+            <div id="totalReservas" class="tarjeta-numero">0</div>
+            <div class="tarjeta-texto">Total</div>
+        </div>
+
+        <div class="tarjeta">
+            <div id="totalPendientes" class="tarjeta-numero">0</div>
+            <div class="tarjeta-texto">Pendientes</div>
+        </div>
+
+        <div class="tarjeta">
+            <div id="totalConfirmadas" class="tarjeta-numero">0</div>
+            <div class="tarjeta-texto">Confirmadas</div>
+        </div>
+
+        <div class="tarjeta">
+            <div id="totalCompletadas" class="tarjeta-numero">0</div>
+            <div class="tarjeta-texto">Completadas</div>
+        </div>
+
+    </div>
+
+    <div class="filtros">
+
+        <button class="filtro activo" data-filtro="todos">TODAS</button>
+        <button class="filtro" data-filtro="pendiente">PENDIENTES</button>
+        <button class="filtro" data-filtro="confirmada">CONFIRMADAS</button>
+        <button class="filtro" data-filtro="completada">COMPLETADAS</button>
+        <button class="filtro" data-filtro="cancelada">CANCELADAS</button>
+        <button class="filtro filtro-extra" data-filtro="hoy">HOY</button>
+
+        <select id="filtroBarbero" class="filtro-select">
+            <option value="todos">TODOS LOS BARBEROS</option>
+        </select>
+
+        <input type="date" id="filtroFecha" class="filtro-fecha">
+
+        <input
+            type="search"
+            id="buscarCliente"
+            class="buscar-cliente"
+            placeholder="🔎 Buscar cliente..."
+            autocomplete="off"
+        >
+
+        <button type="button" id="btnLimpiarFiltros" class="filtro limpiar">
+            LIMPIAR
+        </button>
+
+    </div>
+
+    <div class="resumen-filtrado">
+
+        <div>
+            <span>RESERVAS MOSTRADAS</span>
+            <strong id="reservasMostradas">0</strong>
+        </div>
+
+        <div>
+            <span>TOTAL SERVICIOS</span>
+            <strong id="serviciosMostrados">Bs 0.00</strong>
+        </div>
+
+        <div>
+            <span>ADELANTOS RECIBIDOS</span>
+            <strong id="adelantosMostrados">Bs 0.00</strong>
+        </div>
+
+        <div>
+            <span>SALDO PENDIENTE</span>
+            <strong id="saldosMostrados">Bs 0.00</strong>
+        </div>
+
+    </div>
+
+    <div class="tabla-container">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Cliente</th>
+                    <th>Barbero</th>
+                    <th>Servicio</th>
+                    <th>Total</th>
+                    <th>Adelanto</th>
+                    <th>Saldo</th>
+                    <th>Pago</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaReservas">
+                <tr>
+                    <td colspan="11" class="mensaje">
+                        Cargando reservas...
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+</main>
+
+<!-- DETALLE -->
+<div id="modalDetalle" class="modal">
+
+    <div class="modal-contenido">
+
+        <div class="modal-header">
+            <h2>📋 Detalle de Reserva</h2>
+            <button class="cerrar" onclick="cerrarDetalle()">×</button>
+        </div>
+
+        <div class="detalle"><strong>CLIENTE</strong><span id="detalleCliente">-</span></div>
+        <div class="detalle"><strong>TELÉFONO</strong><span id="detalleTelefono">-</span></div>
+        <div class="detalle"><strong>BARBERO</strong><span id="detalleBarbero">-</span></div>
+        <div class="detalle"><strong>SERVICIO</strong><span id="detalleServicio">-</span></div>
+        <div class="detalle"><strong>FECHA</strong><span id="detalleFecha">-</span></div>
+        <div class="detalle"><strong>HORA</strong><span id="detalleHora">-</span></div>
+
+        <div class="finanzas-detalle">
+
+            <div class="fin-box">
+                <span>Total</span>
+                <strong id="detalleTotal">Bs 0.00</strong>
+            </div>
+
+            <div class="fin-box">
+                <span>Adelanto</span>
+                <strong id="detalleAdelanto">Bs 0.00</strong>
+            </div>
+
+            <div class="fin-box">
+                <span>Saldo</span>
+                <strong id="detalleSaldo">Bs 0.00</strong>
+            </div>
+
+            <div class="fin-box">
+                <span>Pago</span>
+                <strong id="detallePago">Pendiente</strong>
+            </div>
+
+        </div>
+
+        <div class="detalle">
+            <strong>OBSERVACIONES</strong>
+            <span id="detalleObservaciones">-</span>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- CONFIRMACIÓN -->
+<div id="modalConfirmacion" class="modal">
+
+    <div class="modal-confirmacion">
+
+        <div id="confirmacionIcono" class="confirmacion-icono">🔥</div>
+
+        <h2 id="confirmacionTitulo">Confirmar acción</h2>
+
+        <p id="confirmacionTexto">¿Deseas continuar?</p>
+
+        <div class="confirmacion-botones">
+
+            <button class="btn-modal btn-no" onclick="cerrarConfirmacion()">
+                CANCELAR
+            </button>
+
+            <button id="btnConfirmarAccion" class="btn-modal btn-si">
+                CONFIRMAR
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+"use strict";
+
+const token = localStorage.getItem("token");
+const usuario = localStorage.getItem("usuario");
+
+if(!token || !usuario){
+    window.location.href="/admin/login.html";
+}
+
+let reservas=[];
+let filtroActual="todos";
+let filtroBarberoActual="todos";
+let filtroFechaActual="";
+let busquedaClienteActual="";
+let accionPendiente=null;
+let toastTimer=null;
+
+function escapeHTML(texto){
+    return String(texto ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+function formatearFecha(fecha){
+    if(!fecha)return "-";
+    const partes=String(fecha).substring(0,10).split("-");
+    return partes.length===3
+        ? `${partes[2]}/${partes[1]}/${partes[0]}`
+        : String(fecha);
+}
+
+function formatearHora(hora){
+    return hora ? String(hora).substring(0,5) : "-";
+}
+
+function obtenerHoyLocal(){
+    const d=new Date();
+    return d.getFullYear()+"-"+
+        String(d.getMonth()+1).padStart(2,"0")+"-"+
+        String(d.getDate()).padStart(2,"0");
+}
+
+function numero(v){
+    const n=Number(v);
+    return Number.isFinite(n) ? n : 0;
+}
+
+function dinero(v){
+    return "Bs "+numero(v).toFixed(2);
+}
+
+async function cargarReservas(){
+
+    try{
+
+        const respuesta=await fetch("/api/reservas");
+
+        if(!respuesta.ok){
+            throw new Error("No se pudieron obtener las reservas.");
+        }
+
+        const datos=await respuesta.json();
+
+        if(!Array.isArray(datos)){
+            throw new Error("La respuesta de reservas no es válida.");
+        }
+
+        reservas=datos;
+
+        cargarFiltroBarberos();
+        actualizarEstadisticas();
+        mostrarReservas();
+
+    }catch(error){
+
+        console.error(error);
+
+        document.getElementById("tablaReservas").innerHTML=`
+            <tr>
+                <td colspan="11" class="mensaje">
+                    ❌ Error al cargar las reservas.
+                </td>
+            </tr>
+        `;
+
+    }
+}
+
+function actualizarEstadisticas(){
+
+    document.getElementById("totalReservas").textContent=reservas.length;
+
+    document.getElementById("totalPendientes").textContent=
+        reservas.filter(r=>String(r.estado).toLowerCase()==="pendiente").length;
+
+    document.getElementById("totalConfirmadas").textContent=
+        reservas.filter(r=>String(r.estado).toLowerCase()==="confirmada").length;
+
+    document.getElementById("totalCompletadas").textContent=
+        reservas.filter(r=>String(r.estado).toLowerCase()==="completada").length;
+}
+
+function cargarFiltroBarberos(){
+
+    const select=document.getElementById("filtroBarbero");
+    if(!select)return;
+
+    const mapa=new Map();
+
+    reservas.forEach(r=>{
+        if(r.id_barbero!==undefined && r.id_barbero!==null){
+            mapa.set(String(r.id_barbero),r.barbero_nombre||"Sin nombre");
+        }
+    });
+
+    select.innerHTML='<option value="todos">TODOS LOS BARBEROS</option>';
+
+    [...mapa.entries()]
+        .sort((a,b)=>String(a[1]).localeCompare(String(b[1])))
+        .forEach(([id,nombre])=>{
+            const option=document.createElement("option");
+            option.value=id;
+            option.textContent=nombre;
+            select.appendChild(option);
+        });
+
+    select.value=mapa.has(String(filtroBarberoActual))
+        ? String(filtroBarberoActual)
+        : "todos";
+}
+
+function obtenerReservasFiltradas(){
+
+    let lista=[...reservas];
+
+    if(filtroActual!=="todos"){
+
+        if(filtroActual==="hoy"){
+
+            const hoy=obtenerHoyLocal();
+
+            lista=lista.filter(r=>
+                String(r.fecha).substring(0,10)===hoy
+            );
+
+        }else{
+
+            lista=lista.filter(r=>
+                String(r.estado||"").toLowerCase()===filtroActual
+            );
+
+        }
+    }
+
+    if(filtroBarberoActual!=="todos"){
+        lista=lista.filter(r=>
+            String(r.id_barbero)===String(filtroBarberoActual)
+        );
+    }
+
+    if(filtroFechaActual){
+        lista=lista.filter(r=>
+            String(r.fecha).substring(0,10)===filtroFechaActual
+        );
+    }
+
+    if(busquedaClienteActual){
+
+        const termino=busquedaClienteActual.toLowerCase();
+
+        lista=lista.filter(r=>{
+
+            const nombre=String(r.cliente_nombre||"").toLowerCase();
+            const telefono=String(r.cliente_telefono||"").toLowerCase();
+
+            return nombre.includes(termino) ||
+                   telefono.includes(termino);
+
+        });
+    }
+
+    return lista;
+}
+
+function mostrarReservas(){
+
+    const tabla=document.getElementById("tablaReservas");
+    const lista=obtenerReservasFiltradas();
+
+    let totalServicios=0;
+    let totalAdelantos=0;
+    let totalSaldos=0;
+
+    lista.forEach(r=>{
+        totalServicios += numero(r.total_servicio ?? r.servicio_precio);
+        totalAdelantos += numero(r.adelanto);
+        if(String(r.estado).toLowerCase()!=="cancelada"){
+            totalSaldos += numero(r.saldo);
+        }
+    });
+
+    document.getElementById("reservasMostradas").textContent=lista.length;
+    document.getElementById("serviciosMostrados").textContent=dinero(totalServicios);
+    document.getElementById("adelantosMostrados").textContent=dinero(totalAdelantos);
+    document.getElementById("saldosMostrados").textContent=dinero(totalSaldos);
+
+    tabla.innerHTML="";
+
+    if(!lista.length){
+
+        tabla.innerHTML=`
+            <tr>
+                <td colspan="11" class="mensaje">
+                    No hay reservas para mostrar.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    lista.forEach(reserva=>{
+
+        const total=numero(reserva.total_servicio ?? reserva.servicio_precio);
+        const adelanto=numero(reserva.adelanto);
+        const saldo=numero(reserva.saldo);
+        const pago=numero(reserva.adelanto_pagado)===1;
+
+        const fila=document.createElement("tr");
+
+        fila.innerHTML=`
+
+            <td class="fecha">
+                ${formatearFecha(reserva.fecha)}
+            </td>
+
+            <td class="hora">
+                ${formatearHora(reserva.hora)}
+            </td>
+
+            <td>
+                <div class="cliente">
+                    ${escapeHTML(reserva.cliente_nombre||"Sin nombre")}
+                </div>
+                <div class="telefono">
+                    📞 ${escapeHTML(reserva.cliente_telefono||"-")}
+                </div>
+            </td>
+
+            <td>
+                💈 ${escapeHTML(reserva.barbero_nombre||"-")}
+            </td>
+
+            <td>
+                ✂️ ${escapeHTML(reserva.servicio_nombre||"-")}
+            </td>
+
+            <td class="total">
+                ${dinero(total)}
+            </td>
+
+            <td class="adelanto">
+                ${dinero(adelanto)}
+            </td>
+
+            <td class="saldo">
+                ${dinero(saldo)}
+            </td>
+
+            <td>
+                ${
+                    pago
+                    ? '<span class="pago-ok">✓ ADELANTO PAGADO</span>'
+                    : '<span class="pago-no">PENDIENTE</span>'
+                }
+            </td>
+
+            <td>
+                <span class="estado ${escapeHTML(reserva.estado||"pendiente")}">
+                    ${escapeHTML(reserva.estado||"pendiente")}
+                </span>
+            </td>
+
+            <td>
+
+                <div class="acciones">
+
+                    <button class="btn btn-ver"
+                        onclick="verDetalle(${Number(reserva.id_reserva)})">
+                        👁️
+                    </button>
+
+                    ${
+                        reserva.cliente_telefono
+                        ? `<button class="btn btn-wa"
+                            onclick="abrirWhatsApp('${escapeHTML(reserva.cliente_telefono)}','${escapeHTML(reserva.cliente_nombre||"")}')">
+                            WhatsApp
+                           </button>`
+                        : ""
+                    }
+
+                    ${
+                        reserva.estado==="pendiente"
+                        ? `<button class="btn btn-confirmar"
+                            onclick="solicitarConfirmacion(${Number(reserva.id_reserva)},'confirmada')">
+                            ✅
+                           </button>`
+                        : ""
+                    }
+
+                    ${
+                        reserva.estado==="confirmada"
+                        ? `<button class="btn btn-completar"
+                            onclick="solicitarConfirmacion(${Number(reserva.id_reserva)},'completada')">
+                            ✔️
+                           </button>`
+                        : ""
+                    }
+
+                    ${
+                        reserva.estado!=="cancelada" &&
+                        reserva.estado!=="completada"
+                        ? `<button class="btn btn-cancelar"
+                            onclick="solicitarConfirmacion(${Number(reserva.id_reserva)},'cancelada')">
+                            ❌
+                           </button>`
+                        : ""
+                    }
+
+                    <button class="btn btn-eliminar"
+                        onclick="solicitarConfirmacion(${Number(reserva.id_reserva)},'eliminar')">
+                        🗑️
+                    </button>
+
+                </div>
+
+            </td>
+        `;
+
+        tabla.appendChild(fila);
+    });
+}
+
+function solicitarConfirmacion(id,accion){
+
+    accionPendiente={id,accion};
+
+    const configuraciones={
+
+        confirmada:{
+            icono:"✅",
+            titulo:"Confirmar reserva",
+            texto:"¿Deseas confirmar esta reserva?"
+        },
+
+        completada:{
+            icono:"✔️",
+            titulo:"Completar reserva",
+            texto:"¿Deseas marcar esta reserva como completada?"
+        },
+
+        cancelada:{
+            icono:"❌",
+            titulo:"Cancelar reserva",
+            texto:"¿Deseas cancelar esta reserva?"
+        },
+
+        eliminar:{
+            icono:"🗑️",
+            titulo:"Eliminar reserva",
+            texto:"Esta acción eliminará la reserva. ¿Deseas continuar?"
+        }
+    };
+
+    const config=configuraciones[accion];
+
+    document.getElementById("confirmacionIcono").textContent=config.icono;
+    document.getElementById("confirmacionTitulo").textContent=config.titulo;
+    document.getElementById("confirmacionTexto").textContent=config.texto;
+
+    document.getElementById("modalConfirmacion").classList.add("mostrar");
+}
+
+document.getElementById("btnConfirmarAccion").addEventListener("click",async()=>{
+
+    if(!accionPendiente)return;
+
+    const {id,accion}=accionPendiente;
+
+    cerrarConfirmacion();
+
+    if(accion==="eliminar"){
+        await eliminarReserva(id);
+    }else{
+        await cambiarEstado(id,accion);
+    }
+});
+
+async function cambiarEstado(id,estado){
+
+    try{
+
+        const respuesta=await fetch(`/api/reservas/${id}/estado`,{
+            method:"PATCH",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({estado})
+        });
+
+        const resultado=await respuesta.json();
+
+        if(!respuesta.ok){
+            mostrarToast(resultado.error||"No se pudo cambiar el estado",true);
+            return;
+        }
+
+        mostrarToast("✅ Estado actualizado correctamente");
+        await cargarReservas();
+
+    }catch(error){
+
+        console.error(error);
+        mostrarToast("❌ Error al conectar con el servidor",true);
+
+    }
+}
+
+async function eliminarReserva(id){
+
+    try{
+
+        const respuesta=await fetch(`/api/reservas/${id}`,{
+            method:"DELETE"
+        });
+
+        const resultado=await respuesta.json();
+
+        if(!respuesta.ok){
+            mostrarToast(resultado.error||"No se pudo eliminar",true);
+            return;
+        }
+
+        mostrarToast("🗑️ Reserva eliminada correctamente");
+        await cargarReservas();
+
+    }catch(error){
+
+        console.error(error);
+        mostrarToast("❌ Error al conectar con el servidor",true);
+
+    }
+}
+
+function verDetalle(id){
+
+    const reserva=reservas.find(r=>
+        Number(r.id_reserva)===Number(id)
+    );
+
+    if(!reserva)return;
+
+    const total=numero(reserva.total_servicio ?? reserva.servicio_precio);
+    const adelanto=numero(reserva.adelanto);
+    const saldo=numero(reserva.saldo);
+    const pago=numero(reserva.adelanto_pagado)===1;
+
+    document.getElementById("detalleCliente").textContent=reserva.cliente_nombre||"-";
+    document.getElementById("detalleTelefono").textContent=reserva.cliente_telefono||"-";
+    document.getElementById("detalleBarbero").textContent=reserva.barbero_nombre||"-";
+    document.getElementById("detalleServicio").textContent=reserva.servicio_nombre||"-";
+    document.getElementById("detalleFecha").textContent=formatearFecha(reserva.fecha);
+    document.getElementById("detalleHora").textContent=formatearHora(reserva.hora);
+
+    document.getElementById("detalleTotal").textContent=dinero(total);
+    document.getElementById("detalleAdelanto").textContent=dinero(adelanto);
+    document.getElementById("detalleSaldo").textContent=dinero(saldo);
+    document.getElementById("detallePago").textContent=
+        pago ? "✓ PAGADO" : "PENDIENTE";
+
+    document.getElementById("detalleObservaciones").textContent=
+        reserva.observaciones||"Sin observaciones";
+
+    document.getElementById("modalDetalle").classList.add("mostrar");
+}
+
+function cerrarDetalle(){
+    document.getElementById("modalDetalle").classList.remove("mostrar");
+}
+
+function cerrarConfirmacion(){
+    document.getElementById("modalConfirmacion").classList.remove("mostrar");
+    accionPendiente=null;
+}
+
+document.querySelectorAll(".filtro").forEach(boton=>{
+
+    boton.addEventListener("click",function(){
+
+        document.querySelectorAll(".filtro")
+            .forEach(b=>b.classList.remove("activo"));
+
+        this.classList.add("activo");
+
+        filtroActual=this.dataset.filtro;
+
+        mostrarReservas();
+
+    });
+
+});
+
+document.getElementById("filtroBarbero").addEventListener("change",function(){
+    filtroBarberoActual=this.value;
+    mostrarReservas();
+});
+
+document.getElementById("filtroFecha").addEventListener("change",function(){
+    filtroFechaActual=this.value;
+    mostrarReservas();
+});
+
+document.getElementById("buscarCliente").addEventListener("input",function(){
+    busquedaClienteActual=this.value.trim();
+    mostrarReservas();
+});
+
+document.getElementById("btnLimpiarFiltros").addEventListener("click",function(){
+
+    filtroActual="todos";
+    filtroBarberoActual="todos";
+    filtroFechaActual="";
+    busquedaClienteActual="";
+
+    document.querySelectorAll(".filtro")
+        .forEach(b=>b.classList.remove("activo"));
+
+    document.querySelector('.filtro[data-filtro="todos"]')
+        ?.classList.add("activo");
+
+    document.getElementById("filtroBarbero").value="todos";
+    document.getElementById("filtroFecha").value="";
+    document.getElementById("buscarCliente").value="";
+
+    mostrarReservas();
+
+});
+
+function abrirWhatsApp(numero,nombre){
+
+    let numeroFinal=String(numero||"").replace(/\D/g,"");
+
+    if(numeroFinal.length===8 && !numeroFinal.startsWith("591")){
+        numeroFinal="591"+numeroFinal;
+    }
+
+    if(!numeroFinal){
+        mostrarToast("El cliente no tiene un número válido.",true);
+        return;
+    }
+
+    const mensaje=
+        `Hola ${nombre||""}, te escribimos de CLUB PONTE PERRO respecto a tu reserva.`;
+
+    window.open(
+        "https://wa.me/"+numeroFinal+
+        "?text="+encodeURIComponent(mensaje),
+        "_blank"
+    );
+}
+
+function mostrarToast(mensaje,error=false){
+
+    const toast=document.getElementById("toast");
+
+    toast.textContent=mensaje;
+    toast.classList.toggle("error",error);
+    toast.classList.add("mostrar");
+
+    clearTimeout(toastTimer);
+
+    toastTimer=setTimeout(()=>{
+        toast.classList.remove("mostrar");
+    },3000);
+}
+
+document.getElementById("modalDetalle").addEventListener("click",function(e){
+    if(e.target===this)cerrarDetalle();
+});
+
+document.getElementById("modalConfirmacion").addEventListener("click",function(e){
+    if(e.target===this)cerrarConfirmacion();
+});
+
+cargarReservas();
+</script>
+
+</body>
+</html>

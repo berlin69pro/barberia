@@ -1,0 +1,2053 @@
+/* =========================================================
+   CLUB PONTE PERRO
+   ESTILO URBANO / STREET BARBERSHOP
+========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+:root {
+
+    --negro: #080808;
+    --negro-2: #101010;
+    --negro-3: #171717;
+
+    --gris: #222;
+    --gris-2: #333;
+    --gris-texto: #999;
+
+    --blanco: #ffffff;
+
+    --amarillo: #f5d90a;
+    --amarillo-hover: #ffe52f;
+
+    --verde: #b6ff00;
+
+    --rojo: #ff304f;
+
+    --radio: 14px;
+
+    --sombra:
+        0 20px 50px rgba(0, 0, 0, .45);
+
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+
+    box-sizing: border-box;
+
+    margin: 0;
+
+    padding: 0;
+
+}
+
+
+html {
+
+    scroll-behavior: smooth;
+
+}
+
+
+body {
+
+    font-family:
+        'Inter',
+        Arial,
+        sans-serif;
+
+    background:
+        var(--negro);
+
+    color:
+        var(--blanco);
+
+    min-height: 100vh;
+
+    overflow-x: hidden;
+
+}
+
+
+a {
+
+    text-decoration: none;
+
+    color: inherit;
+
+}
+
+
+button,
+input,
+textarea,
+select {
+
+    font-family: inherit;
+
+}
+
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+::-webkit-scrollbar {
+
+    width: 9px;
+
+}
+
+
+::-webkit-scrollbar-track {
+
+    background:
+        #080808;
+
+}
+
+
+::-webkit-scrollbar-thumb {
+
+    background:
+        var(--amarillo);
+
+    border-radius:
+        20px;
+
+}
+
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+.navbar {
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 1000;
+
+    height: 78px;
+
+    padding:
+        0 5%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 30px;
+
+    background:
+        rgba(8, 8, 8, .92);
+
+    backdrop-filter:
+        blur(15px);
+
+    border-bottom:
+        1px solid #272727;
+
+}
+
+
+/* LOGO */
+
+.logo {
+
+    font-family:
+        'Anton',
+        Impact,
+        sans-serif;
+
+    font-size:
+        27px;
+
+    letter-spacing:
+        1px;
+
+    line-height:
+        .85;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.logo span {
+
+    color:
+        var(--amarillo);
+
+}
+
+
+/* MENU */
+
+.menu {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 25px;
+
+}
+
+
+.menu a {
+
+    position: relative;
+
+    font-size:
+        13px;
+
+    font-weight:
+        800;
+
+    text-transform:
+        uppercase;
+
+    color:
+        #d0d0d0;
+
+    transition:
+        .25s;
+
+}
+
+
+.menu a::after {
+
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+
+    bottom: -7px;
+
+    width: 0;
+
+    height: 2px;
+
+    background:
+        var(--amarillo);
+
+    transition:
+        .25s;
+
+}
+
+
+.menu a:hover {
+
+    color:
+        var(--amarillo);
+
+}
+
+
+.menu a:hover::after {
+
+    width:
+        100%;
+
+}
+
+
+/* BOTÓN RESERVAR */
+
+.btn-reservar {
+
+    background:
+        var(--amarillo);
+
+    color:
+        #080808;
+
+    padding:
+        12px 20px;
+
+    border-radius:
+        5px;
+
+    font-size:
+        12px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        .5px;
+
+    transition:
+        .25s;
+
+}
+
+
+.btn-reservar:hover {
+
+    background:
+        var(--amarillo-hover);
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 10px 25px
+        rgba(245, 217, 10, .2);
+
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+
+    min-height:
+        calc(100vh - 78px);
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    position:
+        relative;
+
+    overflow:
+        hidden;
+
+    padding:
+        80px 7%;
+
+    background:
+
+        radial-gradient(
+            circle at 80% 30%,
+            rgba(245, 217, 10, .12),
+            transparent 25%
+        ),
+
+        radial-gradient(
+            circle at 20% 80%,
+            rgba(182, 255, 0, .05),
+            transparent 25%
+        ),
+
+        linear-gradient(
+            135deg,
+            #050505,
+            #101010
+        );
+
+}
+
+
+/* TEXTURA */
+
+.hero::before {
+
+    content: "";
+
+    position:
+        absolute;
+
+    inset: 0;
+
+    opacity: .18;
+
+    background-image:
+        radial-gradient(
+            #fff 1px,
+            transparent 1px
+        );
+
+    background-size:
+        24px 24px;
+
+    pointer-events:
+        none;
+
+}
+
+
+/* GRAN MANCHA */
+
+.hero::after {
+
+    content:
+        "PONTE\nPERRO";
+
+    white-space:
+        pre;
+
+    position:
+        absolute;
+
+    right:
+        -30px;
+
+    bottom:
+        -70px;
+
+    font-family:
+        'Anton',
+        Impact,
+        sans-serif;
+
+    font-size:
+        clamp(
+            130px,
+            20vw,
+            330px
+        );
+
+    line-height:
+        .75;
+
+    text-align:
+        right;
+
+    color:
+        rgba(255,255,255,.025);
+
+    pointer-events:
+        none;
+
+}
+
+
+/* CONTENIDO */
+
+.hero-content {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    max-width:
+        850px;
+
+}
+
+
+.hero-small {
+
+    display:
+        inline-block;
+
+    padding:
+        8px 13px;
+
+    margin-bottom:
+        20px;
+
+    border:
+        1px solid
+        var(--amarillo);
+
+    color:
+        var(--amarillo);
+
+    font-size:
+        11px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        2px;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.hero h1 {
+
+    font-family:
+        'Anton',
+        Impact,
+        sans-serif;
+
+    font-size:
+        clamp(
+            65px,
+            10vw,
+            150px
+        );
+
+    line-height:
+        .82;
+
+    letter-spacing:
+        -2px;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.hero h1 span {
+
+    color:
+        var(--amarillo);
+
+    text-shadow:
+        5px 5px 0 #171717;
+
+}
+
+
+.hero p {
+
+    max-width:
+        600px;
+
+    margin-top:
+        30px;
+
+    color:
+        #aaa;
+
+    font-size:
+        17px;
+
+    line-height:
+        1.7;
+
+}
+
+
+/* BOTONES HERO */
+
+.hero-buttons {
+
+    display:
+        flex;
+
+    gap:
+        12px;
+
+    margin-top:
+        35px;
+
+    flex-wrap:
+        wrap;
+
+}
+
+
+.btn-principal,
+.btn-secundario {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    min-height:
+        50px;
+
+    padding:
+        0 25px;
+
+    border-radius:
+        5px;
+
+    font-size:
+        12px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        .5px;
+
+    transition:
+        .25s;
+
+}
+
+
+.btn-principal {
+
+    background:
+        var(--amarillo);
+
+    color:
+        #080808;
+
+}
+
+
+.btn-principal:hover {
+
+    background:
+        var(--amarillo-hover);
+
+    transform:
+        translateY(-3px);
+
+}
+
+
+.btn-secundario {
+
+    border:
+        1px solid #555;
+
+    color:
+        white;
+
+}
+
+
+.btn-secundario:hover {
+
+    border-color:
+        var(--amarillo);
+
+    color:
+        var(--amarillo);
+
+}
+
+
+/* =========================================================
+   SECCIONES
+========================================================= */
+
+.seccion {
+
+    padding:
+        100px 7%;
+
+    background:
+        var(--negro);
+
+}
+
+
+.seccion-oscura {
+
+    background:
+        #0d0d0d;
+
+}
+
+
+.titulo-seccion {
+
+    max-width:
+        700px;
+
+    margin:
+        0 auto 55px;
+
+    text-align:
+        center;
+
+}
+
+
+.titulo-seccion span {
+
+    color:
+        var(--amarillo);
+
+    font-size:
+        11px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        3px;
+
+}
+
+
+.titulo-seccion h2 {
+
+    margin-top:
+        10px;
+
+    font-family:
+        'Anton',
+        Impact,
+        sans-serif;
+
+    font-size:
+        clamp(
+            40px,
+            6vw,
+            70px
+        );
+
+    line-height:
+        .9;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.titulo-seccion p {
+
+    margin-top:
+        15px;
+
+    color:
+        var(--gris-texto);
+
+    line-height:
+        1.6;
+
+}
+
+
+/* =========================================================
+   CARGANDO / SIN DATOS
+========================================================= */
+
+.cargando,
+.sin-datos {
+
+    width:
+        100%;
+
+    grid-column:
+        1 / -1;
+
+    text-align:
+        center;
+
+    padding:
+        50px;
+
+    color:
+        #777;
+
+}
+
+
+/* =========================================================
+   PROMOCIONES
+========================================================= */
+
+.grid-promociones {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(
+                280px,
+                1fr
+            )
+        );
+
+    gap:
+        25px;
+
+    max-width:
+        1200px;
+
+    margin:
+        auto;
+
+}
+
+
+.card-promocion {
+
+    position:
+        relative;
+
+    overflow:
+        hidden;
+
+    background:
+        #151515;
+
+    border:
+        1px solid #292929;
+
+    border-radius:
+        var(--radio);
+
+    transition:
+        .3s;
+
+}
+
+
+.card-promocion:hover {
+
+    transform:
+        translateY(-8px);
+
+    border-color:
+        var(--amarillo);
+
+    box-shadow:
+        var(--sombra);
+
+}
+
+
+.imagen-promocion {
+
+    height:
+        250px;
+
+    overflow:
+        hidden;
+
+    background:
+        #222;
+
+}
+
+
+.imagen-promocion img {
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    object-fit:
+        cover;
+
+    transition:
+        .5s;
+
+}
+
+
+.card-promocion:hover
+.imagen-promocion img {
+
+    transform:
+        scale(1.07);
+
+}
+
+
+.contenido-promocion {
+
+    padding:
+        25px;
+
+}
+
+
+.contenido-promocion h3 {
+
+    font-family:
+        'Anton',
+        Impact,
+        sans-serif;
+
+    font-size:
+        28px;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.contenido-promocion p {
+
+    margin:
+        10px 0 18px;
+
+    color:
+        #999;
+
+    line-height:
+        1.5;
+
+}
+
+
+.precios {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        12px;
+
+    margin-bottom:
+        20px;
+
+}
+
+
+.precio-anterior {
+
+    color:
+        #666;
+
+    text-decoration:
+        line-through;
+
+}
+
+
+.precio-promocion {
+
+    color:
+        var(--amarillo);
+
+    font-size:
+        28px;
+
+    font-weight:
+        900;
+
+}
+
+
+.btn-promocion {
+
+    display:
+        inline-flex;
+
+    padding:
+        11px 18px;
+
+    background:
+        var(--amarillo);
+
+    color:
+        #080808;
+
+    border-radius:
+        4px;
+
+    font-size:
+        11px;
+
+    font-weight:
+        900;
+
+}
+
+
+/* =========================================================
+   SERVICIOS
+========================================================= */
+
+.grid-servicios {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(
+                230px,
+                1fr
+            )
+        );
+
+    gap:
+        20px;
+
+    max-width:
+        1200px;
+
+    margin:
+        auto;
+
+}
+
+
+.card-servicio {
+
+    padding:
+        30px;
+
+    background:
+        #151515;
+
+    border:
+        1px solid #292929;
+
+    border-radius:
+        var(--radio);
+
+    transition:
+        .25s;
+
+}
+
+
+.card-servicio:hover {
+
+    transform:
+        translateY(-6px);
+
+    border-color:
+        var(--amarillo);
+
+}
+
+
+.icono-servicio {
+
+    width:
+        50px;
+
+    height:
+        50px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    margin-bottom:
+        20px;
+
+    background:
+        var(--amarillo);
+
+    color:
+        #000;
+
+    border-radius:
+        8px;
+
+    font-size:
+        23px;
+
+}
+
+
+.card-servicio h3 {
+
+    font-family:
+        'Anton',
+        Impact,
+        sans-serif;
+
+    font-size:
+        26px;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.card-servicio p {
+
+    margin:
+        10px 0 18px;
+
+    color:
+        #888;
+
+    font-size:
+        14px;
+
+    line-height:
+        1.5;
+
+}
+
+
+.card-servicio strong {
+
+    display:
+        block;
+
+    color:
+        var(--amarillo);
+
+    font-size:
+        25px;
+
+    margin-bottom:
+        20px;
+
+}
+
+
+.btn-card {
+
+    display:
+        inline-block;
+
+    border:
+        1px solid #444;
+
+    padding:
+        9px 15px;
+
+    border-radius:
+        4px;
+
+    font-size:
+        11px;
+
+    font-weight:
+        800;
+
+    transition:
+        .2s;
+
+}
+
+
+.btn-card:hover {
+
+    border-color:
+        var(--amarillo);
+
+    color:
+        var(--amarillo);
+
+}
+
+
+/* =========================================================
+   BARBEROS
+========================================================= */
+
+.grid-barberos {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(
+                240px,
+                1fr
+            )
+        );
+
+    gap:
+        25px;
+
+    max-width:
+        1100px;
+
+    margin:
+        auto;
+
+}
+
+
+.card-barbero {
+
+    text-align:
+        center;
+
+    background:
+        #151515;
+
+    border:
+        1px solid #292929;
+
+    border-radius:
+        var(--radio);
+
+    padding:
+        20px;
+
+    transition:
+        .3s;
+
+}
+
+
+.card-barbero:hover {
+
+    transform:
+        translateY(-7px);
+
+    border-color:
+        var(--amarillo);
+
+}
+
+
+.foto-barbero {
+
+    width:
+        150px;
+
+    height:
+        150px;
+
+    margin:
+        0 auto 20px;
+
+    border-radius:
+        50%;
+
+    overflow:
+        hidden;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    background:
+        #252525;
+
+    border:
+        3px solid
+        var(--amarillo);
+
+}
+
+
+.foto-barbero img {
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    object-fit:
+        cover;
+
+}
+
+
+.foto-barbero span {
+
+    font-size:
+        50px;
+
+}
+
+
+.card-barbero h3 {
+
+    font-family:
+        'Anton',
+        Impact,
+        sans-serif;
+
+    font-size:
+        27px;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.card-barbero p {
+
+    margin-top:
+        8px;
+
+    color:
+        var(--amarillo);
+
+    font-size:
+        12px;
+
+    font-weight:
+        700;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+/* =========================================================
+   GALERÍA
+========================================================= */
+
+.grid-galeria {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(
+                250px,
+                1fr
+            )
+        );
+
+    gap:
+        5px;
+
+    max-width:
+        1250px;
+
+    margin:
+        auto;
+
+}
+
+
+.card-galeria {
+
+    position:
+        relative;
+
+    height:
+        300px;
+
+    overflow:
+        hidden;
+
+    background:
+        #151515;
+
+}
+
+
+.card-galeria img {
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    object-fit:
+        cover;
+
+    transition:
+        .5s;
+
+}
+
+
+.card-galeria:hover img {
+
+    transform:
+        scale(1.08);
+
+}
+
+
+.card-galeria > div {
+
+    position:
+        absolute;
+
+    left:
+        0;
+
+    right:
+        0;
+
+    bottom:
+        0;
+
+    padding:
+        25px 18px 18px;
+
+    background:
+        linear-gradient(
+            transparent,
+            rgba(0,0,0,.95)
+        );
+
+    transform:
+        translateY(20px);
+
+    opacity:
+        0;
+
+    transition:
+        .3s;
+
+}
+
+
+.card-galeria:hover > div {
+
+    transform:
+        translateY(0);
+
+    opacity:
+        1;
+
+}
+
+
+.card-galeria h3 {
+
+    font-family:
+        'Anton',
+        Impact,
+        sans-serif;
+
+    font-size:
+        23px;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.card-galeria p {
+
+    margin-top:
+        5px;
+
+    color:
+        #bbb;
+
+    font-size:
+        12px;
+
+}
+
+
+/* =========================================================
+   RESERVAS
+========================================================= */
+
+.reserva-contenedor {
+
+    max-width:
+        850px;
+
+    margin:
+        auto;
+
+    padding:
+        35px;
+
+    background:
+        #151515;
+
+    border:
+        1px solid #292929;
+
+    border-radius:
+        var(--radio);
+
+    box-shadow:
+        var(--sombra);
+
+}
+
+
+#formReserva {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            1fr
+        );
+
+    gap:
+        20px;
+
+}
+
+
+.campo-reserva {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        8px;
+
+}
+
+
+.campo-completo {
+
+    grid-column:
+        1 / -1;
+
+}
+
+
+.campo-reserva label {
+
+    font-size:
+        12px;
+
+    font-weight:
+        800;
+
+    color:
+        #ddd;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.campo-reserva input,
+.campo-reserva select,
+.campo-reserva textarea {
+
+    width:
+        100%;
+
+    padding:
+        14px;
+
+    border:
+        1px solid #3a3a3a;
+
+    border-radius:
+        6px;
+
+    background:
+        #0d0d0d;
+
+    color:
+        white;
+
+    outline:
+        none;
+
+    transition:
+        .2s;
+
+}
+
+
+.campo-reserva input:focus,
+.campo-reserva select:focus,
+.campo-reserva textarea:focus {
+
+    border-color:
+        var(--amarillo);
+
+    box-shadow:
+        0 0 0 2px
+        rgba(245,217,10,.08);
+
+}
+
+
+.campo-reserva textarea {
+
+    min-height:
+        110px;
+
+    resize:
+        vertical;
+
+}
+
+
+.campo-reserva select {
+
+    cursor:
+        pointer;
+
+}
+
+
+.btn-enviar-reserva {
+
+    grid-column:
+        1 / -1;
+
+    padding:
+        16px;
+
+    border:
+        none;
+
+    border-radius:
+        6px;
+
+    background:
+        var(--amarillo);
+
+    color:
+        #080808;
+
+    font-weight:
+        900;
+
+    cursor:
+        pointer;
+
+    transition:
+        .25s;
+
+}
+
+
+.btn-enviar-reserva:hover {
+
+    background:
+        var(--amarillo-hover);
+
+    transform:
+        translateY(-2px);
+
+}
+
+
+.mensaje-reserva {
+
+    grid-column:
+        1 / -1;
+
+    text-align:
+        center;
+
+    color:
+        var(--amarillo);
+
+    font-weight:
+        700;
+
+}
+
+
+/* =========================================================
+   CONTACTO
+========================================================= */
+
+.seccion-contacto {
+
+    background:
+        #080808;
+
+}
+
+
+.contacto-grid {
+
+    max-width:
+        1000px;
+
+    margin:
+        auto;
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            1fr
+        );
+
+    gap:
+        20px;
+
+}
+
+
+.contacto-card {
+
+    text-align:
+        center;
+
+    padding:
+        30px 20px;
+
+    border:
+        1px solid #292929;
+
+    border-radius:
+        var(--radio);
+
+    background:
+        #111;
+
+}
+
+
+.contacto-card > div {
+
+    font-size:
+        30px;
+
+    margin-bottom:
+        15px;
+
+}
+
+
+.contacto-card h3 {
+
+    font-family:
+        'Anton',
+        Impact,
+        sans-serif;
+
+    font-size:
+        23px;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.contacto-card p {
+
+    margin-top:
+        8px;
+
+    color:
+        #888;
+
+    font-size:
+        13px;
+
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer {
+
+    padding:
+        35px 7%;
+
+    background:
+        #050505;
+
+    border-top:
+        1px solid #222;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        20px;
+
+}
+
+
+footer p {
+
+    color:
+        #666;
+
+    font-size:
+        12px;
+
+}
+
+
+/* =========================================================
+   ANIMACIONES
+========================================================= */
+
+@keyframes aparecer {
+
+    from {
+
+        opacity:
+            0;
+
+        transform:
+            translateY(20px);
+
+    }
+
+    to {
+
+        opacity:
+            1;
+
+        transform:
+            translateY(0);
+
+    }
+
+}
+
+
+.hero-content {
+
+    animation:
+        aparecer .8s ease;
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 950px) {
+
+    .menu {
+
+        display:
+            none;
+
+    }
+
+
+    .navbar {
+
+        padding:
+            0 20px;
+
+    }
+
+
+    .hero {
+
+        padding:
+            70px 25px;
+
+    }
+
+
+    .seccion {
+
+        padding:
+            75px 25px;
+
+    }
+
+
+    .contacto-grid {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .navbar {
+
+        height:
+            68px;
+
+    }
+
+
+    .logo {
+
+        font-size:
+            22px;
+
+    }
+
+
+    .btn-reservar {
+
+        padding:
+            10px 13px;
+
+        font-size:
+            10px;
+
+    }
+
+
+    .hero {
+
+        min-height:
+            650px;
+
+    }
+
+
+    .hero h1 {
+
+        font-size:
+            65px;
+
+    }
+
+
+    .hero p {
+
+        font-size:
+            14px;
+
+    }
+
+
+    .hero-buttons {
+
+        flex-direction:
+            column;
+
+        align-items:
+            stretch;
+
+    }
+
+
+    .btn-principal,
+    .btn-secundario {
+
+        width:
+            100%;
+
+    }
+
+
+    #formReserva {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .campo-completo {
+
+        grid-column:
+            auto;
+
+    }
+
+
+    .reserva-contenedor {
+
+        padding:
+            20px;
+
+    }
+
+
+    .grid-galeria {
+
+        grid-template-columns:
+            repeat(
+                2,
+                1fr
+            );
+
+    }
+
+
+    .card-galeria {
+
+        height:
+            220px;
+
+    }
+
+
+    footer {
+
+        flex-direction:
+            column;
+
+        text-align:
+            center;
+
+    }
+
+}
+
+
+@media (max-width: 450px) {
+
+    .hero h1 {
+
+        font-size:
+            52px;
+
+    }
+
+
+    .grid-galeria {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .card-galeria {
+
+        height:
+            280px;
+
+    }
+
+}

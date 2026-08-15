@@ -1,0 +1,1701 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>CLUB PONTE PERRO | Galería</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: white;
+            min-height: 100vh;
+        }
+
+        header {
+            height: 70px;
+            background: #181818;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            border-bottom: 1px solid #333;
+        }
+
+        .logo {
+            font-size: 23px;
+            font-weight: 900;
+        }
+
+        .logo span {
+            color: #d4af37;
+        }
+
+        .volver {
+            color: #aaa;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .volver:hover {
+            color: #d4af37;
+        }
+
+        main {
+            max-width: 1400px;
+            margin: auto;
+            padding: 40px;
+        }
+
+        .titulo {
+            margin-bottom: 25px;
+        }
+
+        .titulo h1 {
+            font-size: 32px;
+        }
+
+        .titulo p {
+            color: #888;
+            margin-top: 8px;
+        }
+
+        /* FORMULARIO */
+
+        .formulario {
+            background: #181818;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .formulario h2 {
+            color: #d4af37;
+            margin-bottom: 20px;
+        }
+
+        .campos {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .campo-completo {
+            grid-column: 1 / -1;
+        }
+
+        .campo label {
+            color: #ddd;
+            font-weight: bold;
+        }
+
+        .campo input,
+        .campo textarea {
+            width: 100%;
+            padding: 13px;
+            background: #222;
+            color: white;
+            border: 1px solid #444;
+            border-radius: 7px;
+            font-family: Arial;
+        }
+
+        .campo input:focus,
+        .campo textarea:focus {
+            outline: none;
+            border-color: #d4af37;
+        }
+
+        .campo input[type="file"] {
+            cursor: pointer;
+        }
+
+        .campo textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        /* PREVIEW */
+
+        .preview {
+            display: none;
+            width: 300px;
+            height: 190px;
+            margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #444;
+            background: #222;
+        }
+
+        .preview.mostrar {
+            display: block;
+        }
+
+        .preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* BOTONES */
+
+        .botones {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            border: none;
+            padding: 11px 18px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-guardar {
+            background: #d4af37;
+            color: #111;
+        }
+
+        .btn-limpiar {
+            background: #333;
+            color: white;
+        }
+
+        button:hover {
+            opacity: .85;
+        }
+
+        button:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        /* MENSAJE */
+
+        #mensaje {
+            display: none;
+            margin-top: 15px;
+            padding: 13px;
+            border-radius: 7px;
+            font-weight: bold;
+        }
+
+        #mensaje.mostrar {
+            display: block;
+        }
+
+        #mensaje.exito {
+            background: #173e26;
+            color: #72e59b;
+        }
+
+        #mensaje.error {
+            background: #4a1e1e;
+            color: #ff8d8d;
+        }
+
+        /* GALERÍA */
+
+        .cabecera-galeria {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .cabecera-galeria h2 {
+            font-size: 22px;
+        }
+
+        .total {
+            color: #d4af37;
+            font-weight: bold;
+        }
+
+        .galeria {
+            display: grid;
+            grid-template-columns:
+                repeat(
+                    auto-fill,
+                    minmax(260px, 1fr)
+                );
+            gap: 20px;
+        }
+
+        .foto {
+            background: #181818;
+            border: 1px solid #333;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: .2s;
+        }
+
+        .foto:hover {
+            border-color: #d4af37;
+            transform: translateY(-3px);
+        }
+
+        .imagen {
+            width: 100%;
+            height: 210px;
+            background: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .imagen img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .sin-imagen {
+            color: #666;
+            font-size: 50px;
+        }
+
+        .foto-contenido {
+            padding: 18px;
+        }
+
+        .foto-contenido h3 {
+            margin-bottom: 8px;
+        }
+
+        .foto-contenido p {
+            color: #999;
+            font-size: 14px;
+            min-height: 35px;
+            margin-bottom: 15px;
+        }
+
+        .foto-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .estado {
+            padding: 5px 9px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .activo {
+            background: #174d2a;
+            color: #62dc86;
+        }
+
+        .inactivo {
+            background: #4d2525;
+            color: #ff8585;
+        }
+
+        .acciones {
+            display: flex;
+            gap: 7px;
+        }
+
+        .btn-estado {
+            background: #333;
+            color: white;
+        }
+
+        .btn-eliminar {
+            background: #8b2020;
+            color: white;
+        }
+
+        .mensaje-vacio {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+            grid-column: 1 / -1;
+        }
+
+        /* =====================================
+           MODAL
+        ===================================== */
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.82);
+            z-index: 5000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.mostrar {
+            display: flex;
+        }
+
+        .modal-contenido {
+            width: 450px;
+            max-width: 100%;
+            background: #181818;
+            border: 1px solid #444;
+            border-radius: 12px;
+            padding: 28px;
+            text-align: center;
+        }
+
+        .modal-icono {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .modal-contenido h2 {
+            margin-bottom: 10px;
+        }
+
+        .modal-contenido p {
+            color: #999;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+        .modal-botones {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-cancelar {
+            background: #333;
+            color: white;
+        }
+
+        .btn-confirmar {
+            background: #8b2020;
+            color: white;
+        }
+
+        @media (max-width: 700px) {
+
+            main {
+                padding: 25px 15px;
+            }
+
+            header {
+                padding: 0 15px;
+            }
+
+            .campos {
+                grid-template-columns: 1fr;
+            }
+
+            .campo-completo {
+                grid-column: auto;
+            }
+
+            .cabecera-galeria {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+
+        CLUB
+        <span>PONTE PERRO</span>
+
+    </div>
+
+
+    <a
+        href="/admin/dashboard.html"
+        class="volver"
+    >
+
+        ← Volver al Dashboard
+
+    </a>
+
+</header>
+
+
+<main>
+
+
+    <div class="titulo">
+
+        <h1>
+            🖼️ Galería
+        </h1>
+
+        <p>
+            Administra las fotografías de CLUB PONTE PERRO.
+        </p>
+
+    </div>
+
+
+    <!-- =========================================
+         FORMULARIO
+    ========================================== -->
+
+    <div class="formulario">
+
+        <h2>
+            ➕ Agregar fotografía
+        </h2>
+
+
+        <div class="campos">
+
+
+            <div class="campo">
+
+                <label>
+                    Título *
+                </label>
+
+                <input
+                    type="text"
+                    id="titulo"
+                    maxlength="150"
+                    placeholder="Ej. Corte Fade"
+                >
+
+            </div>
+
+
+            <div class="campo">
+
+                <label>
+                    Fotografía *
+                </label>
+
+                <input
+                    type="file"
+                    id="imagen"
+                    accept="image/jpeg,image/png,image/webp"
+                >
+
+            </div>
+
+
+            <div class="campo campo-completo">
+
+                <label>
+                    Descripción
+                </label>
+
+                <textarea
+                    id="descripcion"
+                    placeholder="Descripción de la fotografía..."
+                ></textarea>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="preview"
+            class="preview"
+        >
+
+            <img
+                id="previewImagen"
+                alt="Vista previa"
+            >
+
+        </div>
+
+
+        <div class="botones">
+
+            <button
+                id="btnGuardar"
+                class="btn-guardar"
+                onclick="guardarFoto()"
+            >
+
+                💾 GUARDAR FOTO
+
+            </button>
+
+
+            <button
+                class="btn-limpiar"
+                onclick="limpiarFormulario()"
+            >
+
+                LIMPIAR
+
+            </button>
+
+        </div>
+
+
+        <div id="mensaje"></div>
+
+    </div>
+
+
+    <!-- =========================================
+         LISTADO
+    ========================================== -->
+
+    <div class="cabecera-galeria">
+
+        <h2>
+            Fotografías registradas
+        </h2>
+
+
+        <div
+            id="totalFotos"
+            class="total"
+        >
+            0 fotos
+        </div>
+
+    </div>
+
+
+    <div
+        id="galeria"
+        class="galeria"
+    >
+
+        <div class="mensaje-vacio">
+            Cargando fotografías...
+        </div>
+
+    </div>
+
+
+</main>
+
+
+<!-- =========================================
+     MODAL CONFIRMAR ELIMINACIÓN
+========================================== -->
+
+<div
+    id="modalEliminar"
+    class="modal"
+>
+
+    <div class="modal-contenido">
+
+        <div class="modal-icono">
+            🗑️
+        </div>
+
+        <h2>
+            Eliminar fotografía
+        </h2>
+
+        <p id="textoEliminar">
+
+            ¿Seguro que deseas eliminar esta fotografía?
+
+        </p>
+
+
+        <div class="modal-botones">
+
+            <button
+                class="btn-cancelar"
+                onclick="cerrarModalEliminar()"
+            >
+
+                CANCELAR
+
+            </button>
+
+
+            <button
+                id="btnConfirmarEliminar"
+                class="btn-confirmar"
+                onclick="confirmarEliminar()"
+            >
+
+                🗑️ ELIMINAR
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+// =====================================================
+// SESIÓN
+// =====================================================
+
+const usuarioGuardado =
+    localStorage.getItem(
+        "usuario"
+    );
+
+
+if (!usuarioGuardado) {
+
+    window.location.href =
+        "/admin/login.html";
+
+}
+
+
+
+// =====================================================
+// VARIABLES
+// =====================================================
+
+let fotos = [];
+
+let fotoEliminarId = null;
+
+
+
+// =====================================================
+// VISTA PREVIA
+// =====================================================
+
+document.getElementById(
+    "imagen"
+).addEventListener(
+    "change",
+    function () {
+
+        ocultarMensaje();
+
+
+        const archivo =
+            this.files[0];
+
+
+        const preview =
+            document.getElementById(
+                "preview"
+            );
+
+
+        const imagen =
+            document.getElementById(
+                "previewImagen"
+            );
+
+
+        if (!archivo) {
+
+            preview.classList.remove(
+                "mostrar"
+            );
+
+            imagen.src = "";
+
+            return;
+
+        }
+
+
+        const tiposPermitidos = [
+
+            "image/jpeg",
+            "image/png",
+            "image/webp"
+
+        ];
+
+
+        if (
+            !tiposPermitidos.includes(
+                archivo.type
+            )
+        ) {
+
+            mostrarMensaje(
+                "Solo se permiten imágenes JPG, PNG o WEBP.",
+                "error"
+            );
+
+            this.value = "";
+
+            preview.classList.remove(
+                "mostrar"
+            );
+
+            return;
+
+        }
+
+
+        if (
+            archivo.size >
+            5 * 1024 * 1024
+        ) {
+
+            mostrarMensaje(
+                "La imagen no puede superar los 5 MB.",
+                "error"
+            );
+
+            this.value = "";
+
+            preview.classList.remove(
+                "mostrar"
+            );
+
+            return;
+
+        }
+
+
+        const lector =
+            new FileReader();
+
+
+        lector.onload =
+            function (evento) {
+
+                imagen.src =
+                    evento.target.result;
+
+                preview.classList.add(
+                    "mostrar"
+                );
+
+            };
+
+
+        lector.readAsDataURL(
+            archivo
+        );
+
+    }
+);
+
+
+
+// =====================================================
+// CARGAR GALERÍA
+// =====================================================
+
+async function cargarGaleria() {
+
+    try {
+
+        const respuesta =
+            await fetch(
+                "/api/galeria"
+            );
+
+
+        if (!respuesta.ok) {
+
+            throw new Error(
+                "No se pudo cargar la galería"
+            );
+
+        }
+
+
+        fotos =
+            await respuesta.json();
+
+
+        mostrarGaleria();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        document.getElementById(
+            "galeria"
+        ).innerHTML = `
+
+            <div class="mensaje-vacio">
+
+                ❌ No se pudo cargar la galería.
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+
+// =====================================================
+// MOSTRAR GALERÍA
+// =====================================================
+
+function mostrarGaleria() {
+
+    const contenedor =
+        document.getElementById(
+            "galeria"
+        );
+
+
+    document.getElementById(
+        "totalFotos"
+    ).textContent =
+
+        `${fotos.length} foto${
+            fotos.length === 1
+                ? ""
+                : "s"
+        }`;
+
+
+    contenedor.innerHTML =
+        "";
+
+
+    if (
+        fotos.length === 0
+    ) {
+
+        contenedor.innerHTML = `
+
+            <div class="mensaje-vacio">
+
+                📷 Todavía no hay fotografías registradas.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    fotos.forEach(
+        foto => {
+
+            const tarjeta =
+                document.createElement(
+                    "div"
+                );
+
+
+            tarjeta.className =
+                "foto";
+
+
+            const activo =
+                Number(
+                    foto.estado
+                ) === 1 ||
+                foto.estado === true;
+
+
+            tarjeta.innerHTML = `
+
+                <div class="imagen">
+
+                    ${
+                        foto.ruta_imagen
+
+                        ?
+
+                        `
+
+                            <img
+                                src="${escapeHTML(
+                                    foto.ruta_imagen
+                                )}"
+                                alt="${escapeHTML(
+                                    foto.titulo
+                                )}"
+                                onerror="
+                                    this.style.display='none';
+                                    this.parentElement.innerHTML='<div class=&quot;sin-imagen&quot;>📷</div>';
+                                "
+                            >
+
+                        `
+
+                        :
+
+                        `
+
+                            <div class="sin-imagen">
+                                📷
+                            </div>
+
+                        `
+                    }
+
+                </div>
+
+
+                <div class="foto-contenido">
+
+                    <h3>
+
+                        ${escapeHTML(
+                            foto.titulo
+                        )}
+
+                    </h3>
+
+
+                    <p>
+
+                        ${
+                            escapeHTML(
+                                foto.descripcion ||
+                                "Sin descripción"
+                            )
+                        }
+
+                    </p>
+
+
+                    <div class="foto-info">
+
+                        <span
+                            class="
+                                estado
+                                ${
+                                    activo
+                                        ? "activo"
+                                        : "inactivo"
+                                }
+                            "
+                        >
+
+                            ${
+                                activo
+                                    ? "ACTIVA"
+                                    : "INACTIVA"
+                            }
+
+                        </span>
+
+
+                        <span
+                            style="
+                                color:#777;
+                                font-size:12px;
+                            "
+                        >
+
+                            #${foto.id_foto}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="acciones">
+
+                        <button
+                            class="btn-estado"
+                            onclick="
+                                cambiarEstado(
+                                    ${Number(
+                                        foto.id_foto
+                                    )},
+                                    ${activo ? 0 : 1}
+                                )
+                            "
+                        >
+
+                            ${
+                                activo
+                                    ? "⏸️ Desactivar"
+                                    : "▶️ Activar"
+                            }
+
+                        </button>
+
+
+                        <button
+                            class="btn-eliminar"
+                            onclick="
+                                abrirModalEliminar(
+                                    ${Number(
+                                        foto.id_foto
+                                    )}
+                                )
+                            "
+                        >
+
+                            🗑️ Eliminar
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            contenedor.appendChild(
+                tarjeta
+            );
+
+        }
+    );
+
+}
+
+
+
+// =====================================================
+// GUARDAR FOTO
+// =====================================================
+
+async function guardarFoto() {
+
+    ocultarMensaje();
+
+
+    const titulo =
+        document.getElementById(
+            "titulo"
+        ).value.trim();
+
+
+    const descripcion =
+        document.getElementById(
+            "descripcion"
+        ).value.trim();
+
+
+    const archivo =
+        document.getElementById(
+            "imagen"
+        ).files[0];
+
+
+    if (!titulo) {
+
+        mostrarMensaje(
+            "El título es obligatorio.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (!archivo) {
+
+        mostrarMensaje(
+            "Debes seleccionar una fotografía.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const tiposPermitidos = [
+
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+
+    ];
+
+
+    if (
+        !tiposPermitidos.includes(
+            archivo.type
+        )
+    ) {
+
+        mostrarMensaje(
+            "Solo se permiten imágenes JPG, PNG o WEBP.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (
+        archivo.size >
+        5 * 1024 * 1024
+    ) {
+
+        mostrarMensaje(
+            "La imagen no puede superar los 5 MB.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const datos =
+        new FormData();
+
+
+    datos.append(
+        "titulo",
+        titulo
+    );
+
+
+    datos.append(
+        "descripcion",
+        descripcion
+    );
+
+
+    datos.append(
+        "imagen",
+        archivo
+    );
+
+
+    const boton =
+        document.getElementById(
+            "btnGuardar"
+        );
+
+
+    boton.disabled =
+        true;
+
+
+    boton.textContent =
+        "⏳ SUBIENDO...";
+
+
+    try {
+
+        const respuesta =
+            await fetch(
+                "/api/galeria/upload",
+                {
+
+                    method:
+                        "POST",
+
+                    body:
+                        datos
+
+                }
+            );
+
+
+        const resultado =
+            await respuesta.json();
+
+
+        if (!respuesta.ok) {
+
+            throw new Error(
+                resultado.error ||
+                "No se pudo subir la fotografía"
+            );
+
+        }
+
+
+        mostrarMensaje(
+            "✅ Fotografía subida correctamente.",
+            "exito"
+        );
+
+
+        limpiarFormulario();
+
+
+        await cargarGaleria();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        mostrarMensaje(
+            "❌ " + error.message,
+            "error"
+        );
+
+    }
+
+    finally {
+
+        boton.disabled =
+            false;
+
+        boton.textContent =
+            "💾 GUARDAR FOTO";
+
+    }
+
+}
+
+
+
+// =====================================================
+// CAMBIAR ESTADO
+// =====================================================
+
+async function cambiarEstado(
+    id,
+    estado
+) {
+
+    try {
+
+        const respuesta =
+            await fetch(
+                `/api/galeria/${id}/estado`,
+                {
+
+                    method:
+                        "PATCH",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify({
+                            estado:
+                                estado
+                        })
+
+                }
+            );
+
+
+        const resultado =
+            await respuesta.json();
+
+
+        if (!respuesta.ok) {
+
+            throw new Error(
+                resultado.error ||
+                "No se pudo cambiar el estado"
+            );
+
+        }
+
+
+        mostrarMensaje(
+            estado === 1
+                ? "✅ Fotografía activada."
+                : "⏸️ Fotografía desactivada.",
+            "exito"
+        );
+
+
+        await cargarGaleria();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        mostrarMensaje(
+            "❌ " + error.message,
+            "error"
+        );
+
+    }
+
+}
+
+
+
+// =====================================================
+// ABRIR MODAL ELIMINAR
+// =====================================================
+
+function abrirModalEliminar(
+    id
+) {
+
+    fotoEliminarId =
+        id;
+
+
+    const foto =
+        fotos.find(
+            item =>
+                Number(
+                    item.id_foto
+                ) ===
+                Number(id)
+        );
+
+
+    document.getElementById(
+        "textoEliminar"
+    ).textContent =
+
+        foto
+
+            ? `¿Seguro que deseas eliminar "${foto.titulo}"? Esta acción no se puede deshacer.`
+
+            : "¿Seguro que deseas eliminar esta fotografía?";
+
+
+    document.getElementById(
+        "modalEliminar"
+    ).classList.add(
+        "mostrar"
+    );
+
+}
+
+
+
+// =====================================================
+// CERRAR MODAL
+// =====================================================
+
+function cerrarModalEliminar() {
+
+    fotoEliminarId =
+        null;
+
+
+    document.getElementById(
+        "modalEliminar"
+    ).classList.remove(
+        "mostrar"
+    );
+
+}
+
+
+
+// =====================================================
+// CONFIRMAR ELIMINACIÓN
+// =====================================================
+
+async function confirmarEliminar() {
+
+    if (!fotoEliminarId) {
+
+        return;
+
+    }
+
+
+    const boton =
+        document.getElementById(
+            "btnConfirmarEliminar"
+        );
+
+
+    boton.disabled =
+        true;
+
+
+    boton.textContent =
+        "⏳ ELIMINANDO...";
+
+
+    try {
+
+        const respuesta =
+            await fetch(
+                `/api/galeria/${fotoEliminarId}`,
+                {
+
+                    method:
+                        "DELETE"
+
+                }
+            );
+
+
+        const resultado =
+            await respuesta.json();
+
+
+        if (!respuesta.ok) {
+
+            throw new Error(
+                resultado.error ||
+                "No se pudo eliminar la fotografía"
+            );
+
+        }
+
+
+        cerrarModalEliminar();
+
+
+        mostrarMensaje(
+            "✅ Fotografía eliminada correctamente.",
+            "exito"
+        );
+
+
+        await cargarGaleria();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        cerrarModalEliminar();
+
+
+        mostrarMensaje(
+            "❌ " + error.message,
+            "error"
+        );
+
+    }
+
+    finally {
+
+        boton.disabled =
+            false;
+
+        boton.textContent =
+            "🗑️ ELIMINAR";
+
+    }
+
+}
+
+
+
+// =====================================================
+// LIMPIAR
+// =====================================================
+
+function limpiarFormulario() {
+
+    document.getElementById(
+        "titulo"
+    ).value =
+        "";
+
+
+    document.getElementById(
+        "descripcion"
+    ).value =
+        "";
+
+
+    document.getElementById(
+        "imagen"
+    ).value =
+        "";
+
+
+    document.getElementById(
+        "preview"
+    ).classList.remove(
+        "mostrar"
+    );
+
+
+    document.getElementById(
+        "previewImagen"
+    ).src =
+        "";
+
+}
+
+
+
+// =====================================================
+// MENSAJES
+// =====================================================
+
+function mostrarMensaje(
+    texto,
+    tipo
+) {
+
+    const mensaje =
+        document.getElementById(
+            "mensaje"
+        );
+
+
+    mensaje.textContent =
+        texto;
+
+
+    mensaje.className =
+        `mostrar ${tipo}`;
+
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+
+    setTimeout(
+        () => {
+
+            ocultarMensaje();
+
+        },
+        5000
+    );
+
+}
+
+
+function ocultarMensaje() {
+
+    const mensaje =
+        document.getElementById(
+            "mensaje"
+        );
+
+
+    mensaje.textContent =
+        "";
+
+    mensaje.className =
+        "";
+
+}
+
+
+
+// =====================================================
+// SEGURIDAD HTML
+// =====================================================
+
+function escapeHTML(
+    texto
+) {
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+
+    div.textContent =
+        texto ?? "";
+
+
+    return div.innerHTML;
+
+}
+
+
+
+// =====================================================
+// CERRAR MODAL AL HACER CLIC AFUERA
+// =====================================================
+
+document.getElementById(
+    "modalEliminar"
+).addEventListener(
+    "click",
+    function(evento) {
+
+        if (
+            evento.target ===
+            this
+        ) {
+
+            cerrarModalEliminar();
+
+        }
+
+    }
+);
+
+
+
+// =====================================================
+// INICIAR
+// =====================================================
+
+cargarGaleria();
+
+
+</script>
+
+
+</body>
+
+</html>

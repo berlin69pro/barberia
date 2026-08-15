@@ -1,0 +1,2937 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>BARBERPRO | Reservar cita</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        body {
+
+            font-family: Arial, sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0d0d0d,
+                    #181818
+                );
+
+            color: white;
+
+            min-height: 100vh;
+
+        }
+
+
+        /* ==================================
+           CABECERA
+        ================================== */
+
+        header {
+
+            height: 75px;
+
+            background: #151515;
+
+            border-bottom:
+                1px solid #333;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding:
+                0 7%;
+
+        }
+
+
+        .logo {
+
+            font-size: 27px;
+
+            font-weight: bold;
+
+        }
+
+
+        .logo span {
+
+            color: #d4af37;
+
+        }
+
+
+        .volver {
+
+            color: #aaa;
+
+            text-decoration: none;
+
+            font-weight: bold;
+
+        }
+
+
+        .volver:hover {
+
+            color: #d4af37;
+
+        }
+
+
+        /* ==================================
+           CONTENEDOR
+        ================================== */
+
+        main {
+
+            width: 100%;
+
+            max-width: 1100px;
+
+            margin: auto;
+
+            padding:
+                45px 20px 70px;
+
+        }
+
+
+        .titulo {
+
+            text-align: center;
+
+            margin-bottom: 40px;
+
+        }
+
+
+        .titulo .subtitulo {
+
+            color: #d4af37;
+
+            letter-spacing: 4px;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .titulo h1 {
+
+            font-size: 42px;
+
+            margin-bottom: 12px;
+
+        }
+
+
+        .titulo p {
+
+            color: #999;
+
+            font-size: 16px;
+
+        }
+
+
+        /* ==================================
+           PASOS
+        ================================== */
+
+        .pasos {
+
+            display: flex;
+
+            justify-content: center;
+
+            gap: 10px;
+
+            margin-bottom: 35px;
+
+            flex-wrap: wrap;
+
+        }
+
+
+        .paso {
+
+            padding:
+                9px 16px;
+
+            border-radius: 20px;
+
+            background: #222;
+
+            color: #777;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+        }
+
+
+        .paso.activo {
+
+            background: #d4af37;
+
+            color: #111;
+
+        }
+
+
+        /* ==================================
+           TARJETA
+        ================================== */
+
+        .tarjeta {
+
+            background: #181818;
+
+            border:
+                1px solid #333;
+
+            border-radius: 15px;
+
+            padding: 35px;
+
+            box-shadow:
+                0 20px 60px
+                rgba(0,0,0,.35);
+
+        }
+
+
+        .seccion {
+
+            margin-bottom: 35px;
+
+        }
+
+
+        .seccion h2 {
+
+            font-size: 20px;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .seccion-descripcion {
+
+            color: #888;
+
+            margin-bottom: 20px;
+
+            font-size: 14px;
+
+        }
+
+
+        /* ==================================
+           SERVICIOS
+        ================================== */
+
+        .servicios {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(220px, 1fr)
+                );
+
+            gap: 15px;
+
+        }
+
+
+        .servicio {
+
+            background: #222;
+
+            border:
+                2px solid #333;
+
+            border-radius: 10px;
+
+            padding: 20px;
+
+            cursor: pointer;
+
+            transition: .2s;
+
+        }
+
+
+        .servicio:hover {
+
+            border-color: #d4af37;
+
+            transform:
+                translateY(-2px);
+
+        }
+
+
+        .servicio.seleccionado {
+
+            border-color: #d4af37;
+
+            background:
+                rgba(
+                    212,
+                    175,
+                    55,
+                    .10
+                );
+
+        }
+
+
+        .servicio-icono {
+
+            font-size: 30px;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .servicio h3 {
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .servicio p {
+
+            color: #999;
+
+            font-size: 13px;
+
+            min-height: 35px;
+
+        }
+
+
+        .servicio-info {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            margin-top: 15px;
+
+        }
+
+
+        .precio {
+
+            color: #d4af37;
+
+            font-weight: bold;
+
+        }
+
+
+        .duracion {
+
+            color: #aaa;
+
+        }
+
+
+        /* ==================================
+           BARBEROS
+        ================================== */
+
+        .barberos {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(180px, 1fr)
+                );
+
+            gap: 15px;
+
+        }
+
+
+        .barbero {
+
+            background: #222;
+
+            border:
+                2px solid #333;
+
+            border-radius: 10px;
+
+            padding: 20px;
+
+            text-align: center;
+
+            cursor: pointer;
+
+            transition: .2s;
+
+        }
+
+
+        .barbero:hover {
+
+            border-color: #d4af37;
+
+        }
+
+
+        .barbero.seleccionado {
+
+            border-color: #d4af37;
+
+            background:
+                rgba(
+                    212,
+                    175,
+                    55,
+                    .10
+                );
+
+        }
+
+
+        .barbero-avatar {
+
+            width: 75px;
+
+            height: 75px;
+
+            border-radius: 50%;
+
+            margin: auto;
+
+            margin-bottom: 12px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background: #333;
+
+            border:
+                2px solid #d4af37;
+
+            font-size: 30px;
+
+            overflow: hidden;
+
+        }
+
+
+        .barbero-avatar img {
+
+            width: 100%;
+
+            height: 100%;
+
+            object-fit: cover;
+
+        }
+
+
+        .barbero p {
+
+            color: #999;
+
+            font-size: 13px;
+
+            margin-top: 5px;
+
+        }
+
+
+        /* ==================================
+           FECHA
+        ================================== */
+
+        .campo {
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .campo label {
+
+            display: block;
+
+            color: #ddd;
+
+            font-weight: bold;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .campo input {
+
+            width: 100%;
+
+            max-width: 400px;
+
+            padding: 14px;
+
+            background: #222;
+
+            color: white;
+
+            border:
+                1px solid #444;
+
+            border-radius: 7px;
+
+            font-size: 16px;
+
+        }
+
+
+        .campo input:focus {
+
+            outline: none;
+
+            border-color: #d4af37;
+
+        }
+
+
+        /* ==================================
+           HORAS
+        ================================== */
+
+        .horas {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fill,
+                    minmax(110px, 1fr)
+                );
+
+            gap: 10px;
+
+        }
+
+
+        .hora {
+
+            padding: 13px;
+
+            border:
+                1px solid #444;
+
+            background: #222;
+
+            color: white;
+
+            border-radius: 7px;
+
+            cursor: pointer;
+
+            font-weight: bold;
+
+            text-align: center;
+
+        }
+
+
+        .hora:hover {
+
+            border-color: #d4af37;
+
+        }
+
+
+        .hora.seleccionada {
+
+            background: #d4af37;
+
+            color: #111;
+
+            border-color: #d4af37;
+
+        }
+
+
+        .hora.ocupada {
+
+            background: #151515;
+
+            color: #555;
+
+            border-color: #252525;
+
+            cursor: not-allowed;
+
+            text-decoration:
+                line-through;
+
+        }
+
+
+        .sin-horas {
+
+            color: #888;
+
+            padding: 20px;
+
+            background: #222;
+
+            border-radius: 8px;
+
+        }
+
+
+        /* ==================================
+           DATOS CLIENTE
+        ================================== */
+
+        .formulario {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    2,
+                    1fr
+                );
+
+            gap: 20px;
+
+        }
+
+
+        .campo-completo {
+
+            grid-column:
+                1 / -1;
+
+        }
+
+
+        textarea {
+
+            width: 100%;
+
+            padding: 14px;
+
+            min-height: 100px;
+
+            resize: vertical;
+
+            background: #222;
+
+            color: white;
+
+            border:
+                1px solid #444;
+
+            border-radius: 7px;
+
+            font-family: Arial;
+
+        }
+
+
+        textarea:focus {
+
+            outline: none;
+
+            border-color: #d4af37;
+
+        }
+
+
+        /* ==================================
+           RESUMEN
+        ================================== */
+
+        .resumen {
+
+            background: #222;
+
+            border:
+                1px solid #333;
+
+            border-radius: 10px;
+
+            padding: 25px;
+
+            margin-top: 30px;
+
+        }
+
+
+        .resumen h3 {
+
+            color: #d4af37;
+
+            margin-bottom: 18px;
+
+        }
+
+
+        .resumen-linea {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            padding: 9px 0;
+
+            border-bottom:
+                1px solid #333;
+
+        }
+
+
+        .resumen-linea:last-child {
+
+            border-bottom: none;
+
+        }
+
+
+        .resumen-linea span:first-child {
+
+            color: #999;
+
+        }
+
+
+        /* ==================================
+           BOTÓN
+        ================================== */
+
+        .boton-reservar {
+
+            width: 100%;
+
+            margin-top: 25px;
+
+            padding: 17px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #d4af37;
+
+            color: #111;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+        }
+
+
+        .boton-reservar:hover {
+
+            background: #e6c65a;
+
+        }
+
+
+        .boton-reservar:disabled {
+
+            background: #555;
+
+            color: #888;
+
+            cursor: not-allowed;
+
+        }
+
+
+        /* ==================================
+           MENSAJES
+        ================================== */
+
+        .mensaje {
+
+            padding: 15px;
+
+            border-radius: 7px;
+
+            margin-top: 15px;
+
+            display: none;
+
+            text-align: center;
+
+        }
+
+
+        .mensaje.error {
+
+            display: block;
+
+            background: #4a1e1e;
+
+            color: #ff8b8b;
+
+        }
+
+
+        .mensaje.exito {
+
+            display: block;
+
+            background: #173e26;
+
+            color: #71e59a;
+
+        }
+
+
+        .cargando {
+
+            color: #888;
+
+            padding: 20px;
+
+            text-align: center;
+
+        }
+
+
+        /* ==================================
+           RESPONSIVE
+        ================================== */
+
+        @media (max-width: 700px) {
+
+            header {
+
+                padding: 0 20px;
+
+            }
+
+
+            main {
+
+                padding:
+                    30px 15px;
+
+            }
+
+
+            .titulo h1 {
+
+                font-size: 32px;
+
+            }
+
+
+            .tarjeta {
+
+                padding: 20px;
+
+            }
+
+
+            .formulario {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
+            .campo-completo {
+
+                grid-column:
+                    auto;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+
+        BARBER<span>PRO</span>
+
+    </div>
+
+
+    <a
+        href="/"
+        class="volver"
+    >
+
+        ← Volver al inicio
+
+    </a>
+
+</header>
+
+
+<main>
+
+
+    <!-- TÍTULO -->
+
+    <div class="titulo">
+
+        <div class="subtitulo">
+
+            BARBERÍA PREMIUM
+
+        </div>
+
+
+        <h1>
+
+            Reserva tu cita
+
+        </h1>
+
+
+        <p>
+
+            Elige tu servicio, tu barbero y el horario que prefieras.
+
+        </p>
+
+    </div>
+
+
+    <!-- PASOS -->
+
+    <div class="pasos">
+
+        <div
+            class="paso activo"
+            id="paso1"
+        >
+            1. Servicio
+        </div>
+
+
+        <div
+            class="paso"
+            id="paso2"
+        >
+            2. Barbero
+        </div>
+
+
+        <div
+            class="paso"
+            id="paso3"
+        >
+            3. Fecha y hora
+        </div>
+
+
+        <div
+            class="paso"
+            id="paso4"
+        >
+            4. Datos
+        </div>
+
+    </div>
+
+
+    <div class="tarjeta">
+
+
+        <!-- ============================
+             SERVICIOS
+        ============================= -->
+
+        <section class="seccion">
+
+            <h2>
+                ✂️ Elige tu servicio
+            </h2>
+
+            <p class="seccion-descripcion">
+                Selecciona el servicio que deseas realizarte.
+            </p>
+
+
+            <div
+                id="servicios"
+                class="servicios"
+            >
+
+                <div class="cargando">
+                    Cargando servicios...
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ============================
+             BARBEROS
+        ============================= -->
+
+        <section class="seccion">
+
+            <h2>
+                💈 Elige tu barbero
+            </h2>
+
+            <p class="seccion-descripcion">
+                Selecciona al profesional que prefieras.
+            </p>
+
+
+            <div
+                id="barberos"
+                class="barberos"
+            >
+
+                <div class="cargando">
+                    Cargando barberos...
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ============================
+             FECHA
+        ============================= -->
+
+        <section class="seccion">
+
+            <h2>
+                📅 Selecciona fecha
+            </h2>
+
+
+            <div class="campo">
+
+                <label>
+                    Fecha de tu cita
+                </label>
+
+
+                <input
+                    type="date"
+                    id="fecha"
+                >
+
+            </div>
+
+        </section>
+
+
+        <!-- ============================
+             HORAS
+        ============================= -->
+
+        <section class="seccion">
+
+            <h2>
+                🕐 Horarios disponibles
+            </h2>
+
+            <p class="seccion-descripcion">
+                Selecciona primero el servicio, barbero y fecha.
+            </p>
+
+
+            <div
+                id="horas"
+                class="horas"
+            >
+
+                <div class="sin-horas">
+                    Selecciona los datos anteriores.
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ============================
+             DATOS CLIENTE
+        ============================= -->
+
+        <section class="seccion">
+
+            <h2>
+                👤 Tus datos
+            </h2>
+
+            <p class="seccion-descripcion">
+                Necesitamos estos datos para registrar tu cita.
+            </p>
+
+
+            <div class="formulario">
+
+
+                <div class="campo">
+
+                    <label>
+                        Nombre completo *
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="nombreCliente"
+                        placeholder="Ej. Juan Pérez"
+                    >
+
+                </div>
+
+
+                <div class="campo">
+
+                    <label>
+                        Teléfono *
+                    </label>
+
+
+                    <input
+                        type="tel"
+                        id="telefonoCliente"
+                        placeholder="Ej. 70000000"
+                    >
+
+                </div>
+
+
+                <div class="campo">
+
+                    <label>
+                        Correo electrónico
+                    </label>
+
+
+                    <input
+                        type="email"
+                        id="correoCliente"
+                        placeholder="Ej. cliente@gmail.com"
+                    >
+
+                </div>
+
+
+                <div
+                    class="campo campo-completo"
+                >
+
+                    <label>
+                        Observaciones
+                    </label>
+
+
+                    <textarea
+                        id="observaciones"
+                        placeholder="Alguna indicación adicional..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ============================
+             RESUMEN
+        ============================= -->
+
+        <div class="resumen">
+
+            <h3>
+                📋 Resumen de tu reserva
+            </h3>
+
+
+            <div class="resumen-linea">
+
+                <span>
+                    Servicio
+                </span>
+
+                <strong id="resumenServicio">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="resumen-linea">
+
+                <span>
+                    Barbero
+                </span>
+
+                <strong id="resumenBarbero">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="resumen-linea">
+
+                <span>
+                    Fecha
+                </span>
+
+                <strong id="resumenFecha">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="resumen-linea">
+
+                <span>
+                    Hora
+                </span>
+
+                <strong id="resumenHora">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="resumen-linea">
+
+                <span>
+                    Precio
+                </span>
+
+                <strong
+                    id="resumenPrecio"
+                    class="precio"
+                >
+                    -
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="mensaje"
+            class="mensaje"
+        ></div>
+
+
+        <button
+            id="btnReservar"
+            class="boton-reservar"
+            disabled
+        >
+
+            CONFIRMAR RESERVA
+
+        </button>
+
+
+    </div>
+
+</main>
+
+
+<script>
+
+
+// ========================================
+// VARIABLES
+// ========================================
+
+let servicios = [];
+
+let barberos = [];
+
+let horarios = [];
+
+let reservas = [];
+
+
+let servicioSeleccionado = null;
+
+let barberoSeleccionado = null;
+
+let fechaSeleccionada = null;
+
+let horaSeleccionada = null;
+
+
+// ========================================
+// ELEMENTOS
+// ========================================
+
+const serviciosContenedor =
+    document.getElementById(
+        "servicios"
+    );
+
+
+const barberosContenedor =
+    document.getElementById(
+        "barberos"
+    );
+
+
+const horasContenedor =
+    document.getElementById(
+        "horas"
+    );
+
+
+const fechaInput =
+    document.getElementById(
+        "fecha"
+    );
+
+
+// ========================================
+// FECHA MÍNIMA = HOY
+// ========================================
+
+function obtenerFechaHoy() {
+
+    const hoy =
+        new Date();
+
+    const año =
+        hoy.getFullYear();
+
+    const mes =
+        String(
+            hoy.getMonth() + 1
+        ).padStart(
+            2,
+            "0"
+        );
+
+    const dia =
+        String(
+            hoy.getDate()
+        ).padStart(
+            2,
+            "0"
+        );
+
+    return `${año}-${mes}-${dia}`;
+
+}
+
+
+fechaInput.min =
+    obtenerFechaHoy();
+
+
+// ========================================
+// CARGAR SERVICIOS
+// ========================================
+
+async function cargarServicios() {
+
+    try {
+
+        const respuesta =
+            await fetch(
+                "/api/servicios"
+            );
+
+
+        servicios =
+            await respuesta.json();
+
+
+        servicios =
+            servicios.filter(
+                servicio =>
+                    Boolean(
+                        servicio.estado
+                    )
+            );
+
+
+        mostrarServicios();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        serviciosContenedor.innerHTML = `
+
+            <div class="sin-horas">
+
+                ❌ No se pudieron cargar los servicios.
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+// ========================================
+// MOSTRAR SERVICIOS
+// ========================================
+
+function mostrarServicios() {
+
+    serviciosContenedor.innerHTML =
+        "";
+
+
+    if (
+        servicios.length === 0
+    ) {
+
+        serviciosContenedor.innerHTML = `
+
+            <div class="sin-horas">
+
+                No hay servicios disponibles.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    servicios.forEach(
+        servicio => {
+
+            const elemento =
+                document.createElement(
+                    "div"
+                );
+
+
+            elemento.className =
+                "servicio";
+
+
+            elemento.innerHTML = `
+
+                <div class="servicio-icono">
+                    ✂️
+                </div>
+
+
+                <h3>
+                    ${escapeHTML(
+                        servicio.nombre
+                    )}
+                </h3>
+
+
+                <p>
+                    ${
+                        escapeHTML(
+                            servicio.descripcion ||
+                            "Servicio profesional de barbería."
+                        )
+                    }
+                </p>
+
+
+                <div class="servicio-info">
+
+                    <span class="precio">
+
+                        Bs ${
+                            Number(
+                                servicio.precio
+                            ).toFixed(2)
+                        }
+
+                    </span>
+
+
+                    <span class="duracion">
+
+                        ⏱️ ${
+                            servicio.duracion
+                        } min
+
+                    </span>
+
+                </div>
+
+            `;
+
+
+            elemento.addEventListener(
+                "click",
+                () => {
+
+                    seleccionarServicio(
+                        servicio
+                    );
+
+                }
+            );
+
+
+            serviciosContenedor.appendChild(
+                elemento
+            );
+
+        }
+    );
+
+}
+
+
+// ========================================
+// SELECCIONAR SERVICIO
+// ========================================
+
+function seleccionarServicio(
+    servicio
+) {
+
+    servicioSeleccionado =
+        servicio;
+
+
+    document.querySelectorAll(
+        ".servicio"
+    ).forEach(
+        elemento =>
+            elemento.classList.remove(
+                "seleccionado"
+            )
+    );
+
+
+    event.currentTarget.classList.add(
+        "seleccionado"
+    );
+
+
+    document.getElementById(
+        "resumenServicio"
+    ).textContent =
+        servicio.nombre;
+
+
+    document.getElementById(
+        "resumenPrecio"
+    ).textContent =
+        `Bs ${
+            Number(
+                servicio.precio
+            ).toFixed(2)
+        }`;
+
+
+    horaSeleccionada =
+        null;
+
+
+    cargarHorariosDisponibles();
+
+    actualizarPasos();
+
+}
+
+
+// ========================================
+// CARGAR BARBEROS
+// ========================================
+
+async function cargarBarberos() {
+
+    try {
+
+        const respuesta =
+            await fetch(
+                "/api/barberos"
+            );
+
+
+        barberos =
+            await respuesta.json();
+
+
+        barberos =
+            barberos.filter(
+                barbero =>
+                    Boolean(
+                        barbero.estado
+                    )
+            );
+
+
+        mostrarBarberos();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        barberosContenedor.innerHTML = `
+
+            <div class="sin-horas">
+
+                ❌ No se pudieron cargar los barberos.
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+// ========================================
+// MOSTRAR BARBEROS
+// ========================================
+
+function mostrarBarberos() {
+
+    barberosContenedor.innerHTML =
+        "";
+
+
+    if (
+        barberos.length === 0
+    ) {
+
+        barberosContenedor.innerHTML = `
+
+            <div class="sin-horas">
+
+                No hay barberos disponibles.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    barberos.forEach(
+        barbero => {
+
+            const elemento =
+                document.createElement(
+                    "div"
+                );
+
+
+            elemento.className =
+                "barbero";
+
+
+            elemento.innerHTML = `
+
+                <div class="barbero-avatar">
+
+                    ${
+                        barbero.foto
+
+                        ? `
+
+                            <img
+                                src="${barbero.foto}"
+                                alt="${escapeHTML(
+                                    barbero.nombre
+                                )}"
+                            >
+
+                        `
+
+                        : "💈"
+
+                    }
+
+                </div>
+
+
+                <h3>
+
+                    ${escapeHTML(
+                        barbero.nombre
+                    )}
+
+                </h3>
+
+
+                <p>
+                    Barbero profesional
+                </p>
+
+            `;
+
+
+            elemento.addEventListener(
+                "click",
+                () => {
+
+                    seleccionarBarbero(
+                        barbero,
+                        elemento
+                    );
+
+                }
+            );
+
+
+            barberosContenedor.appendChild(
+                elemento
+            );
+
+        }
+    );
+
+}
+
+
+// ========================================
+// SELECCIONAR BARBERO
+// ========================================
+
+function seleccionarBarbero(
+    barbero,
+    elemento
+) {
+
+    barberoSeleccionado =
+        barbero;
+
+
+    document.querySelectorAll(
+        ".barbero"
+    ).forEach(
+        item =>
+            item.classList.remove(
+                "seleccionado"
+            )
+    );
+
+
+    elemento.classList.add(
+        "seleccionado"
+    );
+
+
+    document.getElementById(
+        "resumenBarbero"
+    ).textContent =
+        barbero.nombre;
+
+
+    horaSeleccionada =
+        null;
+
+
+    cargarHorariosDisponibles();
+
+    actualizarPasos();
+
+}
+
+
+// ========================================
+// FECHA
+// ========================================
+
+fechaInput.addEventListener(
+    "change",
+    function() {
+
+        fechaSeleccionada =
+            this.value;
+
+
+        horaSeleccionada =
+            null;
+
+
+        document.getElementById(
+            "resumenFecha"
+        ).textContent =
+            formatearFecha(
+                this.value
+            );
+
+
+        cargarHorariosDisponibles();
+
+        actualizarPasos();
+
+    }
+);
+
+
+// ========================================
+// CARGAR HORARIOS
+// ========================================
+
+async function cargarHorariosDisponibles() {
+
+    if (
+        !servicioSeleccionado ||
+        !barberoSeleccionado ||
+        !fechaSeleccionada
+    ) {
+
+        horasContenedor.innerHTML = `
+
+            <div class="sin-horas">
+
+                Selecciona servicio, barbero y fecha.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    horasContenedor.innerHTML = `
+
+        <div class="cargando">
+
+            Calculando horarios disponibles...
+
+        </div>
+
+    `;
+
+
+    try {
+
+        const [
+            respuestaHorarios,
+            respuestaReservas
+        ] = await Promise.all([
+
+            fetch(
+                "/api/horarios"
+            ),
+
+            fetch(
+                "/api/reservas"
+            )
+
+        ]);
+
+
+        horarios =
+            await respuestaHorarios.json();
+
+
+        reservas =
+            await respuestaReservas.json();
+
+
+        mostrarHoras();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        horasContenedor.innerHTML = `
+
+            <div class="sin-horas">
+
+                ❌ No se pudieron calcular los horarios.
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+// ========================================
+// MOSTRAR HORAS
+// ========================================
+
+function mostrarHoras() {
+
+    horasContenedor.innerHTML =
+        "";
+
+
+    const fecha =
+        new Date(
+            fechaSeleccionada +
+            "T00:00:00"
+        );
+
+
+    const nombresDias = [
+
+        "Domingo",
+        "Lunes",
+        "Martes",
+        "Miércoles",
+        "Jueves",
+        "Viernes",
+        "Sábado"
+
+    ];
+
+
+    const diaSemana =
+        nombresDias[
+            fecha.getDay()
+        ];
+
+
+    const horario =
+        horarios.find(
+            h =>
+                h.dia_semana ===
+                diaSemana &&
+                Boolean(
+                    h.estado
+                )
+        );
+
+
+    if (!horario) {
+
+        horasContenedor.innerHTML = `
+
+            <div class="sin-horas">
+
+                ❌ La barbería no tiene horario de atención configurado para ${diaSemana}.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    const inicio =
+        convertirMinutos(
+            horario.hora_inicio
+        );
+
+
+    const fin =
+        convertirMinutos(
+            horario.hora_fin
+        );
+
+
+    const duracion =
+        Number(
+            servicioSeleccionado.duracion
+        ) || 30;
+
+
+    /*
+       Generamos horarios cada 30 minutos.
+       Luego verificamos que el servicio
+       pueda terminar antes del cierre.
+    */
+
+    const intervalo =
+        30;
+
+
+    const ahora =
+        new Date();
+
+
+    const esHoy =
+        fechaSeleccionada ===
+        obtenerFechaHoy();
+
+
+    let cantidad =
+        0;
+
+
+    for (
+        let minutos = inicio;
+        minutos + duracion <= fin;
+        minutos += intervalo
+    ) {
+
+        const hora =
+            minutosAHora(
+                minutos
+            );
+
+
+        /*
+           Si es hoy, no mostramos horas
+           que ya hayan pasado.
+        */
+
+        if (
+            esHoy
+        ) {
+
+            const fechaHora =
+                new Date();
+
+            fechaHora.setHours(
+                Math.floor(
+                    minutos / 60
+                ),
+                minutos % 60,
+                0,
+                0
+            );
+
+
+            if (
+                fechaHora <= ahora
+            ) {
+
+                continue;
+
+            }
+
+        }
+
+
+        const ocupada =
+            estaOcupada(
+                minutos,
+                duracion
+            );
+
+
+        const boton =
+            document.createElement(
+                "button"
+            );
+
+
+        boton.type =
+            "button";
+
+
+        boton.className =
+            "hora";
+
+
+        boton.textContent =
+            hora;
+
+
+        if (ocupada) {
+
+            boton.classList.add(
+                "ocupada"
+            );
+
+
+            boton.disabled =
+                true;
+
+        }
+
+        else {
+
+            boton.addEventListener(
+                "click",
+                () => {
+
+                    seleccionarHora(
+                        hora,
+                        boton
+                    );
+
+                }
+            );
+
+        }
+
+
+        horasContenedor.appendChild(
+            boton
+        );
+
+
+        cantidad++;
+
+    }
+
+
+    if (
+        cantidad === 0
+    ) {
+
+        horasContenedor.innerHTML = `
+
+            <div class="sin-horas">
+
+                ❌ No hay horarios disponibles para esta fecha.
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+// ========================================
+// COMPROBAR OCUPACIÓN
+// ========================================
+
+function estaOcupada(
+    inicioNueva,
+    duracionNueva
+) {
+
+    const finNueva =
+        inicioNueva +
+        duracionNueva;
+
+
+    return reservas.some(
+        reserva => {
+
+            if (
+                Number(
+                    reserva.id_barbero
+                ) !==
+                Number(
+                    barberoSeleccionado.id_barbero
+                )
+            ) {
+
+                return false;
+
+            }
+
+
+            if (
+                reserva.fecha !==
+                fechaSeleccionada
+            ) {
+
+                return false;
+
+            }
+
+
+            if (
+                reserva.estado ===
+                "cancelada"
+            ) {
+
+                return false;
+
+            }
+
+
+            const inicioExistente =
+                convertirMinutos(
+                    reserva.hora
+                );
+
+
+            const duracionExistente =
+                Number(
+                    reserva.servicio_duracion
+                ) || 30;
+
+
+            const finExistente =
+                inicioExistente +
+                duracionExistente;
+
+
+            return (
+
+                inicioNueva <
+                finExistente
+
+                &&
+
+                finNueva >
+                inicioExistente
+
+            );
+
+        }
+    );
+
+}
+
+
+// ========================================
+// SELECCIONAR HORA
+// ========================================
+
+function seleccionarHora(
+    hora,
+    elemento
+) {
+
+    document.querySelectorAll(
+        ".hora"
+    ).forEach(
+        item =>
+            item.classList.remove(
+                "seleccionada"
+            )
+    );
+
+
+    elemento.classList.add(
+        "seleccionada"
+    );
+
+
+    horaSeleccionada =
+        hora;
+
+
+    document.getElementById(
+        "resumenHora"
+    ).textContent =
+        hora;
+
+
+    actualizarPasos();
+
+}
+
+
+// ========================================
+// CREAR CLIENTE Y RESERVA
+// ========================================
+
+document.getElementById(
+    "btnReservar"
+).addEventListener(
+    "click",
+    async function() {
+
+        ocultarMensaje();
+
+
+        if (
+            !servicioSeleccionado
+        ) {
+
+            mostrarMensaje(
+                "Selecciona un servicio.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        if (
+            !barberoSeleccionado
+        ) {
+
+            mostrarMensaje(
+                "Selecciona un barbero.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        if (
+            !fechaSeleccionada
+        ) {
+
+            mostrarMensaje(
+                "Selecciona una fecha.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        if (
+            !horaSeleccionada
+        ) {
+
+            mostrarMensaje(
+                "Selecciona una hora disponible.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        const nombre =
+            document.getElementById(
+                "nombreCliente"
+            ).value.trim();
+
+
+        const telefono =
+            document.getElementById(
+                "telefonoCliente"
+            ).value.trim();
+
+
+        const correo =
+            document.getElementById(
+                "correoCliente"
+            ).value.trim();
+
+
+        const observaciones =
+            document.getElementById(
+                "observaciones"
+            ).value.trim();
+
+
+        if (!nombre) {
+
+            mostrarMensaje(
+                "Ingresa tu nombre completo.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        if (!telefono) {
+
+            mostrarMensaje(
+                "Ingresa tu número de teléfono.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        const boton =
+            document.getElementById(
+                "btnReservar"
+            );
+
+
+        boton.disabled =
+            true;
+
+
+        boton.textContent =
+            "REGISTRANDO RESERVA...";
+
+
+        try {
+
+
+            // ==============================
+            // CREAR CLIENTE
+            // ==============================
+
+            const respuestaCliente =
+                await fetch(
+                    "/api/clientes",
+                    {
+
+                        method:
+                            "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body:
+                            JSON.stringify({
+
+                                nombre:
+                                    nombre,
+
+                                telefono:
+                                    telefono,
+
+                                correo:
+                                    correo || null
+
+                            })
+
+                    }
+                );
+
+
+            const cliente =
+                await respuestaCliente.json();
+
+
+            if (
+                !respuestaCliente.ok
+            ) {
+
+                throw new Error(
+                    cliente.error ||
+                    "No se pudo registrar el cliente"
+                );
+
+            }
+
+
+            // ==============================
+            // CREAR RESERVA
+            // ==============================
+
+            const respuestaReserva =
+                await fetch(
+                    "/api/reservas",
+                    {
+
+                        method:
+                            "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body:
+                            JSON.stringify({
+
+                                id_cliente:
+                                    cliente.id_cliente,
+
+                                id_barbero:
+                                    barberoSeleccionado.id_barbero,
+
+                                id_servicio:
+                                    servicioSeleccionado.id_servicio,
+
+                                fecha:
+                                    fechaSeleccionada,
+
+                                hora:
+                                    horaSeleccionada,
+
+                                observaciones:
+                                    observaciones ||
+                                    null
+
+                            })
+
+                    }
+                );
+
+
+            const reserva =
+                await respuestaReserva.json();
+
+
+            if (
+                !respuestaReserva.ok
+            ) {
+
+                throw new Error(
+                    reserva.error ||
+                    "No se pudo crear la reserva"
+                );
+
+            }
+
+
+            // ==============================
+            // ÉXITO
+            // ==============================
+
+            mostrarMensaje(
+
+                `
+
+                    ✅ ¡Reserva realizada correctamente!
+
+                    <br><br>
+
+                    Reserva #${reserva.id_reserva}
+
+                    <br>
+
+                    ${servicioSeleccionado.nombre}
+
+                    <br>
+
+                    ${barberoSeleccionado.nombre}
+
+                    <br>
+
+                    ${formatearFecha(
+                        fechaSeleccionada
+                    )}
+                    -
+                    ${horaSeleccionada}
+
+                `,
+
+                "exito"
+
+            );
+
+
+            boton.textContent =
+                "RESERVA REGISTRADA ✓";
+
+
+            /*
+               Deshabilitamos el botón
+               para evitar doble reserva.
+            */
+
+            boton.disabled =
+                true;
+
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+
+            mostrarMensaje(
+                "❌ " +
+                error.message,
+                "error"
+            );
+
+
+            boton.disabled =
+                false;
+
+
+            boton.textContent =
+                "CONFIRMAR RESERVA";
+
+        }
+
+    }
+);
+
+
+// ========================================
+// ACTUALIZAR BOTÓN
+// ========================================
+
+function actualizarBoton() {
+
+    const boton =
+        document.getElementById(
+            "btnReservar"
+        );
+
+
+    const nombre =
+        document.getElementById(
+            "nombreCliente"
+        ).value.trim();
+
+
+    const telefono =
+        document.getElementById(
+            "telefonoCliente"
+        ).value.trim();
+
+
+    boton.disabled = !(
+        servicioSeleccionado
+        &&
+        barberoSeleccionado
+        &&
+        fechaSeleccionada
+        &&
+        horaSeleccionada
+        &&
+        nombre
+        &&
+        telefono
+    );
+
+}
+
+
+// ========================================
+// ACTUALIZAR PASOS
+// ========================================
+
+function actualizarPasos() {
+
+    const paso1 =
+        document.getElementById(
+            "paso1"
+        );
+
+
+    const paso2 =
+        document.getElementById(
+            "paso2"
+        );
+
+
+    const paso3 =
+        document.getElementById(
+            "paso3"
+        );
+
+
+    const paso4 =
+        document.getElementById(
+            "paso4"
+        );
+
+
+    [
+        paso1,
+        paso2,
+        paso3,
+        paso4
+    ].forEach(
+        paso =>
+            paso.classList.remove(
+                "activo"
+            )
+    );
+
+
+    if (
+        !servicioSeleccionado
+    ) {
+
+        paso1.classList.add(
+            "activo"
+        );
+
+    }
+
+    else if (
+        !barberoSeleccionado
+    ) {
+
+        paso2.classList.add(
+            "activo"
+        );
+
+    }
+
+    else if (
+        !fechaSeleccionada ||
+        !horaSeleccionada
+    ) {
+
+        paso3.classList.add(
+            "activo"
+        );
+
+    }
+
+    else {
+
+        paso4.classList.add(
+            "activo"
+        );
+
+    }
+
+
+    actualizarBoton();
+
+}
+
+
+// ========================================
+// ESCUCHAR DATOS
+// ========================================
+
+document.getElementById(
+    "nombreCliente"
+).addEventListener(
+    "input",
+    actualizarBoton
+);
+
+
+document.getElementById(
+    "telefonoCliente"
+).addEventListener(
+    "input",
+    actualizarBoton
+);
+
+
+// ========================================
+// UTILIDADES
+// ========================================
+
+function convertirMinutos(
+    hora
+) {
+
+    const partes =
+        String(
+            hora
+        ).split(":");
+
+
+    return (
+        Number(
+            partes[0]
+        ) * 60
+    )
+    +
+    Number(
+        partes[1]
+    );
+
+}
+
+
+function minutosAHora(
+    minutos
+) {
+
+    const horas =
+        Math.floor(
+            minutos / 60
+        );
+
+
+    const minutosRestantes =
+        minutos % 60;
+
+
+    return (
+
+        String(
+            horas
+        ).padStart(
+            2,
+            "0"
+        )
+
+        +
+
+        ":"
+
+        +
+
+        String(
+            minutosRestantes
+        ).padStart(
+            2,
+            "0"
+        )
+
+    );
+
+}
+
+
+function formatearFecha(
+    fecha
+) {
+
+    if (!fecha) {
+
+        return "-";
+
+    }
+
+
+    const partes =
+        String(
+            fecha
+        ).split("-");
+
+
+    if (
+        partes.length !== 3
+    ) {
+
+        return fecha;
+
+    }
+
+
+    return `${partes[2]}/${partes[1]}/${partes[0]}`;
+
+}
+
+
+function mostrarMensaje(
+    texto,
+    tipo
+) {
+
+    const mensaje =
+        document.getElementById(
+            "mensaje"
+        );
+
+
+    mensaje.innerHTML =
+        texto;
+
+
+    mensaje.className =
+        `mensaje ${tipo}`;
+
+}
+
+
+function ocultarMensaje() {
+
+    const mensaje =
+        document.getElementById(
+            "mensaje"
+        );
+
+
+    mensaje.className =
+        "mensaje";
+
+
+    mensaje.innerHTML =
+        "";
+
+}
+
+
+function escapeHTML(
+    texto
+) {
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+
+    div.textContent =
+        texto ?? "";
+
+
+    return div.innerHTML;
+
+}
+
+
+// ========================================
+// INICIAR
+// ========================================
+
+cargarServicios();
+
+cargarBarberos();
+
+actualizarPasos();
+
+</script>
+
+
+</body>
+
+</html>

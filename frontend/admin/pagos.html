@@ -1,0 +1,3037 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+    CLUB PONTE PERRO | Pagos
+</title>
+
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+
+    font-family:Arial,sans-serif;
+
+    background:#111;
+
+    color:#fff;
+
+    min-height:100vh;
+
+}
+
+header{
+
+    height:70px;
+
+    background:#181818;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:0 30px;
+
+    border-bottom:1px solid #333;
+
+}
+
+.logo{
+
+    font-size:24px;
+
+    font-weight:900;
+
+}
+
+.logo span{
+
+    color:#d4af37;
+
+}
+
+.volver{
+
+    color:#aaa;
+
+    text-decoration:none;
+
+    font-weight:bold;
+
+}
+
+.volver:hover{
+
+    color:#d4af37;
+
+}
+
+main{
+
+    max-width:1500px;
+
+    margin:auto;
+
+    padding:35px 30px 60px;
+
+}
+
+
+/* ==================================================
+   TITULO
+================================================== */
+
+.titulo{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:25px;
+
+    gap:20px;
+
+}
+
+.titulo h1{
+
+    font-size:32px;
+
+}
+
+.titulo p{
+
+    color:#888;
+
+    margin-top:7px;
+
+}
+
+
+/* ==================================================
+   BOTONES
+================================================== */
+
+.btn-principal{
+
+    background:#d4af37;
+
+    color:#111;
+
+    border:none;
+
+    padding:13px 20px;
+
+    border-radius:7px;
+
+    font-weight:900;
+
+    cursor:pointer;
+
+}
+
+.btn-principal:hover{
+
+    background:#f0ce52;
+
+}
+
+
+/* ==================================================
+   ESTADISTICAS
+================================================== */
+
+.estadisticas{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(6,1fr);
+
+    gap:12px;
+
+    margin-bottom:22px;
+
+}
+
+.estadistica{
+
+    background:#181818;
+
+    border:1px solid #333;
+
+    border-radius:10px;
+
+    padding:18px;
+
+    min-height:105px;
+
+}
+
+.numero{
+
+    color:#d4af37;
+
+    font-size:24px;
+
+    font-weight:900;
+
+}
+
+.numero.verde{
+
+    color:#72db8c;
+
+}
+
+.numero.rojo{
+
+    color:#ff6868;
+
+}
+
+.numero.azul{
+
+    color:#70c9ed;
+
+}
+
+.texto{
+
+    color:#888;
+
+    font-size:11px;
+
+    margin-top:7px;
+
+    text-transform:uppercase;
+
+    line-height:1.4;
+
+}
+
+
+/* ==================================================
+   PENDIENTES
+================================================== */
+
+.seccion-pendientes{
+
+    background:#181818;
+
+    border:1px solid #4b302f;
+
+    border-radius:12px;
+
+    margin-bottom:25px;
+
+    overflow:hidden;
+
+}
+
+.cabecera-pendientes{
+
+    padding:18px 20px;
+
+    background:#211919;
+
+    border-bottom:1px solid #402b2b;
+
+}
+
+.cabecera-pendientes h2{
+
+    color:#ff6868;
+
+    font-size:20px;
+
+}
+
+.cabecera-pendientes p{
+
+    color:#888;
+
+    margin-top:5px;
+
+    font-size:13px;
+
+}
+
+.lista-pendientes{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:15px;
+
+    padding:18px;
+
+}
+
+.pendiente-card{
+
+    background:#151515;
+
+    border:1px solid #333;
+
+    border-radius:10px;
+
+    padding:18px;
+
+}
+
+.pendiente-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:15px;
+
+    margin-bottom:14px;
+
+}
+
+.reserva-numero{
+
+    color:#d4af37;
+
+    font-weight:900;
+
+}
+
+.pendiente-monto{
+
+    color:#ff6868;
+
+    font-size:22px;
+
+    font-weight:900;
+
+}
+
+.pendiente-datos{
+
+    display:grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:8px;
+
+    margin-bottom:15px;
+
+}
+
+.dato{
+
+    background:#202020;
+
+    border-radius:7px;
+
+    padding:10px;
+
+}
+
+.dato small{
+
+    display:block;
+
+    color:#777;
+
+    font-size:10px;
+
+    text-transform:uppercase;
+
+    margin-bottom:4px;
+
+}
+
+.dato strong{
+
+    color:#eee;
+
+    font-size:13px;
+
+}
+
+.pendiente-fin{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:10px;
+
+}
+
+.btn-cobrar{
+
+    background:#72db8c;
+
+    color:#102016;
+
+    border:none;
+
+    padding:10px 15px;
+
+    border-radius:7px;
+
+    cursor:pointer;
+
+    font-weight:900;
+
+}
+
+.btn-cobrar:hover{
+
+    opacity:.85;
+
+}
+
+.sin-pendientes{
+
+    padding:30px;
+
+    text-align:center;
+
+    color:#72db8c;
+
+}
+
+
+/* ==================================================
+   FILTROS
+================================================== */
+
+.filtros{
+
+    background:#181818;
+
+    border:1px solid #333;
+
+    border-radius:10px;
+
+    padding:18px;
+
+    margin-bottom:20px;
+
+    display:grid;
+
+    grid-template-columns:
+        2fr 1fr;
+
+    gap:12px;
+
+}
+
+.filtros input,
+.filtros select{
+
+    width:100%;
+
+    padding:12px;
+
+    background:#222;
+
+    color:white;
+
+    border:1px solid #444;
+
+    border-radius:7px;
+
+    outline:none;
+
+}
+
+.filtros input:focus,
+.filtros select:focus{
+
+    border-color:#d4af37;
+
+}
+
+
+/* ==================================================
+   TABLA
+================================================== */
+
+.tabla-container{
+
+    background:#181818;
+
+    border:1px solid #333;
+
+    border-radius:10px;
+
+    overflow-x:auto;
+
+}
+
+table{
+
+    width:100%;
+
+    min-width:1300px;
+
+    border-collapse:collapse;
+
+}
+
+th{
+
+    background:#222;
+
+    color:#d4af37;
+
+    padding:14px;
+
+    text-align:left;
+
+    font-size:11px;
+
+    white-space:nowrap;
+
+}
+
+td{
+
+    padding:13px;
+
+    border-top:1px solid #333;
+
+    color:#ddd;
+
+}
+
+tr:hover{
+
+    background:#202020;
+
+}
+
+.monto{
+
+    color:#72db8c;
+
+    font-weight:900;
+
+}
+
+.tipo{
+
+    padding:5px 9px;
+
+    border-radius:15px;
+
+    font-size:10px;
+
+    font-weight:bold;
+
+    text-transform:uppercase;
+
+}
+
+.tipo-adelanto{
+
+    background:#332d16;
+
+    color:#e7ca61;
+
+}
+
+.tipo-saldo{
+
+    background:#16351e;
+
+    color:#72db8c;
+
+}
+
+.tipo-completo{
+
+    background:#172d40;
+
+    color:#70c9ed;
+
+}
+
+.metodo{
+
+    text-transform:capitalize;
+
+}
+
+.estado{
+
+    padding:5px 8px;
+
+    border-radius:12px;
+
+    font-size:10px;
+
+    text-transform:uppercase;
+
+}
+
+.estado-completada{
+
+    background:#17351f;
+
+    color:#72db8c;
+
+}
+
+.estado-confirmada{
+
+    background:#172d40;
+
+    color:#70c9ed;
+
+}
+
+.estado-pendiente{
+
+    background:#332d16;
+
+    color:#e7ca61;
+
+}
+
+.estado-cancelada{
+
+    background:#3b1919;
+
+    color:#ff6868;
+
+}
+
+.btn-eliminar{
+
+    background:#8b2020;
+
+    color:white;
+
+    border:none;
+
+    border-radius:5px;
+
+    padding:8px 10px;
+
+    cursor:pointer;
+
+    font-weight:bold;
+
+}
+
+.btn-eliminar:hover{
+
+    opacity:.8;
+
+}
+
+.mensaje{
+
+    text-align:center;
+
+    padding:40px!important;
+
+    color:#777;
+
+}
+
+
+/* ==================================================
+   MODAL
+================================================== */
+
+.modal{
+
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.88);
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:20px;
+
+    z-index:2000;
+
+}
+
+.modal.mostrar{
+
+    display:flex;
+
+}
+
+.modal-contenido{
+
+    width:620px;
+
+    max-width:100%;
+
+    max-height:90vh;
+
+    overflow-y:auto;
+
+    background:#181818;
+
+    border:1px solid #444;
+
+    border-radius:12px;
+
+    padding:28px;
+
+}
+
+.modal-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-bottom:20px;
+
+}
+
+.modal-header h2{
+
+    color:#d4af37;
+
+}
+
+.cerrar{
+
+    background:none;
+
+    border:none;
+
+    color:#aaa;
+
+    font-size:28px;
+
+    cursor:pointer;
+
+}
+
+.campo{
+
+    margin-bottom:16px;
+
+}
+
+.campo label{
+
+    display:block;
+
+    margin-bottom:7px;
+
+    color:#ccc;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+}
+
+.campo input,
+.campo select,
+.campo textarea{
+
+    width:100%;
+
+    padding:12px;
+
+    background:#222;
+
+    color:white;
+
+    border:1px solid #444;
+
+    border-radius:7px;
+
+    outline:none;
+
+}
+
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus{
+
+    border-color:#d4af37;
+
+}
+
+.campo textarea{
+
+    resize:vertical;
+
+    min-height:80px;
+
+}
+
+.info-reserva{
+
+    background:#202020;
+
+    border:1px solid #333;
+
+    border-radius:8px;
+
+    padding:13px;
+
+    margin-bottom:18px;
+
+    display:none;
+
+}
+
+.info-reserva.visible{
+
+    display:block;
+
+}
+
+.info-reserva strong{
+
+    color:#d4af37;
+
+}
+
+.acciones{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:10px;
+
+    margin-top:20px;
+
+}
+
+.btn-cancelar,
+.btn-guardar{
+
+    border:none;
+
+    padding:12px 18px;
+
+    border-radius:7px;
+
+    cursor:pointer;
+
+    font-weight:bold;
+
+}
+
+.btn-cancelar{
+
+    background:#333;
+
+    color:white;
+
+}
+
+.btn-guardar{
+
+    background:#d4af37;
+
+    color:#111;
+
+}
+
+.btn-guardar:disabled{
+
+    opacity:.5;
+
+}
+
+
+/* ==================================================
+   RESPONSIVE
+================================================== */
+
+@media(max-width:1200px){
+
+    .estadisticas{
+
+        grid-template-columns:
+            repeat(3,1fr);
+
+    }
+
+}
+
+@media(max-width:850px){
+
+    .lista-pendientes{
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+}
+
+@media(max-width:700px){
+
+    header{
+
+        padding:0 15px;
+
+    }
+
+    main{
+
+        padding:25px 15px;
+
+    }
+
+    .titulo{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+    }
+
+    .estadisticas{
+
+        grid-template-columns:
+            1fr 1fr;
+
+    }
+
+    .filtros{
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+    .pendiente-datos{
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<div class="logo">
+
+    CLUB
+    <span>PONTE PERRO</span>
+
+</div>
+
+
+<a
+    href="/admin/dashboard.html"
+    class="volver"
+>
+
+    ← Volver al Dashboard
+
+</a>
+
+</header>
+
+
+<main>
+
+
+<!-- ==================================================
+     TITULO
+================================================== -->
+
+<div class="titulo">
+
+<div>
+
+<h1>
+    💰 Pagos
+</h1>
+
+<p>
+    Control de adelantos, saldos pendientes y pagos realizados.
+</p>
+
+</div>
+
+
+<button
+    class="btn-principal"
+    onclick="abrirModal()"
+>
+
+    ＋ REGISTRAR PAGO
+
+</button>
+
+</div>
+
+
+<!-- ==================================================
+     ESTADISTICAS
+================================================== -->
+
+<section class="estadisticas">
+
+
+<div class="estadistica">
+
+<div
+    id="cantidadPagos"
+    class="numero"
+>
+    0
+</div>
+
+<div class="texto">
+    Pagos registrados
+</div>
+
+</div>
+
+
+<div class="estadistica">
+
+<div
+    id="totalPagado"
+    class="numero verde"
+>
+    Bs 0.00
+</div>
+
+<div class="texto">
+    Total pagado
+</div>
+
+</div>
+
+
+<div class="estadistica">
+
+<div
+    id="totalAdelantos"
+    class="numero"
+>
+    Bs 0.00
+</div>
+
+<div class="texto">
+    Adelantos pagados
+</div>
+
+</div>
+
+
+<div class="estadistica">
+
+<div
+    id="totalSaldos"
+    class="numero verde"
+>
+    Bs 0.00
+</div>
+
+<div class="texto">
+    Saldos pagados
+</div>
+
+</div>
+
+
+<div class="estadistica">
+
+<div
+    id="totalCompletos"
+    class="numero azul"
+>
+    Bs 0.00
+</div>
+
+<div class="texto">
+    Pagos completos
+</div>
+
+</div>
+
+
+<div class="estadistica">
+
+<div
+    id="saldoPendiente"
+    class="numero rojo"
+>
+    Bs 0.00
+</div>
+
+<div class="texto">
+    Saldo pendiente
+</div>
+
+</div>
+
+
+</section>
+
+
+<!-- ==================================================
+     SALDOS PENDIENTES
+================================================== -->
+
+<section class="seccion-pendientes">
+
+
+<div class="cabecera-pendientes">
+
+<h2>
+    🔴 Saldos pendientes
+</h2>
+
+<p>
+    Reservas que todavía tienen dinero pendiente de pago.
+</p>
+
+</div>
+
+
+<div
+    id="listaPendientes"
+    class="lista-pendientes"
+>
+
+<div class="sin-pendientes">
+
+    Cargando saldos pendientes...
+
+</div>
+
+</div>
+
+
+</section>
+
+
+<!-- ==================================================
+     FILTROS
+================================================== -->
+
+<div class="filtros">
+
+<input
+    id="buscar"
+    type="text"
+    placeholder="🔎 Buscar cliente, barbero, servicio o reserva..."
+>
+
+
+<select id="filtroTipo">
+
+<option value="">
+    Todos los pagos
+</option>
+
+<option value="adelanto">
+    Adelantos
+</option>
+
+<option value="saldo">
+    Saldos
+</option>
+
+<option value="completo">
+    Completos
+</option>
+
+</select>
+
+</div>
+
+
+<!-- ==================================================
+     TABLA
+================================================== -->
+
+<div class="tabla-container">
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+<th>
+    ID
+</th>
+
+<th>
+    RESERVA
+</th>
+
+<th>
+    CLIENTE
+</th>
+
+<th>
+    BARBERO
+</th>
+
+<th>
+    SERVICIO
+</th>
+
+<th>
+    ESTADO
+</th>
+
+<th>
+    TIPO
+</th>
+
+<th>
+    MONTO
+</th>
+
+<th>
+    MÉTODO
+</th>
+
+<th>
+    FECHA
+</th>
+
+<th>
+    ACCIÓN
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="tablaPagos">
+
+<tr>
+
+<td
+    colspan="11"
+    class="mensaje"
+>
+
+    Cargando pagos...
+
+</td>
+
+</tr>
+
+</tbody>
+
+
+</table>
+
+</div>
+
+
+</main>
+
+
+<!-- ==================================================
+     MODAL
+================================================== -->
+
+<div
+    id="modal"
+    class="modal"
+>
+
+
+<div class="modal-contenido">
+
+
+<div class="modal-header">
+
+<h2>
+    💰 Registrar pago
+</h2>
+
+
+<button
+    class="cerrar"
+    onclick="cerrarModal()"
+>
+
+    ×
+
+</button>
+
+</div>
+
+
+<form id="formPago">
+
+
+<div
+    id="infoReserva"
+    class="info-reserva"
+></div>
+
+
+<div class="campo">
+
+<label>
+    Reserva *
+</label>
+
+<select
+    id="id_reserva"
+    required
+>
+
+<option value="">
+    Selecciona una reserva
+</option>
+
+</select>
+
+</div>
+
+
+<div class="campo">
+
+<label>
+    Tipo de pago *
+</label>
+
+<select
+    id="tipo_pago"
+    required
+>
+
+<option value="saldo">
+    Saldo
+</option>
+
+<option value="completo">
+    Pago completo
+</option>
+
+<option value="adelanto">
+    Adelanto
+</option>
+
+</select>
+
+</div>
+
+
+<div class="campo">
+
+<label>
+    Monto *
+</label>
+
+<input
+    type="number"
+    id="monto"
+    min="0.01"
+    step="0.01"
+    required
+>
+
+</div>
+
+
+<div class="campo">
+
+<label>
+    Método de pago *
+</label>
+
+<select
+    id="metodo_pago"
+    required
+>
+
+<option value="qr">
+    QR
+</option>
+
+<option value="efectivo">
+    Efectivo
+</option>
+
+<option value="transferencia">
+    Transferencia
+</option>
+
+<option value="otro">
+    Otro
+</option>
+
+</select>
+
+</div>
+
+
+<div class="campo">
+
+<label>
+    Referencia
+</label>
+
+<input
+    type="text"
+    id="referencia"
+    maxlength="255"
+    placeholder="N.º de transferencia, referencia, etc."
+>
+
+</div>
+
+
+<div class="campo">
+
+<label>
+    Observaciones
+</label>
+
+<textarea
+    id="observaciones"
+    maxlength="255"
+></textarea>
+
+</div>
+
+
+<div class="acciones">
+
+
+<button
+    type="button"
+    class="btn-cancelar"
+    onclick="cerrarModal()"
+>
+
+    CANCELAR
+
+</button>
+
+
+<button
+    type="submit"
+    id="btnGuardar"
+    class="btn-guardar"
+>
+
+    💾 GUARDAR PAGO
+
+</button>
+
+
+</div>
+
+
+</form>
+
+
+</div>
+
+</div>
+
+
+<script>
+
+"use strict";
+
+
+let pagos = [];
+
+let reservas = [];
+
+let pendientes = [];
+
+
+// =====================================================
+// DINERO
+// =====================================================
+
+function dinero(valor){
+
+    return (
+        "Bs " +
+        Number(
+            valor || 0
+        ).toFixed(2)
+    );
+
+}
+
+
+// =====================================================
+// ESCAPE
+// =====================================================
+
+function escapeHTML(texto){
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+    div.textContent =
+        texto ?? "";
+
+    return div.innerHTML;
+
+}
+
+
+// =====================================================
+// FECHA
+// =====================================================
+
+function fechaHora(fecha){
+
+    if(!fecha){
+
+        return "-";
+
+    }
+
+    const d =
+        new Date(fecha);
+
+    if(
+        Number.isNaN(
+            d.getTime()
+        )
+    ){
+
+        return String(fecha);
+
+    }
+
+    return d.toLocaleString(
+        "es-BO"
+    );
+
+}
+
+
+// =====================================================
+// CARGAR TODO
+// =====================================================
+
+async function cargarTodo(){
+
+    await Promise.all([
+
+        cargarPagos(),
+
+        cargarReservas(),
+
+        cargarPendientes(),
+
+        cargarResumen()
+
+    ]);
+
+}
+
+
+// =====================================================
+// CARGAR PAGOS
+// =====================================================
+
+async function cargarPagos(){
+
+    try{
+
+        const respuesta =
+            await fetch(
+                "/api/pagos"
+            );
+
+
+        if(!respuesta.ok){
+
+            throw new Error(
+                "No se pudieron cargar los pagos"
+            );
+
+        }
+
+
+        pagos =
+            await respuesta.json();
+
+
+        mostrarPagos();
+
+    }
+    catch(error){
+
+        console.error(
+            error
+        );
+
+
+        document.getElementById(
+            "tablaPagos"
+        ).innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="11"
+                    class="mensaje"
+                >
+
+                    ❌
+                    ${escapeHTML(
+                        error.message
+                    )}
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+}
+
+
+// =====================================================
+// RESUMEN
+// =====================================================
+
+async function cargarResumen(){
+
+    try{
+
+        const respuesta =
+            await fetch(
+                "/api/pagos/resumen"
+            );
+
+
+        if(!respuesta.ok){
+
+            throw new Error(
+                "No se pudo obtener el resumen"
+            );
+
+        }
+
+
+        const data =
+            await respuesta.json();
+
+
+        document.getElementById(
+            "cantidadPagos"
+        ).textContent =
+            data.cantidadPagos || 0;
+
+
+        document.getElementById(
+            "totalPagado"
+        ).textContent =
+            dinero(
+                data.totalPagado
+            );
+
+
+        document.getElementById(
+            "totalAdelantos"
+        ).textContent =
+            dinero(
+                data.totalAdelantos
+            );
+
+
+        document.getElementById(
+            "totalSaldos"
+        ).textContent =
+            dinero(
+                data.totalSaldos
+            );
+
+
+        document.getElementById(
+            "totalCompletos"
+        ).textContent =
+            dinero(
+                data.totalCompletos
+            );
+
+
+        document.getElementById(
+            "saldoPendiente"
+        ).textContent =
+            dinero(
+                data.saldoPendiente
+            );
+
+    }
+    catch(error){
+
+        console.error(
+            error
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// CARGAR SALDOS PENDIENTES
+// =====================================================
+
+async function cargarPendientes(){
+
+    try{
+
+        const respuesta =
+            await fetch(
+                "/api/pagos/pendientes"
+            );
+
+
+        if(!respuesta.ok){
+
+            throw new Error(
+                "No se pudieron cargar los saldos pendientes"
+            );
+
+        }
+
+
+        pendientes =
+            await respuesta.json();
+
+
+        mostrarPendientes();
+
+    }
+    catch(error){
+
+        console.error(
+            error
+        );
+
+
+        document.getElementById(
+            "listaPendientes"
+        ).innerHTML = `
+
+            <div class="sin-pendientes">
+
+                ❌
+                ${escapeHTML(
+                    error.message
+                )}
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+// =====================================================
+// MOSTRAR PENDIENTES
+// =====================================================
+
+function mostrarPendientes(){
+
+    const contenedor =
+        document.getElementById(
+            "listaPendientes"
+        );
+
+
+    contenedor.innerHTML = "";
+
+
+    if(
+        !pendientes.length
+    ){
+
+        contenedor.innerHTML = `
+
+            <div
+                class="sin-pendientes"
+                style="grid-column:1/-1"
+            >
+
+                ✅ No existen saldos pendientes.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    pendientes.forEach(
+        reserva => {
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "pendiente-card";
+
+
+            card.innerHTML = `
+
+                <div class="pendiente-top">
+
+                    <div>
+
+                        <div class="reserva-numero">
+
+                            RESERVA
+                            #${Number(
+                                reserva.id_reserva
+                            )}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="pendiente-monto">
+
+                        ${dinero(
+                            reserva.saldo_pendiente
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="pendiente-datos">
+
+
+                    <div class="dato">
+
+                        <small>
+                            Cliente
+                        </small>
+
+                        <strong>
+                            ${escapeHTML(
+                                reserva.cliente_nombre ||
+                                "-"
+                            )}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="dato">
+
+                        <small>
+                            Barbero
+                        </small>
+
+                        <strong>
+                            ${escapeHTML(
+                                reserva.barbero_nombre ||
+                                "-"
+                            )}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="dato">
+
+                        <small>
+                            Servicio
+                        </small>
+
+                        <strong>
+                            ${escapeHTML(
+                                reserva.servicio_nombre ||
+                                "-"
+                            )}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="dato">
+
+                        <small>
+                            Estado
+                        </small>
+
+                        <strong>
+                            ${escapeHTML(
+                                reserva.estado
+                            )}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="dato">
+
+                        <small>
+                            Total servicio
+                        </small>
+
+                        <strong>
+                            ${dinero(
+                                reserva.total_servicio
+                            )}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="dato">
+
+                        <small>
+                            Total pagado
+                        </small>
+
+                        <strong>
+                            ${dinero(
+                                reserva.total_pagado
+                            )}
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="pendiente-fin">
+
+                    <span
+                        style="
+                            color:#ff6868;
+                            font-weight:bold;
+                        "
+                    >
+
+                        Pendiente:
+                        ${dinero(
+                            reserva.saldo_pendiente
+                        )}
+
+                    </span>
+
+
+                    <button
+                        class="btn-cobrar"
+                        onclick="
+                            cobrarSaldo(
+                                ${Number(
+                                    reserva.id_reserva
+                                )}
+                            )
+                        "
+                    >
+
+                        💵 COBRAR SALDO
+
+                    </button>
+
+                </div>
+
+            `;
+
+
+            contenedor.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// MOSTRAR PAGOS
+// =====================================================
+
+function mostrarPagos(){
+
+    const texto =
+        document.getElementById(
+            "buscar"
+        ).value
+        .toLowerCase()
+        .trim();
+
+
+    const tipo =
+        document.getElementById(
+            "filtroTipo"
+        ).value;
+
+
+    const lista =
+        pagos.filter(
+            pago => {
+
+                const busqueda = (
+
+                    String(
+                        pago.cliente_nombre || ""
+                    ) +
+
+                    " " +
+
+                    String(
+                        pago.barbero_nombre || ""
+                    ) +
+
+                    " " +
+
+                    String(
+                        pago.servicio_nombre || ""
+                    ) +
+
+                    " " +
+
+                    String(
+                        pago.id_reserva || ""
+                    )
+
+                ).toLowerCase();
+
+
+                const coincideTexto =
+                    !texto ||
+                    busqueda.includes(
+                        texto
+                    );
+
+
+                const coincideTipo =
+                    !tipo ||
+                    pago.tipo_pago === tipo;
+
+
+                return (
+                    coincideTexto &&
+                    coincideTipo
+                );
+
+            }
+        );
+
+
+    const tabla =
+        document.getElementById(
+            "tablaPagos"
+        );
+
+
+    tabla.innerHTML = "";
+
+
+    if(
+        !lista.length
+    ){
+
+        tabla.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="11"
+                    class="mensaje"
+                >
+
+                    No hay pagos registrados.
+
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+    lista.forEach(
+        pago => {
+
+            const tr =
+                document.createElement(
+                    "tr"
+                );
+
+
+            const estado =
+                String(
+                    pago.estado_reserva ||
+                    ""
+                );
+
+
+            tr.innerHTML = `
+
+                <td>
+                    #${Number(
+                        pago.id_pago
+                    )}
+                </td>
+
+
+                <td>
+                    #${Number(
+                        pago.id_reserva
+                    )}
+                </td>
+
+
+                <td>
+
+                    ${escapeHTML(
+                        pago.cliente_nombre ||
+                        "-"
+                    )}
+
+                    ${
+                        pago.cliente_telefono
+                        ? `<br>
+                           <small
+                               style="
+                                   color:#777;
+                               "
+                           >
+                               ${escapeHTML(
+                                   pago.cliente_telefono
+                               )}
+                           </small>`
+                        : ""
+                    }
+
+                </td>
+
+
+                <td>
+
+                    ${escapeHTML(
+                        pago.barbero_nombre ||
+                        "-"
+                    )}
+
+                </td>
+
+
+                <td>
+
+                    ${escapeHTML(
+                        pago.servicio_nombre ||
+                        "-"
+                    )}
+
+                </td>
+
+
+                <td>
+
+                    <span
+                        class="
+                            estado
+                            estado-${escapeHTML(
+                                estado
+                            )}
+                        "
+                    >
+
+                        ${escapeHTML(
+                            estado ||
+                            "-"
+                        )}
+
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    <span
+                        class="
+                            tipo
+                            tipo-${escapeHTML(
+                                pago.tipo_pago
+                            )}
+                        "
+                    >
+
+                        ${escapeHTML(
+                            pago.tipo_pago
+                        )}
+
+                    </span>
+
+                </td>
+
+
+                <td class="monto">
+
+                    ${dinero(
+                        pago.monto
+                    )}
+
+                </td>
+
+
+                <td class="metodo">
+
+                    ${escapeHTML(
+                        pago.metodo_pago
+                    )}
+
+                </td>
+
+
+                <td>
+
+                    ${fechaHora(
+                        pago.fecha_pago
+                    )}
+
+                </td>
+
+
+                <td>
+
+                    <button
+                        class="btn-eliminar"
+                        onclick="
+                            eliminarPago(
+                                ${Number(
+                                    pago.id_pago
+                                )}
+                            )
+                        "
+                    >
+
+                        🗑️
+
+                    </button>
+
+                </td>
+
+            `;
+
+
+            tabla.appendChild(
+                tr
+            );
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// CARGAR RESERVAS
+// =====================================================
+
+async function cargarReservas(){
+
+    try{
+
+        const respuesta =
+            await fetch(
+                "/api/reservas"
+            );
+
+
+        if(!respuesta.ok){
+
+            throw new Error(
+                "No se pudieron cargar las reservas"
+            );
+
+        }
+
+
+        reservas =
+            await respuesta.json();
+
+
+        llenarSelectReservas();
+
+    }
+    catch(error){
+
+        console.error(
+            error
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// LLENAR SELECT
+// =====================================================
+
+function llenarSelectReservas(){
+
+    const select =
+        document.getElementById(
+            "id_reserva"
+        );
+
+
+    select.innerHTML = `
+
+        <option value="">
+            Selecciona una reserva
+        </option>
+
+    `;
+
+
+    reservas.forEach(
+        reserva => {
+
+            if(
+                reserva.estado ===
+                "cancelada"
+            ){
+
+                return;
+
+            }
+
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                reserva.id_reserva;
+
+
+            const saldo =
+                Number(
+                    reserva.saldo || 0
+                );
+
+
+            option.textContent =
+
+                `#${reserva.id_reserva} - ` +
+
+                `${reserva.cliente_nombre || "Cliente"} - ` +
+
+                `${reserva.servicio_nombre || "Servicio"} - ` +
+
+                `Pendiente: Bs ${saldo.toFixed(2)}`;
+
+
+            select.appendChild(
+                option
+            );
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// ABRIR MODAL
+// =====================================================
+
+function abrirModal(
+    idReserva = null,
+    tipo = "saldo",
+    monto = null
+){
+
+    document.getElementById(
+        "formPago"
+    ).reset();
+
+
+    document.getElementById(
+        "infoReserva"
+    ).classList.remove(
+        "visible"
+    );
+
+
+    document.getElementById(
+        "modal"
+    ).classList.add(
+        "mostrar"
+    );
+
+
+    llenarSelectReservas();
+
+
+    if(
+        idReserva
+    ){
+
+        document.getElementById(
+            "id_reserva"
+        ).value =
+            String(
+                idReserva
+            );
+
+
+        document.getElementById(
+            "tipo_pago"
+        ).value =
+            tipo;
+
+
+        const reserva =
+            reservas.find(
+                r =>
+                    Number(
+                        r.id_reserva
+                    ) ===
+                    Number(
+                        idReserva
+                    )
+            );
+
+
+        if(reserva){
+
+            mostrarInfoReserva(
+                reserva,
+                monto
+            );
+
+        }
+
+    }
+
+}
+
+
+// =====================================================
+// COBRAR SALDO
+// =====================================================
+
+function cobrarSaldo(
+    idReserva
+){
+
+    const pendiente =
+        pendientes.find(
+            p =>
+                Number(
+                    p.id_reserva
+                ) ===
+                Number(
+                    idReserva
+                )
+        );
+
+
+    abrirModal(
+        idReserva,
+        "saldo",
+        pendiente
+            ? Number(
+                pendiente.saldo_pendiente
+            )
+            : null
+    );
+
+}
+
+
+// =====================================================
+// INFORMACION RESERVA
+// =====================================================
+
+function mostrarInfoReserva(
+    reserva,
+    monto = null
+){
+
+    const info =
+        document.getElementById(
+            "infoReserva"
+        );
+
+
+    const saldo =
+        Number(
+            reserva.saldo || 0
+        );
+
+
+    info.innerHTML = `
+
+        <strong>
+            Reserva #${Number(
+                reserva.id_reserva
+            )}
+        </strong>
+
+        <br><br>
+
+        Cliente:
+        ${escapeHTML(
+            reserva.cliente_nombre ||
+            "-"
+        )}
+
+        <br>
+
+        Servicio:
+        ${escapeHTML(
+            reserva.servicio_nombre ||
+            "-"
+        )}
+
+        <br>
+
+        Total:
+        ${dinero(
+            reserva.total_servicio
+        )}
+
+        <br>
+
+        Saldo actual:
+        <span
+            style="
+                color:#ff6868;
+                font-weight:bold;
+            "
+        >
+            ${dinero(
+                saldo
+            )}
+        </span>
+
+    `;
+
+
+    info.classList.add(
+        "visible"
+    );
+
+
+    if(
+        monto !== null
+    ){
+
+        document.getElementById(
+            "monto"
+        ).value =
+            Number(
+                monto
+            ).toFixed(2);
+
+    }
+
+}
+
+
+// =====================================================
+// CAMBIO DE RESERVA
+// =====================================================
+
+document.getElementById(
+    "id_reserva"
+).addEventListener(
+    "change",
+    function(){
+
+        const id =
+            Number(
+                this.value
+            );
+
+
+        const reserva =
+            reservas.find(
+                r =>
+                    Number(
+                        r.id_reserva
+                    ) ===
+                    id
+            );
+
+
+        if(reserva){
+
+            mostrarInfoReserva(
+                reserva
+            );
+
+        }
+        else{
+
+            document.getElementById(
+                "infoReserva"
+            ).classList.remove(
+                "visible"
+            );
+
+        }
+
+    }
+);
+
+
+// =====================================================
+// CAMBIO DE TIPO
+// =====================================================
+
+document.getElementById(
+    "tipo_pago"
+).addEventListener(
+    "change",
+    function(){
+
+        const id =
+            Number(
+                document.getElementById(
+                    "id_reserva"
+                ).value
+            );
+
+
+        const reserva =
+            reservas.find(
+                r =>
+                    Number(
+                        r.id_reserva
+                    ) ===
+                    id
+            );
+
+
+        if(
+            reserva &&
+            this.value ===
+            "saldo"
+        ){
+
+            const pendiente =
+                pendientes.find(
+                    p =>
+                        Number(
+                            p.id_reserva
+                        ) ===
+                        id
+                );
+
+
+            if(pendiente){
+
+                document.getElementById(
+                    "monto"
+                ).value =
+                    Number(
+                        pendiente.saldo_pendiente
+                    ).toFixed(2);
+
+            }
+
+        }
+
+    }
+);
+
+
+// =====================================================
+// CERRAR MODAL
+// =====================================================
+
+function cerrarModal(){
+
+    document.getElementById(
+        "modal"
+    ).classList.remove(
+        "mostrar"
+    );
+
+}
+
+
+// =====================================================
+// GUARDAR PAGO
+// =====================================================
+
+document.getElementById(
+    "formPago"
+).addEventListener(
+    "submit",
+    async function(evento){
+
+        evento.preventDefault();
+
+
+        const boton =
+            document.getElementById(
+                "btnGuardar"
+            );
+
+
+        const datos = {
+
+            id_reserva:
+                Number(
+                    document.getElementById(
+                        "id_reserva"
+                    ).value
+                ),
+
+            tipo_pago:
+                document.getElementById(
+                    "tipo_pago"
+                ).value,
+
+            monto:
+                Number(
+                    document.getElementById(
+                        "monto"
+                    ).value
+                ),
+
+            metodo_pago:
+                document.getElementById(
+                    "metodo_pago"
+                ).value,
+
+            referencia:
+                document.getElementById(
+                    "referencia"
+                ).value.trim(),
+
+            observaciones:
+                document.getElementById(
+                    "observaciones"
+                ).value.trim()
+
+        };
+
+
+        if(
+            !datos.id_reserva
+        ){
+
+            alert(
+                "Selecciona una reserva."
+            );
+
+            return;
+
+        }
+
+
+        if(
+            !datos.monto ||
+            datos.monto <= 0
+        ){
+
+            alert(
+                "Ingresa un monto válido."
+            );
+
+            return;
+
+        }
+
+
+        boton.disabled =
+            true;
+
+        boton.textContent =
+            "⏳ GUARDANDO...";
+
+
+        try{
+
+            const respuesta =
+                await fetch(
+                    "/api/pagos",
+                    {
+
+                        method:"POST",
+
+                        headers:{
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body:
+                            JSON.stringify(
+                                datos
+                            )
+
+                    }
+                );
+
+
+            const resultado =
+                await respuesta.json();
+
+
+            if(
+                !respuesta.ok
+            ){
+
+                throw new Error(
+                    resultado.error ||
+                    "No se pudo registrar el pago"
+                );
+
+            }
+
+
+            alert(
+                "✅ Pago registrado correctamente."
+            );
+
+
+            cerrarModal();
+
+
+            await cargarTodo();
+
+        }
+        catch(error){
+
+            console.error(
+                error
+            );
+
+
+            alert(
+                "❌ " +
+                error.message
+            );
+
+        }
+        finally{
+
+            boton.disabled =
+                false;
+
+            boton.textContent =
+                "💾 GUARDAR PAGO";
+
+        }
+
+    }
+);
+
+
+// =====================================================
+// ELIMINAR PAGO
+// =====================================================
+
+async function eliminarPago(
+    id
+){
+
+    if(
+        !confirm(
+            "¿Seguro que deseas eliminar este pago?"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+        const respuesta =
+            await fetch(
+                `/api/pagos/${id}`,
+                {
+
+                    method:
+                        "DELETE"
+
+                }
+            );
+
+
+        const resultado =
+            await respuesta.json();
+
+
+        if(
+            !respuesta.ok
+        ){
+
+            throw new Error(
+                resultado.error ||
+                "No se pudo eliminar el pago"
+            );
+
+        }
+
+
+        alert(
+            "✅ Pago eliminado correctamente."
+        );
+
+
+        await cargarTodo();
+
+    }
+    catch(error){
+
+        console.error(
+            error
+        );
+
+
+        alert(
+            "❌ " +
+            error.message
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// FILTROS
+// =====================================================
+
+document.getElementById(
+    "buscar"
+).addEventListener(
+    "input",
+    mostrarPagos
+);
+
+
+document.getElementById(
+    "filtroTipo"
+).addEventListener(
+    "change",
+    mostrarPagos
+);
+
+
+// =====================================================
+// CERRAR MODAL AL HACER CLICK AFUERA
+// =====================================================
+
+document.getElementById(
+    "modal"
+).addEventListener(
+    "click",
+    function(evento){
+
+        if(
+            evento.target ===
+            this
+        ){
+
+            cerrarModal();
+
+        }
+
+    }
+);
+
+
+// =====================================================
+// INICIAR
+// =====================================================
+
+cargarTodo();
+
+</script>
+
+
+</body>
+
+</html>

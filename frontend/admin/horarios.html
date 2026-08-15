@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>BARBERPRO | Horarios</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: white;
+            min-height: 100vh;
+        }
+
+        header {
+            height: 70px;
+            background: #181818;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 30px;
+
+            border-bottom: 1px solid #333;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .logo span {
+            color: #d4af37;
+        }
+
+        .volver {
+            color: #aaa;
+            text-decoration: none;
+        }
+
+        .volver:hover {
+            color: #d4af37;
+        }
+
+        main {
+            padding: 40px;
+        }
+
+        .titulo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 15px;
+        }
+
+        .titulo h1 {
+            font-size: 32px;
+        }
+
+        .descripcion {
+            color: #999;
+            margin-bottom: 30px;
+        }
+
+        .tabla-container {
+            background: #181818;
+
+            border: 1px solid #333;
+
+            border-radius: 10px;
+
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #222;
+
+            color: #d4af37;
+
+            padding: 16px;
+
+            text-align: left;
+        }
+
+        td {
+            padding: 16px;
+
+            border-top: 1px solid #333;
+        }
+
+        tr:hover {
+            background: #202020;
+        }
+
+        .dia {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .hora {
+            color: #ddd;
+            font-size: 16px;
+        }
+
+        .estado-activo {
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        .estado-inactivo {
+            color: #f44336;
+            font-weight: bold;
+        }
+
+        .acciones {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            border: none;
+
+            padding: 9px 13px;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            font-weight: bold;
+        }
+
+        .btn-editar {
+            background: #333;
+            color: white;
+        }
+
+        .btn-estado {
+            background: #444;
+            color: white;
+        }
+
+        .btn-eliminar {
+            background: #8b2020;
+            color: white;
+        }
+
+        .btn-nuevo {
+            background: #d4af37;
+            color: #111;
+
+            padding: 12px 18px;
+        }
+
+        .mensaje {
+            text-align: center;
+            padding: 30px;
+            color: #aaa;
+        }
+
+        /* MODAL */
+
+        .modal {
+            display: none;
+
+            position: fixed;
+
+            inset: 0;
+
+            background: rgba(0, 0, 0, .8);
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 20px;
+
+            z-index: 1000;
+        }
+
+        .modal.mostrar {
+            display: flex;
+        }
+
+        .modal-contenido {
+            width: 460px;
+
+            max-width: 100%;
+
+            background: #181818;
+
+            border: 1px solid #333;
+
+            border-radius: 12px;
+
+            padding: 30px;
+        }
+
+        .modal-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 25px;
+        }
+
+        .modal-header h2 {
+            color: #d4af37;
+        }
+
+        .cerrar {
+            background: none;
+
+            color: #aaa;
+
+            font-size: 25px;
+
+            padding: 0;
+        }
+
+        .campo {
+            margin-bottom: 18px;
+        }
+
+        .campo label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #ddd;
+        }
+
+        .campo select,
+        .campo input {
+            width: 100%;
+
+            padding: 12px;
+
+            background: #222;
+
+            color: white;
+
+            border: 1px solid #444;
+
+            border-radius: 6px;
+
+            font-size: 15px;
+        }
+
+        .campo select:focus,
+        .campo input:focus {
+            outline: none;
+
+            border-color: #d4af37;
+        }
+
+        .check {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+        }
+
+        .check input {
+            width: 18px;
+            height: 18px;
+        }
+
+        .botones {
+            display: flex;
+
+            justify-content: flex-end;
+
+            gap: 10px;
+
+            margin-top: 25px;
+        }
+
+        .btn-cancelar {
+            background: #333;
+            color: white;
+        }
+
+        .btn-guardar {
+            background: #d4af37;
+            color: #111;
+        }
+
+        #mensajeFormulario {
+            text-align: center;
+
+            margin-top: 15px;
+
+            font-size: 14px;
+        }
+
+        @media (max-width: 700px) {
+
+            main {
+                padding: 20px;
+            }
+
+            .titulo {
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 15px;
+            }
+
+            header {
+                padding: 0 20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+        BARBER<span>PRO</span>
+    </div>
+
+    <a
+        href="/admin/dashboard.html"
+        class="volver"
+    >
+        ← Volver al Dashboard
+    </a>
+
+</header>
+
+
+<main>
+
+    <div class="titulo">
+
+        <h1>
+            🕐 Horarios
+        </h1>
+
+        <button
+            class="btn-nuevo"
+            onclick="abrirNuevo()"
+        >
+            + NUEVO HORARIO
+        </button>
+
+    </div>
+
+
+    <p class="descripcion">
+        Configura los días y horarios de atención de la barbería.
+        Puedes trabajar los siete días de la semana.
+    </p>
+
+
+    <div class="tabla-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Día</th>
+
+                    <th>Hora de apertura</th>
+
+                    <th>Hora de cierre</th>
+
+                    <th>Estado</th>
+
+                    <th>Acciones</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="tablaHorarios">
+
+                <tr>
+
+                    <td
+                        colspan="5"
+                        class="mensaje"
+                    >
+                        Cargando horarios...
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</main>
+
+
+<!-- MODAL -->
+
+<div
+    id="modal"
+    class="modal"
+>
+
+    <div class="modal-contenido">
+
+        <div class="modal-header">
+
+            <h2 id="tituloModal">
+                Nuevo Horario
+            </h2>
+
+            <button
+                class="cerrar"
+                onclick="cerrarModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <form id="formHorario">
+
+
+            <div class="campo">
+
+                <label>
+                    Día de la semana
+                </label>
+
+                <select
+                    id="dia_semana"
+                    required
+                >
+
+                    <option value="">
+                        Seleccionar día
+                    </option>
+
+                    <option value="Lunes">
+                        Lunes
+                    </option>
+
+                    <option value="Martes">
+                        Martes
+                    </option>
+
+                    <option value="Miércoles">
+                        Miércoles
+                    </option>
+
+                    <option value="Jueves">
+                        Jueves
+                    </option>
+
+                    <option value="Viernes">
+                        Viernes
+                    </option>
+
+                    <option value="Sábado">
+                        Sábado
+                    </option>
+
+                    <option value="Domingo">
+                        Domingo
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="campo">
+
+                <label>
+                    Hora de apertura
+                </label>
+
+                <input
+                    type="time"
+                    id="hora_inicio"
+                    required
+                >
+
+            </div>
+
+
+            <div class="campo">
+
+                <label>
+                    Hora de cierre
+                </label>
+
+                <input
+                    type="time"
+                    id="hora_fin"
+                    required
+                >
+
+            </div>
+
+
+            <div
+                class="campo check"
+                id="campoEstado"
+                style="display:none;"
+            >
+
+                <input
+                    type="checkbox"
+                    id="estado"
+                >
+
+                <label>
+                    Horario activo
+                </label>
+
+            </div>
+
+
+            <div class="botones">
+
+                <button
+                    type="button"
+                    class="btn-cancelar"
+                    onclick="cerrarModal()"
+                >
+                    CANCELAR
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn-guardar"
+                >
+                    GUARDAR
+                </button>
+
+            </div>
+
+
+            <div
+                id="mensajeFormulario"
+            ></div>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+// ========================================
+// SESIÓN
+// ========================================
+
+const token =
+    localStorage.getItem("token");
+
+const usuario =
+    localStorage.getItem("usuario");
+
+
+if (!token || !usuario) {
+
+    window.location.href =
+        "/admin/login.html";
+
+}
+
+
+let idEditando = null;
+
+
+// ========================================
+// ORDEN DE DÍAS
+// ========================================
+
+const ordenDias = {
+
+    "Lunes": 1,
+    "Martes": 2,
+    "Miércoles": 3,
+    "Jueves": 4,
+    "Viernes": 5,
+    "Sábado": 6,
+    "Domingo": 7
+
+};
+
+
+// ========================================
+// ABRIR NUEVO
+// ========================================
+
+function abrirNuevo() {
+
+    idEditando = null;
+
+    document.getElementById(
+        "tituloModal"
+    ).textContent =
+        "Nuevo Horario";
+
+    document.getElementById(
+        "formHorario"
+    ).reset();
+
+    document.getElementById(
+        "campoEstado"
+    ).style.display =
+        "none";
+
+    document.getElementById(
+        "mensajeFormulario"
+    ).textContent = "";
+
+    document.getElementById(
+        "modal"
+    ).classList.add(
+        "mostrar"
+    );
+
+}
+
+
+// ========================================
+// CERRAR
+// ========================================
+
+function cerrarModal() {
+
+    document.getElementById(
+        "modal"
+    ).classList.remove(
+        "mostrar"
+    );
+
+    document.getElementById(
+        "formHorario"
+    ).reset();
+
+    idEditando = null;
+
+}
+
+
+// ========================================
+// CARGAR HORARIOS
+// ========================================
+
+async function cargarHorarios() {
+
+    try {
+
+        const respuesta =
+            await fetch(
+                "/api/horarios"
+            );
+
+
+        const horarios =
+            await respuesta.json();
+
+
+        if (!respuesta.ok) {
+
+            throw new Error(
+                "Error al obtener horarios"
+            );
+
+        }
+
+
+        horarios.sort(
+            (a, b) =>
+                ordenDias[a.dia_semana] -
+                ordenDias[b.dia_semana]
+        );
+
+
+        const tabla =
+            document.getElementById(
+                "tablaHorarios"
+            );
+
+
+        tabla.innerHTML = "";
+
+
+        if (
+            horarios.length === 0
+        ) {
+
+            tabla.innerHTML = `
+
+                <tr>
+
+                    <td
+                        colspan="5"
+                        class="mensaje"
+                    >
+
+                        No hay horarios registrados.
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        horarios.forEach(
+            horario => {
+
+                const fila =
+                    document.createElement(
+                        "tr"
+                    );
+
+
+                fila.innerHTML = `
+
+                    <td class="dia">
+                        ${horario.dia_semana}
+                    </td>
+
+                    <td class="hora">
+                        ${horario.hora_inicio}
+                    </td>
+
+                    <td class="hora">
+                        ${horario.hora_fin}
+                    </td>
+
+                    <td>
+
+                        ${
+                            horario.estado
+                            ? '<span class="estado-activo">🟢 ACTIVO</span>'
+                            : '<span class="estado-inactivo">🔴 INACTIVO</span>'
+                        }
+
+                    </td>
+
+                    <td>
+
+                        <div class="acciones">
+
+                            <button
+                                class="btn-editar"
+                                onclick="
+                                    editarHorario(
+                                        ${horario.id_horario}
+                                    )
+                                "
+                            >
+                                ✏️ Editar
+                            </button>
+
+                            <button
+                                class="btn-estado"
+                                onclick="
+                                    cambiarEstado(
+                                        ${horario.id_horario},
+                                        ${horario.estado ? 0 : 1}
+                                    )
+                                "
+                            >
+                                ${
+                                    horario.estado
+                                    ? "🔴 Desactivar"
+                                    : "🟢 Activar"
+                                }
+                            </button>
+
+                            <button
+                                class="btn-eliminar"
+                                onclick="
+                                    eliminarHorario(
+                                        ${horario.id_horario},
+                                        '${horario.dia_semana}'
+                                    )
+                                "
+                            >
+                                🗑️ Eliminar
+                            </button>
+
+                        </div>
+
+                    </td>
+
+                `;
+
+
+                tabla.appendChild(
+                    fila
+                );
+
+            }
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        document.getElementById(
+            "tablaHorarios"
+        ).innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="5"
+                    class="mensaje"
+                >
+
+                    ❌ Error al cargar horarios.
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+}
+
+
+// ========================================
+// EDITAR
+// ========================================
+
+async function editarHorario(id) {
+
+    try {
+
+        const respuesta =
+            await fetch(
+                `/api/horarios/${id}`
+            );
+
+
+        const horario =
+            await respuesta.json();
+
+
+        if (!respuesta.ok) {
+
+            alert(
+                horario.error ||
+                "No se pudo obtener el horario"
+            );
+
+            return;
+
+        }
+
+
+        idEditando = id;
+
+
+        document.getElementById(
+            "tituloModal"
+        ).textContent =
+            "Editar Horario";
+
+
+        document.getElementById(
+            "dia_semana"
+        ).value =
+            horario.dia_semana;
+
+
+        document.getElementById(
+            "hora_inicio"
+        ).value =
+            horario.hora_inicio;
+
+
+        document.getElementById(
+            "hora_fin"
+        ).value =
+            horario.hora_fin;
+
+
+        document.getElementById(
+            "estado"
+        ).checked =
+            Boolean(
+                horario.estado
+            );
+
+
+        document.getElementById(
+            "campoEstado"
+        ).style.display =
+            "flex";
+
+
+        document.getElementById(
+            "modal"
+        ).classList.add(
+            "mostrar"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        alert(
+            "❌ Error al obtener el horario"
+        );
+
+    }
+
+}
+
+
+// ========================================
+// GUARDAR
+// ========================================
+
+document.getElementById(
+    "formHorario"
+).addEventListener(
+    "submit",
+    async function(evento) {
+
+        evento.preventDefault();
+
+
+        const dia =
+            document.getElementById(
+                "dia_semana"
+            ).value;
+
+
+        const inicio =
+            document.getElementById(
+                "hora_inicio"
+            ).value;
+
+
+        const fin =
+            document.getElementById(
+                "hora_fin"
+            ).value;
+
+
+        const estado =
+            document.getElementById(
+                "estado"
+            ).checked;
+
+
+        const mensaje =
+            document.getElementById(
+                "mensajeFormulario"
+            );
+
+
+        if (
+            !dia ||
+            !inicio ||
+            !fin
+        ) {
+
+            mensaje.textContent =
+                "⚠️ Completa todos los campos.";
+
+            return;
+
+        }
+
+
+        if (inicio >= fin) {
+
+            mensaje.textContent =
+                "⚠️ La hora de apertura debe ser menor que la hora de cierre.";
+
+            return;
+
+        }
+
+
+        mensaje.textContent =
+            "Guardando...";
+
+
+        try {
+
+            let url =
+                "/api/horarios";
+
+            let metodo =
+                "POST";
+
+
+            const datos = {
+
+                dia_semana:
+                    dia,
+
+                hora_inicio:
+                    inicio,
+
+                hora_fin:
+                    fin
+
+            };
+
+
+            if (
+                idEditando !== null
+            ) {
+
+                url =
+                    `/api/horarios/${idEditando}`;
+
+                metodo =
+                    "PUT";
+
+
+                datos.estado =
+                    estado;
+
+            }
+
+
+            const respuesta =
+                await fetch(
+                    url,
+                    {
+
+                        method:
+                            metodo,
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body:
+                            JSON.stringify(
+                                datos
+                            )
+
+                    }
+                );
+
+
+            const resultado =
+                await respuesta.json();
+
+
+            if (!respuesta.ok) {
+
+                mensaje.textContent =
+                    resultado.error ||
+                    "No se pudo guardar.";
+
+                return;
+
+            }
+
+
+            mensaje.textContent =
+                "✅ Guardado correctamente";
+
+
+            await cargarHorarios();
+
+
+            setTimeout(
+                () => {
+
+                    cerrarModal();
+
+                },
+                700
+            );
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+            mensaje.textContent =
+                "❌ Error al conectar con el servidor.";
+
+        }
+
+    }
+);
+
+
+// ========================================
+// CAMBIAR ESTADO
+// ========================================
+
+async function cambiarEstado(
+    id,
+    nuevoEstado
+) {
+
+    const accion =
+        nuevoEstado === 1
+            ? "activar"
+            : "desactivar";
+
+
+    if (
+        !confirm(
+            `¿Seguro que deseas ${accion} este horario?`
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const respuesta =
+            await fetch(
+                `/api/horarios/${id}/estado`,
+                {
+
+                    method:
+                        "PATCH",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            estado:
+                                nuevoEstado
+
+                        })
+
+                }
+            );
+
+
+        const resultado =
+            await respuesta.json();
+
+
+        if (!respuesta.ok) {
+
+            alert(
+                resultado.error ||
+                "No se pudo cambiar el estado"
+            );
+
+            return;
+
+        }
+
+
+        cargarHorarios();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        alert(
+            "❌ Error al conectar con el servidor"
+        );
+
+    }
+
+}
+
+
+// ========================================
+// ELIMINAR
+// ========================================
+
+async function eliminarHorario(
+    id,
+    dia
+) {
+
+    if (
+        !confirm(
+            `¿Seguro que deseas eliminar el horario del ${dia}?`
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const respuesta =
+            await fetch(
+                `/api/horarios/${id}`,
+                {
+
+                    method:
+                        "DELETE"
+
+                }
+            );
+
+
+        const resultado =
+            await respuesta.json();
+
+
+        if (!respuesta.ok) {
+
+            alert(
+                resultado.error ||
+                "No se pudo eliminar"
+            );
+
+            return;
+
+        }
+
+
+        cargarHorarios();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        alert(
+            "❌ Error al conectar con el servidor"
+        );
+
+    }
+
+}
+
+
+// ========================================
+// INICIAR
+// ========================================
+
+cargarHorarios();
+
+</script>
+
+</body>
+
+</html>

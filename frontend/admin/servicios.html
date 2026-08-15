@@ -1,0 +1,2189 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CLUB PONTE PERRO | Servicios</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: white;
+    min-height: 100vh;
+}
+
+header {
+    height: 70px;
+    background: #181818;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    border-bottom: 1px solid #333;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 900;
+}
+
+.logo span {
+    color: #d4af37;
+}
+
+.btn-volver {
+    color: #aaa;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.btn-volver:hover {
+    color: #d4af37;
+}
+
+main {
+    max-width: 1400px;
+    margin: auto;
+    padding: 40px 30px 60px;
+}
+
+.titulo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    gap: 20px;
+}
+
+.titulo h1 {
+    font-size: 32px;
+}
+
+.titulo p {
+    color: #888;
+    margin-top: 7px;
+}
+
+.btn-nuevo {
+    background: #d4af37;
+    color: #111;
+    border: none;
+    padding: 13px 20px;
+    border-radius: 7px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.btn-nuevo:hover {
+    background: #e5c45c;
+}
+
+/* =====================================
+   MENSAJES
+===================================== */
+
+#mensajeGeneral {
+    display: none;
+    padding: 14px;
+    border-radius: 7px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+#mensajeGeneral.mostrar {
+    display: block;
+}
+
+#mensajeGeneral.exito {
+    background: #173e26;
+    color: #72e59b;
+}
+
+#mensajeGeneral.error {
+    background: #4a1e1e;
+    color: #ff8d8d;
+}
+
+/* =====================================
+   TABLA
+===================================== */
+
+.tabla-container {
+    background: #181818;
+    border: 1px solid #333;
+    border-radius: 10px;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 1000px;
+    border-collapse: collapse;
+}
+
+th {
+    background: #222;
+    color: #d4af37;
+    text-align: left;
+    padding: 15px;
+    font-size: 13px;
+}
+
+td {
+    padding: 15px;
+    border-top: 1px solid #333;
+}
+
+tr:hover {
+    background: #202020;
+}
+
+.foto-servicio {
+    width: 65px;
+    height: 65px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 2px solid #d4af37;
+}
+
+.sin-foto {
+    width: 65px;
+    height: 65px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #222;
+    border: 2px solid #444;
+    font-size: 25px;
+}
+
+.precio {
+    color: #d4af37;
+    font-weight: bold;
+}
+
+.activo {
+    color: #4caf50;
+    font-weight: bold;
+}
+
+.inactivo {
+    color: #f44336;
+    font-weight: bold;
+}
+
+.acciones {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    border: none;
+    padding: 8px 11px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.btn:hover {
+    opacity: .82;
+}
+
+.btn-editar {
+    background: #333;
+    color: white;
+}
+
+.btn-estado {
+    background: #444;
+    color: white;
+}
+
+.btn-eliminar {
+    background: #8b2020;
+    color: white;
+}
+
+.mensaje-tabla {
+    text-align: center;
+    padding: 35px;
+    color: #888;
+}
+
+/* =====================================
+   MODAL FORMULARIO
+===================================== */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.82);
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    z-index: 3000;
+}
+
+.modal.mostrar {
+    display: flex;
+}
+
+.modal-contenido {
+    width: 540px;
+    max-width: 100%;
+    max-height: 92vh;
+    overflow-y: auto;
+    background: #181818;
+    border: 1px solid #444;
+    border-radius: 12px;
+    padding: 28px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.modal-header h2 {
+    color: #d4af37;
+}
+
+.btn-cerrar {
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.btn-cerrar:hover {
+    color: white;
+}
+
+.campo {
+    margin-bottom: 17px;
+}
+
+.campo label {
+    display: block;
+    margin-bottom: 7px;
+    color: #ddd;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.campo input,
+.campo textarea {
+    width: 100%;
+    padding: 12px;
+    background: #222;
+    color: white;
+    border: 1px solid #444;
+    border-radius: 7px;
+    outline: none;
+    font-size: 15px;
+}
+
+.campo input:focus,
+.campo textarea:focus {
+    border-color: #d4af37;
+}
+
+.campo textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+.campo input[type="file"] {
+    padding: 9px;
+    cursor: pointer;
+}
+
+.preview {
+    display: none;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.preview.mostrar {
+    display: block;
+}
+
+.preview img {
+    width: 140px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 3px solid #d4af37;
+}
+
+.preview p {
+    margin-top: 8px;
+    color: #888;
+    font-size: 13px;
+}
+
+.campo-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.campo-check input {
+    width: 18px;
+    height: 18px;
+}
+
+.modal-botones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.btn-cancelar {
+    padding: 12px 18px;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-guardar {
+    padding: 12px 20px;
+    background: #d4af37;
+    color: #111;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: 900;
+}
+
+.btn-guardar:disabled,
+.btn-confirmar:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.mensaje-formulario {
+    display: none;
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 7px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.mensaje-formulario.mostrar {
+    display: block;
+}
+
+.mensaje-formulario.exito {
+    background: #173e26;
+    color: #72e59b;
+}
+
+.mensaje-formulario.error {
+    background: #4a1e1e;
+    color: #ff8d8d;
+}
+
+/* =====================================
+   MODAL CONFIRMACIÓN
+===================================== */
+
+.modal-confirmacion {
+    width: 440px;
+    max-width: 100%;
+    background: #181818;
+    border: 1px solid #444;
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+}
+
+.icono-confirmacion {
+    font-size: 50px;
+    margin-bottom: 15px;
+}
+
+.modal-confirmacion h2 {
+    margin-bottom: 10px;
+}
+
+.modal-confirmacion p {
+    color: #999;
+    line-height: 1.5;
+    margin-bottom: 25px;
+}
+
+.confirmacion-botones {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-confirmar {
+    padding: 12px 18px;
+    background: #8b2020;
+    color: white;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+@media (max-width: 700px) {
+
+    header {
+        padding: 0 15px;
+    }
+
+    main {
+        padding: 25px 15px;
+    }
+
+    .titulo {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .btn-nuevo {
+        width: 100%;
+    }
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+
+        CLUB
+        <span>PONTE PERRO</span>
+
+    </div>
+
+
+    <a
+        href="/admin/dashboard.html"
+        class="btn-volver"
+    >
+
+        ← Volver al Dashboard
+
+    </a>
+
+</header>
+
+
+<main>
+
+
+<div class="titulo">
+
+    <div>
+
+        <h1>
+            ✂️ Servicios
+        </h1>
+
+        <p>
+            Administra los servicios de CLUB PONTE PERRO.
+        </p>
+
+    </div>
+
+
+    <button
+        class="btn-nuevo"
+        onclick="abrirNuevo()"
+    >
+
+        ＋ NUEVO SERVICIO
+
+    </button>
+
+</div>
+
+
+<div id="mensajeGeneral"></div>
+
+
+<div class="tabla-container">
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>Foto</th>
+                <th>ID</th>
+                <th>Servicio</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Duración</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody id="tablaServicios">
+
+            <tr>
+
+                <td
+                    colspan="8"
+                    class="mensaje-tabla"
+                >
+
+                    Cargando servicios...
+
+                </td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+</main>
+
+
+<!-- =====================================
+     MODAL FORMULARIO
+===================================== -->
+
+<div
+    id="modal"
+    class="modal"
+>
+
+    <div class="modal-contenido">
+
+
+        <div class="modal-header">
+
+            <h2 id="tituloModal">
+                Nuevo Servicio
+            </h2>
+
+
+            <button
+                class="btn-cerrar"
+                onclick="cerrarModal()"
+            >
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <form
+            id="formServicio"
+            enctype="multipart/form-data"
+        >
+
+
+            <div class="campo">
+
+                <label>
+                    Nombre del servicio *
+                </label>
+
+                <input
+                    type="text"
+                    id="nombre"
+                    placeholder="Ej. Corte Fade"
+                    maxlength="150"
+                    required
+                >
+
+            </div>
+
+
+            <div class="campo">
+
+                <label>
+                    Descripción
+                </label>
+
+                <textarea
+                    id="descripcion"
+                    placeholder="Descripción del servicio..."
+                ></textarea>
+
+            </div>
+
+
+            <div class="campo">
+
+                <label>
+                    Precio (Bs) *
+                </label>
+
+                <input
+                    type="number"
+                    id="precio"
+                    min="0"
+                    step="0.01"
+                    placeholder="40"
+                    required
+                >
+
+            </div>
+
+
+            <div class="campo">
+
+                <label>
+                    Duración (minutos) *
+                </label>
+
+                <input
+                    type="number"
+                    id="duracion"
+                    min="1"
+                    placeholder="45"
+                    required
+                >
+
+            </div>
+
+
+            <div class="campo">
+
+                <label>
+                    📷 Foto del servicio
+                </label>
+
+                <input
+                    type="file"
+                    id="foto"
+                    accept="image/jpeg,image/png,image/webp"
+                >
+
+
+                <div
+                    id="preview"
+                    class="preview"
+                ></div>
+
+            </div>
+
+
+            <div
+                class="campo-check"
+                id="campoEstado"
+                style="display:none;"
+            >
+
+                <input
+                    type="checkbox"
+                    id="estado"
+                >
+
+                <label for="estado">
+                    Servicio activo
+                </label>
+
+            </div>
+
+
+            <div class="modal-botones">
+
+                <button
+                    type="button"
+                    class="btn-cancelar"
+                    onclick="cerrarModal()"
+                >
+
+                    CANCELAR
+
+                </button>
+
+
+                <button
+                    type="submit"
+                    id="btnGuardar"
+                    class="btn-guardar"
+                >
+
+                    💾 GUARDAR
+
+                </button>
+
+            </div>
+
+
+            <div
+                id="mensajeFormulario"
+                class="mensaje-formulario"
+            ></div>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================
+     MODAL ELIMINAR
+===================================== -->
+
+<div
+    id="modalEliminar"
+    class="modal"
+>
+
+    <div class="modal-confirmacion">
+
+
+        <div class="icono-confirmacion">
+            🗑️
+        </div>
+
+
+        <h2>
+            Eliminar servicio
+        </h2>
+
+
+        <p id="textoEliminar">
+
+            ¿Seguro que deseas eliminar este servicio?
+
+        </p>
+
+
+        <div class="confirmacion-botones">
+
+            <button
+                class="btn-cancelar"
+                onclick="cerrarModalEliminar()"
+            >
+
+                CANCELAR
+
+            </button>
+
+
+            <button
+                id="btnConfirmar"
+                class="btn-confirmar"
+                onclick="confirmarEliminar()"
+            >
+
+                🗑️ ELIMINAR
+
+            </button>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+// ========================================
+// SESIÓN
+// ========================================
+
+const token =
+    localStorage.getItem("token");
+
+const usuario =
+    localStorage.getItem("usuario");
+
+
+if (!token || !usuario) {
+
+    window.location.href =
+        "/admin/login.html";
+
+}
+
+
+let servicios = [];
+
+let idEditando = null;
+
+let idEliminar = null;
+
+
+// ========================================
+// NUEVO
+// ========================================
+
+function abrirNuevo() {
+
+    idEditando = null;
+
+
+    document.getElementById(
+        "tituloModal"
+    ).textContent =
+        "Nuevo Servicio";
+
+
+    document.getElementById(
+        "formServicio"
+    ).reset();
+
+
+    document.getElementById(
+        "campoEstado"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "preview"
+    ).innerHTML = "";
+
+
+    document.getElementById(
+        "preview"
+    ).classList.remove(
+        "mostrar"
+    );
+
+
+    ocultarMensajeFormulario();
+
+
+    document.getElementById(
+        "btnGuardar"
+    ).textContent =
+        "💾 GUARDAR";
+
+
+    document.getElementById(
+        "modal"
+    ).classList.add(
+        "mostrar"
+    );
+
+}
+
+
+// ========================================
+// CERRAR
+// ========================================
+
+function cerrarModal() {
+
+    document.getElementById(
+        "modal"
+    ).classList.remove(
+        "mostrar"
+    );
+
+
+    document.getElementById(
+        "formServicio"
+    ).reset();
+
+
+    document.getElementById(
+        "preview"
+    ).innerHTML = "";
+
+
+    document.getElementById(
+        "preview"
+    ).classList.remove(
+        "mostrar"
+    );
+
+
+    ocultarMensajeFormulario();
+
+
+    idEditando = null;
+
+}
+
+
+// ========================================
+// PREVIEW
+// ========================================
+
+document.getElementById(
+    "foto"
+).addEventListener(
+    "change",
+    function() {
+
+        const archivo =
+            this.files[0];
+
+
+        const preview =
+            document.getElementById(
+                "preview"
+            );
+
+
+        preview.innerHTML = "";
+
+
+        preview.classList.remove(
+            "mostrar"
+        );
+
+
+        if (!archivo) {
+
+            return;
+
+        }
+
+
+        const tiposPermitidos = [
+
+            "image/jpeg",
+            "image/png",
+            "image/webp"
+
+        ];
+
+
+        if (
+            !tiposPermitidos.includes(
+                archivo.type
+            )
+        ) {
+
+            mostrarMensaje(
+                "Solo se permiten imágenes JPG, PNG o WEBP.",
+                "error"
+            );
+
+
+            this.value = "";
+
+
+            return;
+
+        }
+
+
+        if (
+            archivo.size >
+            5 * 1024 * 1024
+        ) {
+
+            mostrarMensaje(
+                "La imagen no puede superar los 5 MB.",
+                "error"
+            );
+
+
+            this.value = "";
+
+
+            return;
+
+        }
+
+
+        const lector =
+            new FileReader();
+
+
+        lector.onload =
+            function(evento) {
+
+                preview.innerHTML = `
+
+                    <img
+                        src="${evento.target.result}"
+                        alt="Vista previa"
+                    >
+
+                `;
+
+
+                preview.classList.add(
+                    "mostrar"
+                );
+
+            };
+
+
+        lector.readAsDataURL(
+            archivo
+        );
+
+    }
+);
+
+
+// ========================================
+// CARGAR SERVICIOS
+// ========================================
+
+async function cargarServicios() {
+
+    try {
+
+        const respuesta =
+            await fetch(
+                "/api/servicios"
+            );
+
+
+        const resultado =
+            await respuesta.json();
+
+
+        if (!respuesta.ok) {
+
+            throw new Error(
+                resultado.error ||
+                "No se pudieron cargar los servicios."
+            );
+
+        }
+
+
+        if (
+            !Array.isArray(
+                resultado
+            )
+        ) {
+
+            throw new Error(
+                "Respuesta inválida del servidor."
+            );
+
+        }
+
+
+        servicios =
+            resultado;
+
+
+        mostrarServicios();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        document.getElementById(
+            "tablaServicios"
+        ).innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="8"
+                    class="mensaje-tabla"
+                >
+
+                    ❌ No se pudieron cargar los servicios.
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+}
+
+
+// ========================================
+// MOSTRAR SERVICIOS
+// ========================================
+
+function mostrarServicios() {
+
+    const tabla =
+        document.getElementById(
+            "tablaServicios"
+        );
+
+
+    tabla.innerHTML = "";
+
+
+    if (
+        servicios.length === 0
+    ) {
+
+        tabla.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="8"
+                    class="mensaje-tabla"
+                >
+
+                    ✂️ No hay servicios registrados.
+
+                </td>
+
+            </tr>
+
+        `;
+
+
+        return;
+
+    }
+
+
+    servicios.forEach(
+        servicio => {
+
+            const fila =
+                document.createElement(
+                    "tr"
+                );
+
+
+            const activo =
+                Number(
+                    servicio.estado
+                ) === 1 ||
+                servicio.estado === true;
+
+
+            const fotoHTML =
+                servicio.foto
+
+                ?
+
+                `
+
+                    <img
+                        src="${escapeHTML(
+                            servicio.foto
+                        )}"
+                        class="foto-servicio"
+                        alt="${escapeHTML(
+                            servicio.nombre
+                        )}"
+                    >
+
+                `
+
+                :
+
+                `
+
+                    <div class="sin-foto">
+                        ✂️
+                    </div>
+
+                `;
+
+
+            fila.innerHTML = `
+
+                <td>
+                    ${fotoHTML}
+                </td>
+
+
+                <td>
+                    ${Number(
+                        servicio.id_servicio
+                    )}
+                </td>
+
+
+                <td>
+
+                    <strong>
+                        ${escapeHTML(
+                            servicio.nombre
+                        )}
+                    </strong>
+
+                </td>
+
+
+                <td>
+
+                    ${
+                        servicio.descripcion
+                        ?
+                        escapeHTML(
+                            servicio.descripcion
+                        )
+                        :
+                        "-"
+                    }
+
+                </td>
+
+
+                <td class="precio">
+
+                    Bs ${Number(
+                        servicio.precio
+                    ).toFixed(2)}
+
+                </td>
+
+
+                <td>
+
+                    ${Number(
+                        servicio.duracion
+                    )} min
+
+                </td>
+
+
+                <td>
+
+                    <span
+                        class="${
+                            activo
+                                ? "activo"
+                                : "inactivo"
+                        }"
+                    >
+
+                        ${
+                            activo
+                                ? "ACTIVO"
+                                : "INACTIVO"
+                        }
+
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    <div class="acciones">
+
+
+                        <button
+                            class="btn btn-editar"
+                            onclick="
+                                editarServicio(
+                                    ${Number(
+                                        servicio.id_servicio
+                                    )}
+                                )
+                            "
+                        >
+
+                            ✏️ Editar
+
+                        </button>
+
+
+                        <button
+                            class="btn btn-estado"
+                            onclick="
+                                cambiarEstado(
+                                    ${Number(
+                                        servicio.id_servicio
+                                    )},
+                                    ${activo ? 0 : 1}
+                                )
+                            "
+                        >
+
+                            ${
+                                activo
+                                    ? "🔴 Desactivar"
+                                    : "🟢 Activar"
+                            }
+
+                        </button>
+
+
+                        <button
+                            class="btn btn-eliminar"
+                            onclick="
+                                abrirModalEliminar(
+                                    ${Number(
+                                        servicio.id_servicio
+                                    )}
+                                )
+                            "
+                        >
+
+                            🗑️ Eliminar
+
+                        </button>
+
+
+                    </div>
+
+                </td>
+
+            `;
+
+
+            tabla.appendChild(
+                fila
+            );
+
+        }
+    );
+
+}
+
+
+// ========================================
+// EDITAR SERVICIO
+// ========================================
+
+async function editarServicio(
+    id
+) {
+
+    try {
+
+        const respuesta =
+            await fetch(
+                `/api/servicios/${id}`
+            );
+
+
+        const resultado =
+            await respuesta.json();
+
+
+        if (!respuesta.ok) {
+
+            throw new Error(
+                resultado.error ||
+                "No se pudo obtener el servicio."
+            );
+
+        }
+
+
+        idEditando =
+            id;
+
+
+        document.getElementById(
+            "tituloModal"
+        ).textContent =
+            "✏️ Editar Servicio";
+
+
+        document.getElementById(
+            "nombre"
+        ).value =
+            resultado.nombre ||
+            "";
+
+
+        document.getElementById(
+            "descripcion"
+        ).value =
+            resultado.descripcion ||
+            "";
+
+
+        document.getElementById(
+            "precio"
+        ).value =
+            resultado.precio;
+
+
+        document.getElementById(
+            "duracion"
+        ).value =
+            resultado.duracion;
+
+
+        document.getElementById(
+            "estado"
+        ).checked =
+            Number(
+                resultado.estado
+            ) === 1 ||
+            resultado.estado === true;
+
+
+        document.getElementById(
+            "campoEstado"
+        ).style.display =
+            "flex";
+
+
+        const preview =
+            document.getElementById(
+                "preview"
+            );
+
+
+        if (
+            resultado.foto
+        ) {
+
+            preview.innerHTML = `
+
+                <img
+                    src="${escapeHTML(
+                        resultado.foto
+                    )}"
+                    alt="Foto actual"
+                >
+
+                <p>
+                    Selecciona otra foto si deseas cambiarla.
+                </p>
+
+            `;
+
+
+            preview.classList.add(
+                "mostrar"
+            );
+
+        }
+
+
+        document.getElementById(
+            "btnGuardar"
+        ).textContent =
+            "💾 ACTUALIZAR";
+
+
+        ocultarMensajeFormulario();
+
+
+        document.getElementById(
+            "modal"
+        ).classList.add(
+            "mostrar"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        mostrarMensaje(
+            "❌ " + error.message,
+            "error"
+        );
+
+    }
+
+}
+
+
+// ========================================
+// GUARDAR / EDITAR
+// ========================================
+
+document.getElementById(
+    "formServicio"
+).addEventListener(
+    "submit",
+    async function(evento) {
+
+        evento.preventDefault();
+
+
+        ocultarMensajeFormulario();
+
+
+        const nombre =
+            document.getElementById(
+                "nombre"
+            ).value.trim();
+
+
+        const descripcion =
+            document.getElementById(
+                "descripcion"
+            ).value.trim();
+
+
+        const precio =
+            document.getElementById(
+                "precio"
+            ).value;
+
+
+        const duracion =
+            document.getElementById(
+                "duracion"
+            ).value;
+
+
+        const estado =
+            document.getElementById(
+                "estado"
+            ).checked;
+
+
+        const archivo =
+            document.getElementById(
+                "foto"
+            ).files[0];
+
+
+        if (!nombre) {
+
+            mostrarMensajeFormulario(
+                "El nombre del servicio es obligatorio.",
+                "error"
+            );
+
+
+            return;
+
+        }
+
+
+        if (
+            precio === "" ||
+            Number(precio) < 0
+        ) {
+
+            mostrarMensajeFormulario(
+                "Ingresa un precio válido.",
+                "error"
+            );
+
+
+            return;
+
+        }
+
+
+        if (
+            duracion === "" ||
+            Number(duracion) <= 0
+        ) {
+
+            mostrarMensajeFormulario(
+                "Ingresa una duración válida.",
+                "error"
+            );
+
+
+            return;
+
+        }
+
+
+        const datos =
+            new FormData();
+
+
+        datos.append(
+            "nombre",
+            nombre
+        );
+
+
+        datos.append(
+            "descripcion",
+            descripcion
+        );
+
+
+        datos.append(
+            "precio",
+            precio
+        );
+
+
+        datos.append(
+            "duracion",
+            duracion
+        );
+
+
+        if (
+            idEditando !== null
+        ) {
+
+            datos.append(
+                "estado",
+                estado ? "1" : "0"
+            );
+
+        }
+
+
+        if (archivo) {
+
+            datos.append(
+                "foto",
+                archivo
+            );
+
+        }
+
+
+        const boton =
+            document.getElementById(
+                "btnGuardar"
+            );
+
+
+        boton.disabled =
+            true;
+
+
+        boton.textContent =
+            "⏳ GUARDANDO...";
+
+
+        try {
+
+            let url =
+                "/api/servicios";
+
+
+            let metodo =
+                "POST";
+
+
+            if (
+                idEditando !== null
+            ) {
+
+                url =
+                    `/api/servicios/${idEditando}`;
+
+                metodo =
+                    "PUT";
+
+            }
+
+
+            const respuesta =
+                await fetch(
+                    url,
+                    {
+
+                        method:
+                            metodo,
+
+                        body:
+                            datos
+
+                    }
+                );
+
+
+            const resultado =
+                await respuesta.json();
+
+
+            if (!respuesta.ok) {
+
+                throw new Error(
+                    resultado.error ||
+                    "No se pudo guardar el servicio."
+                );
+
+            }
+
+
+            mostrarMensajeFormulario(
+                idEditando !== null
+                    ? "✅ Servicio actualizado correctamente."
+                    : "✅ Servicio creado correctamente.",
+                "exito"
+            );
+
+
+            await cargarServicios();
+
+
+            setTimeout(
+                () => {
+
+                    cerrarModal();
+
+                },
+                800
+            );
+
+        }
+
+        catch (error) {
+
+            console.error(
+                error
+            );
+
+
+            mostrarMensajeFormulario(
+                "❌ " + error.message,
+                "error"
+            );
+
+        }
+
+        finally {
+
+            boton.disabled =
+                false;
+
+
+            boton.textContent =
+                idEditando !== null
+                    ? "💾 ACTUALIZAR"
+                    : "💾 GUARDAR";
+
+        }
+
+    }
+);
+
+
+// ========================================
+// CAMBIAR ESTADO
+// ========================================
+
+async function cambiarEstado(
+    id,
+    nuevoEstado
+) {
+
+    try {
+
+        const respuesta =
+            await fetch(
+                `/api/servicios/${id}/estado`,
+                {
+
+                    method:
+                        "PATCH",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify({
+                            estado:
+                                nuevoEstado
+                        })
+
+                }
+            );
+
+
+        const resultado =
+            await respuesta.json();
+
+
+        if (!respuesta.ok) {
+
+            throw new Error(
+                resultado.error ||
+                "No se pudo cambiar el estado."
+            );
+
+        }
+
+
+        mostrarMensaje(
+            nuevoEstado === 1
+                ? "✅ Servicio activado correctamente."
+                : "⏸️ Servicio desactivado correctamente.",
+            "exito"
+        );
+
+
+        await cargarServicios();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        mostrarMensaje(
+            "❌ " + error.message,
+            "error"
+        );
+
+    }
+
+}
+
+
+// ========================================
+// ABRIR MODAL ELIMINAR
+// ========================================
+
+function abrirModalEliminar(
+    id
+) {
+
+    idEliminar =
+        id;
+
+
+    const servicio =
+        servicios.find(
+            item =>
+                Number(
+                    item.id_servicio
+                ) ===
+                Number(id)
+        );
+
+
+    document.getElementById(
+        "textoEliminar"
+    ).textContent = servicio
+
+        ? `¿Seguro que deseas eliminar "${servicio.nombre}"? Esta acción no se puede deshacer.`
+
+        : "¿Seguro que deseas eliminar este servicio?";
+
+
+    document.getElementById(
+        "modalEliminar"
+    ).classList.add(
+        "mostrar"
+    );
+
+}
+
+
+// ========================================
+// CERRAR MODAL ELIMINAR
+// ========================================
+
+function cerrarModalEliminar() {
+
+    idEliminar =
+        null;
+
+
+    document.getElementById(
+        "modalEliminar"
+    ).classList.remove(
+        "mostrar"
+    );
+
+}
+
+
+// ========================================
+// CONFIRMAR ELIMINACIÓN
+// ========================================
+
+async function confirmarEliminar() {
+
+    if (!idEliminar) {
+
+        return;
+
+    }
+
+
+    const boton =
+        document.getElementById(
+            "btnConfirmar"
+        );
+
+
+    boton.disabled =
+        true;
+
+
+    boton.textContent =
+        "⏳ ELIMINANDO...";
+
+
+    try {
+
+        const respuesta =
+            await fetch(
+                `/api/servicios/${idEliminar}`,
+                {
+
+                    method:
+                        "DELETE"
+
+                }
+            );
+
+
+        const resultado =
+            await respuesta.json();
+
+
+        if (!respuesta.ok) {
+
+            throw new Error(
+                resultado.error ||
+                "No se pudo eliminar el servicio."
+            );
+
+        }
+
+
+        cerrarModalEliminar();
+
+
+        mostrarMensaje(
+            "✅ Servicio eliminado correctamente.",
+            "exito"
+        );
+
+
+        await cargarServicios();
+
+    }
+
+    catch (error) {
+
+        cerrarModalEliminar();
+
+
+        mostrarMensaje(
+            "❌ " + error.message,
+            "error"
+        );
+
+    }
+
+    finally {
+
+        boton.disabled =
+            false;
+
+
+        boton.textContent =
+            "🗑️ ELIMINAR";
+
+    }
+
+}
+
+
+// ========================================
+// MENSAJES
+// ========================================
+
+function mostrarMensaje(
+    texto,
+    tipo
+) {
+
+    const mensaje =
+        document.getElementById(
+            "mensajeGeneral"
+        );
+
+
+    mensaje.textContent =
+        texto;
+
+
+    mensaje.className =
+        `mostrar ${tipo}`;
+
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+
+    setTimeout(
+        () => {
+
+            mensaje.className =
+                "";
+
+            mensaje.textContent =
+                "";
+
+        },
+        5000
+    );
+
+}
+
+
+function mostrarMensajeFormulario(
+    texto,
+    tipo
+) {
+
+    const mensaje =
+        document.getElementById(
+            "mensajeFormulario"
+        );
+
+
+    mensaje.textContent =
+        texto;
+
+
+    mensaje.className =
+        `mensaje-formulario mostrar ${tipo}`;
+
+}
+
+
+function ocultarMensajeFormulario() {
+
+    const mensaje =
+        document.getElementById(
+            "mensajeFormulario"
+        );
+
+
+    mensaje.textContent =
+        "";
+
+    mensaje.className =
+        "mensaje-formulario";
+
+}
+
+
+// ========================================
+// SEGURIDAD
+// ========================================
+
+function escapeHTML(
+    texto
+) {
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+
+    div.textContent =
+        texto ?? "";
+
+
+    return div.innerHTML;
+
+}
+
+
+// ========================================
+// CERRAR AL HACER CLIC AFUERA
+// ========================================
+
+document.getElementById(
+    "modal"
+).addEventListener(
+    "click",
+    function(evento) {
+
+        if (
+            evento.target === this
+        ) {
+
+            cerrarModal();
+
+        }
+
+    }
+);
+
+
+document.getElementById(
+    "modalEliminar"
+).addEventListener(
+    "click",
+    function(evento) {
+
+        if (
+            evento.target === this
+        ) {
+
+            cerrarModalEliminar();
+
+        }
+
+    }
+);
+
+
+// ========================================
+// INICIAR
+// ========================================
+
+cargarServicios();
+
+</script>
+
+</body>
+
+</html>

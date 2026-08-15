@@ -1,0 +1,1774 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>CLUB PONTE PERRO | Configuración</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: white;
+            min-height: 100vh;
+        }
+
+        header {
+            height: 70px;
+            background: #181818;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 30px;
+
+            border-bottom: 1px solid #333;
+        }
+
+        .logo {
+            font-size: 23px;
+            font-weight: bold;
+        }
+
+        .logo span {
+            color: #d4af37;
+        }
+
+        .volver {
+            color: #aaa;
+            text-decoration: none;
+        }
+
+        .volver:hover {
+            color: #d4af37;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: auto;
+            padding: 35px 25px 60px;
+        }
+
+        .titulo {
+            margin-bottom: 30px;
+        }
+
+        .titulo h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .titulo p {
+            color: #888;
+        }
+
+        .configuracion {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .bloque {
+            background: #181818;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .bloque-completo {
+            grid-column: 1 / -1;
+        }
+
+        .bloque h2 {
+            color: #d4af37;
+            font-size: 20px;
+            margin-bottom: 7px;
+        }
+
+        .bloque-descripcion {
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 22px;
+        }
+
+        .campo {
+            margin-bottom: 18px;
+        }
+
+        .campo:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            color: #ccc;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+
+            background: #222;
+            color: white;
+
+            border: 1px solid #444;
+            border-radius: 7px;
+
+            padding: 12px;
+
+            font-family: Arial, sans-serif;
+
+            outline: none;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: #d4af37;
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .ayuda {
+            display: block;
+            color: #666;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        /* =====================================
+           LOGO
+        ===================================== */
+
+        .selector-logo {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .input-archivo {
+            display: none;
+        }
+
+        .btn-archivo {
+            display: inline-block;
+
+            background: #333;
+            color: white;
+
+            border: 1px solid #555;
+
+            padding: 12px 18px;
+
+            border-radius: 7px;
+
+            cursor: pointer;
+
+            font-weight: bold;
+        }
+
+        .btn-archivo:hover {
+            border-color: #d4af37;
+            color: #d4af37;
+        }
+
+        .nombre-archivo {
+            color: #888;
+            font-size: 13px;
+        }
+
+        .logo-preview {
+            margin-top: 15px;
+
+            width: 220px;
+            height: 140px;
+
+            background: #222;
+
+            border: 1px solid #444;
+
+            border-radius: 10px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            overflow: hidden;
+
+            color: #666;
+        }
+
+        .logo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .qr-panel {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 25px;
+            align-items: start;
+        }
+
+        .qr-preview {
+            width: 240px;
+            height: 240px;
+            max-width: 100%;
+            background: #fff;
+            border: 1px solid #555;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            color: #777;
+        }
+
+        .qr-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .qr-info {
+            background: #121212;
+            border: 1px solid #303030;
+            border-left: 3px solid #d4af37;
+            padding: 16px;
+            color: #999;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .qr-info strong { color: #fff; }
+
+        .btn-eliminar-qr {
+            margin-top: 12px;
+            background: #2a1515;
+            color: #ff9999;
+            border: 1px solid #603333;
+            padding: 10px 15px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-eliminar-qr:hover {
+            border-color: #ff6666;
+            color: #fff;
+        }
+
+        /* =====================================
+           BOTONES
+        ===================================== */
+
+        .acciones {
+            grid-column: 1 / -1;
+
+            display: flex;
+
+            justify-content: flex-end;
+
+            gap: 10px;
+        }
+
+        .btn {
+            border: none;
+
+            border-radius: 7px;
+
+            padding: 13px 24px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .btn-guardar {
+            background: #d4af37;
+            color: #111;
+        }
+
+        .btn-guardar:hover {
+            background: #e5c451;
+        }
+
+        .btn-guardar:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .btn-cancelar {
+            background: #333;
+            color: white;
+        }
+
+        /* =====================================
+           MENSAJE
+        ===================================== */
+
+        .mensaje {
+            position: fixed;
+
+            right: 25px;
+            bottom: 25px;
+
+            max-width: 380px;
+
+            padding: 15px 20px;
+
+            background: #181818;
+
+            border: 1px solid #444;
+
+            border-left: 4px solid #d4af37;
+
+            border-radius: 8px;
+
+            display: none;
+
+            z-index: 1000;
+        }
+
+        .mensaje.mostrar {
+            display: block;
+        }
+
+        .mensaje.error {
+            border-left-color: #ff5555;
+        }
+
+        .adelanto-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: stretch;
+        }
+
+        .switch-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .switch-row input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .switch {
+            width: 48px;
+            height: 26px;
+            border-radius: 20px;
+            background: #444;
+            border: 1px solid #555;
+            position: relative;
+            transition: .2s ease;
+        }
+
+        .switch::after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #aaa;
+            top: 2px;
+            left: 3px;
+            transition: .2s ease;
+        }
+
+        .switch-row input:checked + .switch {
+            background: #d4af37;
+            border-color: #d4af37;
+        }
+
+        .switch-row input:checked + .switch::after {
+            left: 23px;
+            background: #111;
+        }
+
+        .adelanto-resumen {
+            min-height: 150px;
+            padding: 22px;
+            background: #121212;
+            border: 1px solid #303030;
+            border-left: 4px solid #d4af37;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .adelanto-icono {
+            width: 64px;
+            height: 64px;
+            flex: 0 0 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #222;
+            border: 1px solid #555;
+            font-size: 28px;
+        }
+
+        .adelanto-resumen strong {
+            display: block;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+
+        .monto-resumen {
+            color: #d4af37;
+            font-size: 27px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .adelanto-resumen span {
+            color: #777;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 750px) {
+
+            .configuracion {
+                grid-template-columns: 1fr;
+            }
+
+            .bloque-completo,
+            .acciones {
+                grid-column: auto;
+            }
+
+            .acciones {
+                flex-direction: column;
+            }
+
+            .acciones button {
+                width: 100%;
+            }
+
+            .qr-panel {
+                grid-template-columns: 1fr;
+            }
+
+            .qr-preview {
+                width: 210px;
+                height: 210px;
+                margin: auto;
+            }
+
+            .adelanto-grid {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                padding: 0 15px;
+            }
+
+            .logo {
+                font-size: 17px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+
+        CLUB
+        <span>PONTE PERRO</span>
+
+    </div>
+
+
+    <a
+        href="/admin/dashboard.html"
+        class="volver"
+    >
+        ← Volver al Dashboard
+    </a>
+
+</header>
+
+
+
+<main>
+
+
+    <div class="titulo">
+
+        <h1>
+            ⚙️ Configuración
+        </h1>
+
+        <p>
+            Administra la información de CLUB PONTE PERRO.
+        </p>
+
+    </div>
+
+
+
+    <form
+        id="formConfiguracion"
+        class="configuracion"
+    >
+
+
+        <!-- =====================================
+             INFORMACIÓN
+        ====================================== -->
+
+        <section class="bloque">
+
+            <h2>
+                🏪 Información general
+            </h2>
+
+            <p class="bloque-descripcion">
+                Datos principales de la barbería.
+            </p>
+
+
+            <div class="campo">
+
+                <label>
+                    Nombre de la barbería *
+                </label>
+
+                <input
+                    type="text"
+                    id="nombre_barberia"
+                    required
+                    maxlength="100"
+                    placeholder="CLUB PONTE PERRO"
+                >
+
+            </div>
+
+
+            <div class="campo">
+
+                <label>
+                    Descripción
+                </label>
+
+                <textarea
+                    id="descripcion"
+                    placeholder="Descripción de la barbería..."
+                ></textarea>
+
+            </div>
+
+
+            <div class="campo">
+
+                <label>
+                    🖼️ Logo
+                </label>
+
+
+                <div class="selector-logo">
+
+                    <input
+                        type="file"
+                        id="archivoLogo"
+                        class="input-archivo"
+                        accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                    >
+
+
+                    <label
+                        for="archivoLogo"
+                        class="btn-archivo"
+                    >
+                        📁 SELECCIONAR IMAGEN
+                    </label>
+
+
+                    <span
+                        id="nombreArchivo"
+                        class="nombre-archivo"
+                    >
+                        Ningún archivo seleccionado
+                    </span>
+
+                </div>
+
+
+                <span class="ayuda">
+                    JPG, JPEG, PNG o WEBP. Máximo 5 MB.
+                </span>
+
+
+                <div
+                    id="logoPreview"
+                    class="logo-preview"
+                >
+                    Sin logo
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             CONTACTO
+        ====================================== -->
+
+        <section class="bloque">
+
+            <h2>
+                📞 Contacto
+            </h2>
+
+            <p class="bloque-descripcion">
+                Información para los clientes.
+            </p>
+
+
+            <div class="campo">
+
+                <label>
+                    Teléfono
+                </label>
+
+                <input
+                    type="text"
+                    id="telefono"
+                    maxlength="20"
+                    placeholder="+591 70000000"
+                >
+
+            </div>
+
+
+            <div class="campo">
+
+                <label>
+                    WhatsApp
+                </label>
+
+                <input
+                    type="text"
+                    id="whatsapp"
+                    maxlength="20"
+                    placeholder="+591 70000000"
+                >
+
+            </div>
+
+
+            <div class="campo">
+
+                <label>
+                    Dirección
+                </label>
+
+                <input
+                    type="text"
+                    id="direccion"
+                    maxlength="255"
+                    placeholder="Dirección de CLUB PONTE PERRO"
+                >
+
+            </div>
+
+
+            <div class="campo">
+
+                <label>
+                    Google Maps
+                </label>
+
+                <input
+                    type="text"
+                    id="google_maps"
+                    maxlength="500"
+                    placeholder="Enlace de Google Maps"
+                >
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             REDES
+        ====================================== -->
+
+        <section class="bloque">
+
+            <h2>
+                🌐 Redes sociales
+            </h2>
+
+            <p class="bloque-descripcion">
+                Enlaces oficiales de la barbería.
+            </p>
+
+
+            <div class="campo">
+
+                <label>
+                    📷 Instagram
+                </label>
+
+                <input
+                    type="text"
+                    id="instagram"
+                    maxlength="500"
+                    placeholder="https://instagram.com/..."
+                >
+
+            </div>
+
+
+            <div class="campo">
+
+                <label>
+                    👍 Facebook
+                </label>
+
+                <input
+                    type="text"
+                    id="facebook"
+                    maxlength="500"
+                    placeholder="https://facebook.com/..."
+                >
+
+            </div>
+
+
+            <div class="campo">
+
+                <label>
+                    🎵 TikTok
+                </label>
+
+                <input
+                    type="text"
+                    id="tiktok"
+                    maxlength="500"
+                    placeholder="https://tiktok.com/@..."
+                >
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             HORARIO
+        ====================================== -->
+
+        <section class="bloque">
+
+            <h2>
+                🕐 Horario general
+            </h2>
+
+            <p class="bloque-descripcion">
+                Información general de atención.
+            </p>
+
+
+            <div class="campo">
+
+                <label>
+                    Horario
+                </label>
+
+                <textarea
+                    id="horario_general"
+                    placeholder="Lunes a Sábado: 09:00 - 20:00&#10;Domingo: 10:00 - 16:00"
+                ></textarea>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             QR DE PAGO DEL DUEÑO
+        ====================================== -->
+
+        <section class="bloque bloque-completo">
+
+            <h2>💳 QR de pago del dueño</h2>
+
+            <p class="bloque-descripcion">
+                Sube el QR que utilizarán los clientes para realizar el pago de su reserva.
+            </p>
+
+            <div class="qr-panel">
+
+                <div>
+                    <label>QR actual</label>
+
+                    <div id="qrPreview" class="qr-preview">
+                        Sin QR configurado
+                    </div>
+
+                    <button
+                        type="button"
+                        id="btnEliminarQR"
+                        class="btn-eliminar-qr"
+                        style="display:none"
+                    >
+                        🗑️ ELIMINAR QR
+                    </button>
+                </div>
+
+                <div>
+                    <div class="selector-logo">
+
+                        <input
+                            type="file"
+                            id="archivoQR"
+                            class="input-archivo"
+                            accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                        >
+
+                        <label
+                            for="archivoQR"
+                            class="btn-archivo"
+                        >
+                            📁 SELECCIONAR QR
+                        </label>
+
+                        <span id="nombreArchivoQR" class="nombre-archivo">
+                            Ningún archivo seleccionado
+                        </span>
+
+                    </div>
+
+                    <span class="ayuda">
+                        JPG, JPEG, PNG o WEBP. Máximo 5 MB.
+                    </span>
+
+                    <div class="qr-info">
+                        <strong>¿Cómo funcionará?</strong><br>
+                        Este es el QR del dueño. El cliente lo verá al final de su reserva
+                        antes de confirmar el pago. Será el mismo QR para todas las reservas.
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ADELANTO OBLIGATORIO -->
+        <section class="bloque bloque-completo">
+            <h2>💳 Adelanto obligatorio</h2>
+            <p class="bloque-descripcion">
+                El cliente deberá pagar este monto fijo mediante el QR antes de confirmar su reserva.
+            </p>
+            <div class="adelanto-grid">
+                <div>
+                    <div class="campo">
+                        <label>Adelanto obligatorio</label>
+                        <label class="switch-row">
+                            <input type="checkbox" id="adelanto_obligatorio" checked>
+                            <span class="switch"></span>
+                            <span>ACTIVADO</span>
+                        </label>
+                        <span class="ayuda">
+                            Si está activado, ninguna reserva podrá confirmarse sin registrar el adelanto.
+                        </span>
+                    </div>
+                    <div class="campo">
+                        <label for="monto_adelanto">Monto fijo del adelanto (Bs)</label>
+                        <input type="number" id="monto_adelanto" min="0.01" max="99999.99" step="0.01" value="20.00" required>
+                        <span class="ayuda">Este monto será igual para todas las reservas.</span>
+                    </div>
+                </div>
+                <div class="adelanto-resumen">
+                    <div class="adelanto-icono">💳</div>
+                    <div>
+                        <strong>Adelanto configurado</strong>
+                        <div id="resumenAdelanto" class="monto-resumen">Bs 20.00</div>
+                        <span>Pago previo obligatorio para confirmar la reserva.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================
+             BOTONES
+        ====================================== -->
+
+        <div class="acciones">
+
+            <button
+                type="button"
+                class="btn btn-cancelar"
+                onclick="cargarConfiguracion()"
+            >
+                ↩️ DESHACER CAMBIOS
+            </button>
+
+
+            <button
+                type="submit"
+                class="btn btn-guardar"
+                id="btnGuardar"
+            >
+                💾 GUARDAR CAMBIOS
+            </button>
+
+        </div>
+
+
+    </form>
+
+</main>
+
+
+
+<div
+    id="mensaje"
+    class="mensaje"
+></div>
+
+
+
+<script>
+
+
+// ======================================================
+// VARIABLES
+// ======================================================
+
+const formulario =
+    document.getElementById(
+        "formConfiguracion"
+    );
+
+const archivoLogo =
+    document.getElementById(
+        "archivoLogo"
+    );
+
+const nombreArchivo =
+    document.getElementById(
+        "nombreArchivo"
+    );
+
+const logoPreview =
+    document.getElementById(
+        "logoPreview"
+    );
+
+const botonGuardar =
+    document.getElementById(
+        "btnGuardar"
+    );
+
+const mensaje =
+    document.getElementById(
+        "mensaje"
+    );
+
+let logoActual = "";
+let qrActual = "";
+
+const archivoQR = document.getElementById("archivoQR");
+const nombreArchivoQR = document.getElementById("nombreArchivoQR");
+const qrPreview = document.getElementById("qrPreview");
+const btnEliminarQR = document.getElementById("btnEliminarQR");
+
+const adelantoObligatorio =
+    document.getElementById("adelanto_obligatorio");
+
+const montoAdelanto =
+    document.getElementById("monto_adelanto");
+
+const resumenAdelanto =
+    document.getElementById("resumenAdelanto");
+
+
+
+// ======================================================
+// MENSAJE
+// ======================================================
+
+let mensajeTimer;
+
+function mostrarMensaje(
+    texto,
+    error = false
+) {
+
+    mensaje.textContent =
+        texto;
+
+    mensaje.classList.toggle(
+        "error",
+        error
+    );
+
+    mensaje.classList.add(
+        "mostrar"
+    );
+
+    clearTimeout(
+        mensajeTimer
+    );
+
+    mensajeTimer =
+        setTimeout(
+            () => {
+
+                mensaje.classList.remove(
+                    "mostrar"
+                );
+
+            },
+            3500
+        );
+
+}
+
+
+
+// ======================================================
+// SELECCIONAR LOGO
+// ======================================================
+
+archivoLogo.addEventListener(
+    "change",
+    function() {
+
+        const archivo =
+            this.files[0];
+
+
+        if (!archivo) {
+
+            nombreArchivo.textContent =
+                "Ningún archivo seleccionado";
+
+            return;
+
+        }
+
+
+        nombreArchivo.textContent =
+            archivo.name;
+
+
+        const tiposPermitidos = [
+
+            "image/jpeg",
+            "image/png",
+            "image/webp"
+
+        ];
+
+
+        if (
+            !tiposPermitidos.includes(
+                archivo.type
+            )
+        ) {
+
+            mostrarMensaje(
+                "❌ Solo JPG, JPEG, PNG o WEBP.",
+                true
+            );
+
+            this.value =
+                "";
+
+            nombreArchivo.textContent =
+                "Ningún archivo seleccionado";
+
+            return;
+
+        }
+
+
+        if (
+            archivo.size >
+            5 * 1024 * 1024
+        ) {
+
+            mostrarMensaje(
+                "❌ La imagen no puede superar 5 MB.",
+                true
+            );
+
+            this.value =
+                "";
+
+            nombreArchivo.textContent =
+                "Ningún archivo seleccionado";
+
+            return;
+
+        }
+
+
+        const lector =
+            new FileReader();
+
+
+        lector.onload =
+            function(evento) {
+
+                logoPreview.innerHTML = `
+
+                    <img
+                        src="${evento.target.result}"
+                        alt="Vista previa del logo"
+                    >
+
+                `;
+
+            };
+
+
+        lector.readAsDataURL(
+            archivo
+        );
+
+    }
+);
+
+
+
+// ======================================================
+// SELECCIONAR QR
+// ======================================================
+
+archivoQR.addEventListener("change", function() {
+
+    const archivo = this.files[0];
+
+    if (!archivo) {
+        nombreArchivoQR.textContent = "Ningún archivo seleccionado";
+        return;
+    }
+
+    const tiposPermitidos = [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+    ];
+
+    if (!tiposPermitidos.includes(archivo.type)) {
+        mostrarMensaje("❌ El QR debe ser JPG, JPEG, PNG o WEBP.", true);
+        this.value = "";
+        nombreArchivoQR.textContent = "Ningún archivo seleccionado";
+        return;
+    }
+
+    if (archivo.size > 5 * 1024 * 1024) {
+        mostrarMensaje("❌ El QR no puede superar 5 MB.", true);
+        this.value = "";
+        nombreArchivoQR.textContent = "Ningún archivo seleccionado";
+        return;
+    }
+
+    nombreArchivoQR.textContent = archivo.name;
+
+    const lector = new FileReader();
+
+    lector.onload = function(evento) {
+        qrPreview.innerHTML = `
+            <img src="${evento.target.result}" alt="Vista previa del QR">
+        `;
+        btnEliminarQR.style.display = "inline-block";
+    };
+
+    lector.readAsDataURL(archivo);
+});
+
+btnEliminarQR.addEventListener("click", function() {
+    qrActual = "";
+    archivoQR.value = "";
+    nombreArchivoQR.textContent = "Ningún archivo seleccionado";
+    qrPreview.innerHTML = "QR eliminado (guarda los cambios)";
+    btnEliminarQR.style.display = "none";
+});
+
+
+// ======================================================
+// ADELANTO
+// ======================================================
+
+function actualizarResumenAdelanto() {
+
+    if (!montoAdelanto || !resumenAdelanto) return;
+
+    const monto = Number(montoAdelanto.value || 0);
+
+    resumenAdelanto.textContent =
+        "Bs " + monto.toFixed(2);
+}
+
+montoAdelanto?.addEventListener(
+    "input",
+    actualizarResumenAdelanto
+);
+
+
+// ======================================================
+// CARGAR CONFIGURACIÓN
+// ======================================================
+
+async function cargarConfiguracion() {
+
+    try {
+
+        const respuesta =
+            await fetch(
+                "/api/configuracion"
+            );
+
+
+        const texto =
+            await respuesta.text();
+
+
+        let configuracion;
+
+
+        try {
+
+            configuracion =
+                JSON.parse(
+                    texto
+                );
+
+        }
+        catch {
+
+            console.error(
+                "Respuesta recibida:",
+                texto
+            );
+
+            throw new Error(
+                "El servidor no devolvió JSON. Revisa la ruta /api/configuracion."
+            );
+
+        }
+
+
+        if (
+            !respuesta.ok
+        ) {
+
+            throw new Error(
+                configuracion.error ||
+                "No se pudo cargar la configuración"
+            );
+
+        }
+
+
+        document.getElementById(
+            "nombre_barberia"
+        ).value =
+            configuracion.nombre_barberia ||
+            "CLUB PONTE PERRO";
+
+
+        document.getElementById(
+            "descripcion"
+        ).value =
+            configuracion.descripcion ||
+            "";
+
+
+        document.getElementById(
+            "telefono"
+        ).value =
+            configuracion.telefono ||
+            "";
+
+
+        document.getElementById(
+            "whatsapp"
+        ).value =
+            configuracion.whatsapp ||
+            "";
+
+
+        document.getElementById(
+            "direccion"
+        ).value =
+            configuracion.direccion ||
+            "";
+
+
+        document.getElementById(
+            "google_maps"
+        ).value =
+            configuracion.google_maps ||
+            "";
+
+
+        document.getElementById(
+            "instagram"
+        ).value =
+            configuracion.instagram ||
+            "";
+
+
+        document.getElementById(
+            "facebook"
+        ).value =
+            configuracion.facebook ||
+            "";
+
+
+        document.getElementById(
+            "tiktok"
+        ).value =
+            configuracion.tiktok ||
+            "";
+
+
+        document.getElementById(
+            "horario_general"
+        ).value =
+            configuracion.horario_general ||
+            "";
+
+
+        if (adelantoObligatorio) {
+            adelantoObligatorio.checked =
+                Number(configuracion.adelanto_obligatorio) === 1;
+        }
+
+        if (montoAdelanto) {
+            montoAdelanto.value =
+                Number(configuracion.monto_adelanto || 20).toFixed(2);
+        }
+
+        actualizarResumenAdelanto();
+
+
+        logoActual =
+            configuracion.logo ||
+            "";
+
+        qrActual =
+            configuracion.qr_pago ||
+            configuracion.qr ||
+            configuracion.qr_pago_url ||
+            "";
+
+
+        archivoLogo.value =
+            "";
+
+        nombreArchivo.textContent =
+            "Ningún archivo seleccionado";
+
+
+        mostrarLogoActual();
+        mostrarQRActual();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "❌ Error configuración:",
+            error
+        );
+
+
+        mostrarMensaje(
+            "❌ " +
+            error.message,
+            true
+        );
+
+    }
+
+}
+
+
+
+// ======================================================
+// MOSTRAR LOGO ACTUAL
+// ======================================================
+
+function mostrarLogoActual() {
+
+    if (!logoActual) {
+
+        logoPreview.innerHTML =
+            "Sin logo";
+
+        return;
+
+    }
+
+
+    logoPreview.innerHTML = `
+
+        <img
+            src="${logoActual}"
+            alt="Logo actual"
+            onerror="
+                this.parentElement.innerHTML =
+                'No se pudo cargar el logo';
+            "
+        >
+
+    `;
+
+}
+
+
+
+// ======================================================
+// MOSTRAR QR ACTUAL
+// ======================================================
+
+function mostrarQRActual() {
+
+    archivoQR.value = "";
+    nombreArchivoQR.textContent = "Ningún archivo seleccionado";
+
+    if (!qrActual) {
+        qrPreview.innerHTML = "Sin QR configurado";
+        btnEliminarQR.style.display = "none";
+        return;
+    }
+
+    qrPreview.innerHTML = `
+        <img
+            src="${qrActual}"
+            alt="QR de pago"
+            onerror="this.parentElement.innerHTML='No se pudo cargar el QR';"
+        >
+    `;
+
+    btnEliminarQR.style.display = "inline-block";
+}
+
+
+// ======================================================
+// GUARDAR
+// ======================================================
+
+formulario.addEventListener(
+    "submit",
+    async function(evento) {
+
+        evento.preventDefault();
+
+
+        const nombre =
+            document.getElementById(
+                "nombre_barberia"
+            ).value.trim();
+
+
+        if (!nombre) {
+
+            mostrarMensaje(
+                "⚠️ El nombre es obligatorio.",
+                true
+            );
+
+            return;
+
+        }
+
+
+        const datos =
+            new FormData();
+
+
+        datos.append(
+            "nombre_barberia",
+            nombre
+        );
+
+
+        datos.append(
+            "descripcion",
+            document.getElementById(
+                "descripcion"
+            ).value.trim()
+        );
+
+
+        datos.append(
+            "telefono",
+            document.getElementById(
+                "telefono"
+            ).value.trim()
+        );
+
+
+        datos.append(
+            "whatsapp",
+            document.getElementById(
+                "whatsapp"
+            ).value.trim()
+        );
+
+
+        datos.append(
+            "direccion",
+            document.getElementById(
+                "direccion"
+            ).value.trim()
+        );
+
+
+        datos.append(
+            "google_maps",
+            document.getElementById(
+                "google_maps"
+            ).value.trim()
+        );
+
+
+        datos.append(
+            "instagram",
+            document.getElementById(
+                "instagram"
+            ).value.trim()
+        );
+
+
+        datos.append(
+            "facebook",
+            document.getElementById(
+                "facebook"
+            ).value.trim()
+        );
+
+
+        datos.append(
+            "tiktok",
+            document.getElementById(
+                "tiktok"
+            ).value.trim()
+        );
+
+
+        datos.append(
+            "horario_general",
+            document.getElementById(
+                "horario_general"
+            ).value.trim()
+        );
+
+
+        datos.append(
+            "adelanto_obligatorio",
+            adelantoObligatorio.checked ? "1" : "0"
+        );
+
+        const monto = Number(montoAdelanto.value);
+
+        if (!Number.isFinite(monto) || monto <= 0) {
+            mostrarMensaje(
+                "⚠️ El monto del adelanto debe ser mayor a Bs 0.",
+                true
+            );
+            montoAdelanto.focus();
+            return;
+        }
+
+        datos.append(
+            "monto_adelanto",
+            monto.toFixed(2)
+        );
+
+
+        if (
+            archivoLogo.files.length > 0
+        ) {
+
+            datos.append(
+                "logo",
+                archivoLogo.files[0]
+            );
+
+        }
+
+        if (
+            archivoQR.files.length > 0
+        ) {
+
+            datos.append(
+                "qr_pago",
+                archivoQR.files[0]
+            );
+
+        }
+
+        if (
+            !qrActual &&
+            archivoQR.files.length === 0
+        ) {
+
+            datos.append(
+                "eliminar_qr",
+                "1"
+            );
+
+        }
+
+
+        botonGuardar.disabled =
+            true;
+
+
+        botonGuardar.textContent =
+            "⏳ GUARDANDO...";
+
+
+        try {
+
+            const respuesta =
+                await fetch(
+                    "/api/configuracion",
+                    {
+
+                        method:
+                            "PUT",
+
+                        body:
+                            datos
+
+                    }
+                );
+
+
+            const resultado =
+                await respuesta.json();
+
+
+            if (
+                !respuesta.ok
+            ) {
+
+                throw new Error(
+                    resultado.error ||
+                    "No se pudo guardar"
+                );
+
+            }
+
+
+            logoActual =
+                resultado.logo ||
+                logoActual;
+
+            qrActual =
+                resultado.qr_pago ||
+                resultado.qr ||
+                qrActual;
+
+
+            mostrarMensaje(
+                "✅ Configuración guardada correctamente."
+            );
+
+
+            await cargarConfiguracion();
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "❌ Error guardando:",
+                error
+            );
+
+
+            mostrarMensaje(
+                "❌ " +
+                error.message,
+                true
+            );
+
+        }
+
+        finally {
+
+            botonGuardar.disabled =
+                false;
+
+            botonGuardar.textContent =
+                "💾 GUARDAR CAMBIOS";
+
+        }
+
+    }
+);
+
+
+
+// ======================================================
+// INICIAR
+// ======================================================
+
+cargarConfiguracion();
+
+
+</script>
+
+
+</body>
+
+</html>
