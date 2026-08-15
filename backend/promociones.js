@@ -8,6 +8,13 @@ const router = express.Router();
 
 
 // ========================================
+// DETECTAR ENTORNO
+// ========================================
+
+const esVercel = process.env.VERCEL === "1";
+
+
+// ========================================
 // CARPETA DE IMÁGENES
 // ========================================
 
@@ -17,14 +24,22 @@ const carpetaUploads = path.join(
 );
 
 
-if (!fs.existsSync(carpetaUploads)) {
+// ========================================
+// CREAR CARPETA SOLO EN LOCAL
+// ========================================
 
-    fs.mkdirSync(
-        carpetaUploads,
-        {
-            recursive: true
-        }
-    );
+if (!esVercel) {
+
+    if (!fs.existsSync(carpetaUploads)) {
+
+        fs.mkdirSync(
+            carpetaUploads,
+            {
+                recursive: true
+            }
+        );
+
+    }
 
 }
 
@@ -33,8 +48,19 @@ if (!fs.existsSync(carpetaUploads)) {
 // CONFIGURACIÓN MULTER
 // ========================================
 
-const almacenamiento =
-    multer.diskStorage({
+let almacenamiento;
+
+if (esVercel) {
+
+    // En Vercel no escribimos archivos en /uploads.
+    almacenamiento = multer.memoryStorage();
+
+} else {
+
+    // En la computadora continúa funcionando
+    // exactamente con la carpeta uploads.
+
+    almacenamiento = multer.diskStorage({
 
         destination: function (
             req,
@@ -80,6 +106,12 @@ const almacenamiento =
 
     });
 
+}
+
+
+// ========================================
+// FILTRO DE IMÁGENES
+// ========================================
 
 const filtroImagen =
     function (
@@ -322,18 +354,23 @@ router.post(
                     : "";
 
 
-            // ==============================
+            // ========================================
             // VALIDACIONES
-            // ==============================
+            // ========================================
 
             if (!titulo) {
 
-                if (archivoSubido) {
+                if (
+                    archivoSubido &&
+                    archivoSubido.path
+                ) {
 
                     try {
+
                         fs.unlinkSync(
                             archivoSubido.path
                         );
+
                     } catch (e) {}
 
                 }
@@ -355,12 +392,17 @@ router.post(
                 )
             ) {
 
-                if (archivoSubido) {
+                if (
+                    archivoSubido &&
+                    archivoSubido.path
+                ) {
 
                     try {
+
                         fs.unlinkSync(
                             archivoSubido.path
                         );
+
                     } catch (e) {}
 
                 }
@@ -378,12 +420,17 @@ router.post(
 
             if (!fechaInicio) {
 
-                if (archivoSubido) {
+                if (
+                    archivoSubido &&
+                    archivoSubido.path
+                ) {
 
                     try {
+
                         fs.unlinkSync(
                             archivoSubido.path
                         );
+
                     } catch (e) {}
 
                 }
@@ -401,12 +448,17 @@ router.post(
 
             if (!fechaFin) {
 
-                if (archivoSubido) {
+                if (
+                    archivoSubido &&
+                    archivoSubido.path
+                ) {
 
                     try {
+
                         fs.unlinkSync(
                             archivoSubido.path
                         );
+
                     } catch (e) {}
 
                 }
@@ -434,20 +486,28 @@ router.post(
             }
 
 
-            // ==============================
+            // ========================================
             // VALIDAR FECHAS
-            // ==============================
+            // ========================================
 
             if (
                 fechaFin <
                 fechaInicio
             ) {
 
-                try {
-                    fs.unlinkSync(
-                        archivoSubido.path
-                    );
-                } catch (e) {}
+                if (
+                    archivoSubido.path
+                ) {
+
+                    try {
+
+                        fs.unlinkSync(
+                            archivoSubido.path
+                        );
+
+                    } catch (e) {}
+
+                }
 
 
                 return res.status(400).json({
@@ -460,18 +520,34 @@ router.post(
             }
 
 
-            // ==============================
+            // ========================================
+            // VERCEL
+            // ========================================
+
+            if (esVercel) {
+
+                return res.status(503).json({
+
+                    error:
+                        "La carga de imágenes de promociones necesita almacenamiento externo en producción."
+
+                });
+
+            }
+
+
+            // ========================================
             // RUTA IMAGEN
-            // ==============================
+            // ========================================
 
             const rutaImagen =
                 "/uploads/promociones/" +
                 archivoSubido.filename;
 
 
-            // ==============================
+            // ========================================
             // INSERTAR
-            // ==============================
+            // ========================================
 
             const sql = `
                 INSERT INTO promociones
@@ -504,11 +580,19 @@ router.post(
 
                     if (error) {
 
-                        try {
-                            fs.unlinkSync(
-                                archivoSubido.path
-                            );
-                        } catch (e) {}
+                        if (
+                            archivoSubido.path
+                        ) {
+
+                            try {
+
+                                fs.unlinkSync(
+                                    archivoSubido.path
+                                );
+
+                            } catch (e) {}
+
+                        }
 
 
                         console.error(
@@ -547,12 +631,17 @@ router.post(
 
         catch (error) {
 
-            if (archivoSubido) {
+            if (
+                archivoSubido &&
+                archivoSubido.path
+            ) {
 
                 try {
+
                     fs.unlinkSync(
                         archivoSubido.path
                     );
+
                 } catch (e) {}
 
             }
@@ -722,9 +811,12 @@ router.delete(
                         }
 
 
-                        // Eliminar archivo físico
+                        // ========================================
+                        // ELIMINAR ARCHIVO SOLO EN LOCAL
+                        // ========================================
 
                         if (
+                            !esVercel &&
                             imagen &&
                             imagen.startsWith(
                                 "/uploads/"
