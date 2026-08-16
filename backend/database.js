@@ -5,7 +5,7 @@ const mysql = require("mysql2");
 // CONFIGURACIÓN MYSQL
 // =====================================================
 
-const conexion = mysql.createConnection({
+const configuracion = {
 
     host:
         process.env.DB_HOST ||
@@ -37,15 +37,41 @@ const conexion = mysql.createConnection({
             }
             : undefined
 
+};
+
+
+// =====================================================
+// POOL DE CONEXIONES
+// =====================================================
+
+const conexion = mysql.createPool({
+
+    ...configuracion,
+
+    waitForConnections:
+        true,
+
+    connectionLimit:
+        5,
+
+    maxIdle:
+        5,
+
+    idleTimeout:
+        60000,
+
+    queueLimit:
+        0
+
 });
 
 
 // =====================================================
-// CONEXIÓN
+// VERIFICAR CONEXIÓN
 // =====================================================
 
-conexion.connect(
-    (error) => {
+conexion.getConnection(
+    (error, connection) => {
 
         if (error) {
 
@@ -63,8 +89,32 @@ conexion.connect(
             "✅ Conexión con MySQL establecida correctamente"
         );
 
+
+        connection.release();
+
     }
 );
 
+
+// =====================================================
+// MANEJO DE ERRORES DEL POOL
+// =====================================================
+
+conexion.on(
+    "error",
+    (error) => {
+
+        console.error(
+            "❌ Error en el pool MySQL:",
+            error
+        );
+
+    }
+);
+
+
+// =====================================================
+// EXPORTAR CONEXIÓN
+// =====================================================
 
 module.exports = conexion;
