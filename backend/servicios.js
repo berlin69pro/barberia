@@ -1,60 +1,65 @@
 const express = require("express");
-const path = require("path");
 const multer = require("multer");
+const { v2: cloudinary } = require("cloudinary");
 const conexion = require("./database");
 
 const router = express.Router();
 
 
 // ========================================
-// CONFIGURACIÓN DE IMÁGENES
+// CONFIGURACIÓN CLOUDINARY
 // ========================================
 
-const almacenamiento = multer.diskStorage({
+cloudinary.config({
 
-    destination: (req, file, cb) => {
+    cloud_name:
+        process.env.CLOUDINARY_CLOUD_NAME,
 
-        cb(
-            null,
-            path.join(
-                __dirname,
-                "../frontend/uploads"
-            )
-        );
+    api_key:
+        process.env.CLOUDINARY_API_KEY,
 
-    },
-
-    filename: (req, file, cb) => {
-
-        const extension =
-            path.extname(file.originalname);
-
-        const nombreArchivo =
-            "servicio-" +
-            Date.now() +
-            extension;
-
-        cb(
-            null,
-            nombreArchivo
-        );
-
-    }
+    api_secret:
+        process.env.CLOUDINARY_API_SECRET
 
 });
 
 
-const filtroImagen = (req, file, cb) => {
+// ========================================
+// MULTER - MEMORIA
+// ========================================
+
+// La imagen se mantiene temporalmente en memoria
+// y luego se envía a Cloudinary.
+
+const almacenamiento =
+    multer.memoryStorage();
+
+
+const filtroImagen = (
+    req,
+    file,
+    cb
+) => {
 
     const permitidos = [
+
         "image/jpeg",
         "image/png",
         "image/webp"
+
     ];
 
-    if (permitidos.includes(file.mimetype)) {
 
-        cb(null, true);
+    if (
+        permitidos.includes(
+            file.mimetype
+        )
+    ) {
+
+        cb(
+            null,
+            true
+        );
 
     } else {
 
@@ -69,94 +74,204 @@ const filtroImagen = (req, file, cb) => {
 };
 
 
-const subirImagen = multer({
+const subirImagen =
+    multer({
 
-    storage: almacenamiento,
+        storage:
+            almacenamiento,
 
-    fileFilter: filtroImagen,
+        fileFilter:
+            filtroImagen,
 
-    limits: {
-        fileSize: 5 * 1024 * 1024
-    }
+        limits: {
 
-});
+            fileSize:
+                5 * 1024 * 1024
+
+        }
+
+    });
+
+
+// ========================================
+// SUBIR IMAGEN A CLOUDINARY
+// ========================================
+
+function subirACloudinary(
+    archivo
+) {
+
+    return new Promise(
+        (
+            resolve,
+            reject
+        ) => {
+
+            const stream =
+                cloudinary.uploader.upload_stream(
+
+                    {
+                        folder:
+                            "barberia/servicios",
+
+                        resource_type:
+                            "image"
+
+                    },
+
+                    (
+                        error,
+                        resultado
+                    ) => {
+
+                        if (error) {
+
+                            reject(
+                                error
+                            );
+
+                        } else {
+
+                            resolve(
+                                resultado
+                            );
+
+                        }
+
+                    }
+
+                );
+
+
+            stream.end(
+                archivo.buffer
+            );
+
+        }
+    );
+
+}
 
 
 // ========================================
 // LISTAR SERVICIOS
 // ========================================
 
-router.get("/", (req, res) => {
+router.get(
+    "/",
+    (req, res) => {
 
-    const sql = `
-        SELECT *
-        FROM servicios
-        ORDER BY id_servicio DESC
-    `;
+        const sql = `
+            SELECT *
+            FROM servicios
+            ORDER BY id_servicio DESC
+        `;
 
-    conexion.query(sql, (error, resultados) => {
 
-        if (error) {
+        conexion.query(
+            sql,
+            (
+                error,
+                resultados
+            ) => {
 
-            console.error(
-                "❌ Error al obtener servicios:",
-                error
-            );
+                if (error) {
 
-            return res.status(500).json({
-                error: "Error al obtener los servicios"
-            });
+                    console.error(
+                        "❌ Error al obtener servicios:",
+                        error
+                    );
 
-        }
 
-        res.json(resultados);
+                    return res
+                        .status(500)
+                        .json({
 
-    });
+                            error:
+                                "Error al obtener los servicios"
 
-});
+                        });
+
+                }
+
+
+                res.json(
+                    resultados
+                );
+
+            }
+        );
+
+    }
+);
 
 
 // ========================================
 // OBTENER UN SERVICIO
 // ========================================
 
-router.get("/:id", (req, res) => {
+router.get(
+    "/:id",
+    (req, res) => {
 
-    const id = req.params.id;
+        const id =
+            req.params.id;
 
-    const sql = `
-        SELECT *
-        FROM servicios
-        WHERE id_servicio = ?
-    `;
 
-    conexion.query(
-        sql,
-        [id],
-        (error, resultados) => {
+        const sql = `
+            SELECT *
+            FROM servicios
+            WHERE id_servicio = ?
+        `;
 
-            if (error) {
 
-                return res.status(500).json({
-                    error: "Error al obtener el servicio"
-                });
+        conexion.query(
+            sql,
+            [id],
+            (
+                error,
+                resultados
+            ) => {
+
+                if (error) {
+
+                    return res
+                        .status(500)
+                        .json({
+
+                            error:
+                                "Error al obtener el servicio"
+
+                        });
+
+                }
+
+
+                if (
+                    resultados.length === 0
+                ) {
+
+                    return res
+                        .status(404)
+                        .json({
+
+                            error:
+                                "Servicio no encontrado"
+
+                        });
+
+                }
+
+
+                res.json(
+                    resultados[0]
+                );
 
             }
+        );
 
-            if (resultados.length === 0) {
-
-                return res.status(404).json({
-                    error: "Servicio no encontrado"
-                });
-
-            }
-
-            res.json(resultados[0]);
-
-        }
-    );
-
-});
+    }
+);
 
 
 // ========================================
@@ -166,110 +281,201 @@ router.get("/:id", (req, res) => {
 router.post(
     "/",
     subirImagen.single("foto"),
-    (req, res) => {
+    async (
+        req,
+        res
+    ) => {
 
-        const {
-            nombre,
-            descripcion,
-            precio,
-            duracion
-        } = req.body;
+        try {
 
-
-        if (!nombre || !nombre.trim()) {
-
-            return res.status(400).json({
-                error: "El nombre del servicio es obligatorio"
-            });
-
-        }
-
-
-        if (
-            precio === undefined ||
-            precio === "" ||
-            Number(precio) < 0
-        ) {
-
-            return res.status(400).json({
-                error: "El precio no es válido"
-            });
-
-        }
-
-
-        if (
-            duracion === undefined ||
-            duracion === "" ||
-            Number(duracion) <= 0
-        ) {
-
-            return res.status(400).json({
-                error: "La duración no es válida"
-            });
-
-        }
-
-
-        const foto = req.file
-            ? "/uploads/" + req.file.filename
-            : null;
-
-
-        const sql = `
-            INSERT INTO servicios
-            (
+            const {
                 nombre,
                 descripcion,
                 precio,
-                duracion,
-                foto,
-                estado
-            )
-            VALUES (?, ?, ?, ?, ?, TRUE)
-        `;
+                duracion
+            } = req.body;
 
 
-        conexion.query(
-            sql,
-            [
-                nombre.trim(),
-                descripcion || null,
-                Number(precio),
-                Number(duracion),
-                foto
-            ],
-            (error, resultado) => {
+            // ========================================
+            // VALIDACIONES
+            // ========================================
 
-                if (error) {
+            if (
+                !nombre ||
+                !nombre.trim()
+            ) {
 
-                    console.error(
-                        "❌ Error al crear servicio:",
-                        error
-                    );
+                return res
+                    .status(400)
+                    .json({
 
-                    return res.status(500).json({
-                        error: "No se pudo crear el servicio"
+                        error:
+                            "El nombre del servicio es obligatorio"
+
                     });
 
+            }
+
+
+            if (
+                precio === undefined ||
+                precio === "" ||
+                Number(precio) < 0
+            ) {
+
+                return res
+                    .status(400)
+                    .json({
+
+                        error:
+                            "El precio no es válido"
+
+                    });
+
+            }
+
+
+            if (
+                duracion === undefined ||
+                duracion === "" ||
+                Number(duracion) <= 0
+            ) {
+
+                return res
+                    .status(400)
+                    .json({
+
+                        error:
+                            "La duración no es válida"
+
+                    });
+
+            }
+
+
+            // ========================================
+            // SUBIR FOTO
+            // ========================================
+
+            let foto = null;
+
+
+            if (req.file) {
+
+                const resultado =
+                    await subirACloudinary(
+                        req.file
+                    );
+
+
+                foto =
+                    resultado.secure_url;
+
+            }
+
+
+            // ========================================
+            // GUARDAR EN AIVEN
+            // ========================================
+
+            const sql = `
+                INSERT INTO servicios
+                (
+                    nombre,
+                    descripcion,
+                    precio,
+                    duracion,
+                    foto,
+                    estado
+                )
+                VALUES (?, ?, ?, ?, ?, TRUE)
+            `;
+
+
+            conexion.query(
+                sql,
+                [
+
+                    nombre.trim(),
+
+                    descripcion ||
+                        null,
+
+                    Number(
+                        precio
+                    ),
+
+                    Number(
+                        duracion
+                    ),
+
+                    foto
+
+                ],
+                (
+                    error,
+                    resultado
+                ) => {
+
+                    if (error) {
+
+                        console.error(
+                            "❌ Error al crear servicio:",
+                            error
+                        );
+
+
+                        return res
+                            .status(500)
+                            .json({
+
+                                error:
+                                    "No se pudo crear el servicio"
+
+                            });
+
+                    }
+
+
+                    res
+                        .status(201)
+                        .json({
+
+                            mensaje:
+                                "Servicio creado correctamente",
+
+                            id_servicio:
+                                resultado.insertId,
+
+                            foto:
+                                foto
+
+                        });
+
                 }
+            );
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "❌ Error al subir imagen del servicio:",
+                error
+            );
 
 
-                res.status(201).json({
+            res
+                .status(500)
+                .json({
 
-                    mensaje:
-                        "Servicio creado correctamente",
-
-                    id_servicio:
-                        resultado.insertId,
-
-                    foto:
-                        foto
+                    error:
+                        error.message ||
+                        "No se pudo procesar la imagen"
 
                 });
 
-            }
-        );
+        }
 
     }
 );
@@ -282,174 +488,316 @@ router.post(
 router.put(
     "/:id",
     subirImagen.single("foto"),
-    (req, res) => {
+    async (
+        req,
+        res
+    ) => {
 
-        const id = req.params.id;
+        try {
 
-        const {
-            nombre,
-            descripcion,
-            precio,
-            duracion,
-            estado
-        } = req.body;
+            const id =
+                req.params.id;
 
 
-        if (!nombre || !nombre.trim()) {
-
-            return res.status(400).json({
-                error: "El nombre del servicio es obligatorio"
-            });
-
-        }
-
-
-        if (
-            precio === undefined ||
-            precio === "" ||
-            Number(precio) < 0
-        ) {
-
-            return res.status(400).json({
-                error: "El precio no es válido"
-            });
-
-        }
+            const {
+                nombre,
+                descripcion,
+                precio,
+                duracion,
+                estado
+            } = req.body;
 
 
-        if (
-            duracion === undefined ||
-            duracion === "" ||
-            Number(duracion) <= 0
-        ) {
+            // ========================================
+            // VALIDACIONES
+            // ========================================
 
-            return res.status(400).json({
-                error: "La duración no es válida"
-            });
+            if (
+                !nombre ||
+                !nombre.trim()
+            ) {
 
-        }
+                return res
+                    .status(400)
+                    .json({
 
+                        error:
+                            "El nombre del servicio es obligatorio"
 
-        let sql;
-        let valores;
+                    });
 
-
-        if (req.file) {
-
-            const foto =
-                "/uploads/" +
-                req.file.filename;
+            }
 
 
-            sql = `
-                UPDATE servicios
+            if (
+                precio === undefined ||
+                precio === "" ||
+                Number(precio) < 0
+            ) {
 
-                SET
-                    nombre = ?,
-                    descripcion = ?,
-                    precio = ?,
-                    duracion = ?,
-                    foto = ?,
-                    estado = ?
+                return res
+                    .status(400)
+                    .json({
 
-                WHERE id_servicio = ?
-            `;
+                        error:
+                            "El precio no es válido"
 
+                    });
 
-            valores = [
-
-                nombre.trim(),
-
-                descripcion || null,
-
-                Number(precio),
-
-                Number(duracion),
-
-                foto,
-
-                estado ? 1 : 0,
-
-                id
-
-            ];
-
-        } else {
-
-            sql = `
-                UPDATE servicios
-
-                SET
-                    nombre = ?,
-                    descripcion = ?,
-                    precio = ?,
-                    duracion = ?,
-                    estado = ?
-
-                WHERE id_servicio = ?
-            `;
+            }
 
 
-            valores = [
+            if (
+                duracion === undefined ||
+                duracion === "" ||
+                Number(duracion) <= 0
+            ) {
 
-                nombre.trim(),
+                return res
+                    .status(400)
+                    .json({
 
-                descripcion || null,
+                        error:
+                            "La duración no es válida"
 
-                Number(precio),
+                    });
 
-                Number(duracion),
-
-                estado ? 1 : 0,
-
-                id
-
-            ];
-
-        }
+            }
 
 
-        conexion.query(
-            sql,
-            valores,
-            (error, resultado) => {
+            // ========================================
+            // SI HAY NUEVA FOTO
+            // ========================================
 
-                if (error) {
+            if (req.file) {
 
-                    console.error(
-                        "❌ Error al editar servicio:",
-                        error
+                const resultado =
+                    await subirACloudinary(
+                        req.file
                     );
 
-                    return res.status(500).json({
-                        error:
-                            "No se pudo editar el servicio"
+
+                const foto =
+                    resultado.secure_url;
+
+
+                const sql = `
+                    UPDATE servicios
+
+                    SET
+                        nombre = ?,
+                        descripcion = ?,
+                        precio = ?,
+                        duracion = ?,
+                        foto = ?,
+                        estado = ?
+
+                    WHERE id_servicio = ?
+                `;
+
+
+                const valores = [
+
+                    nombre.trim(),
+
+                    descripcion ||
+                        null,
+
+                    Number(
+                        precio
+                    ),
+
+                    Number(
+                        duracion
+                    ),
+
+                    foto,
+
+                    estado ? 1 : 0,
+
+                    id
+
+                ];
+
+
+                conexion.query(
+                    sql,
+                    valores,
+                    (
+                        error,
+                        resultadoSQL
+                    ) => {
+
+                        if (error) {
+
+                            console.error(
+                                "❌ Error al editar servicio:",
+                                error
+                            );
+
+
+                            return res
+                                .status(500)
+                                .json({
+
+                                    error:
+                                        "No se pudo editar el servicio"
+
+                                });
+
+                        }
+
+
+                        if (
+                            resultadoSQL.affectedRows === 0
+                        ) {
+
+                            return res
+                                .status(404)
+                                .json({
+
+                                    error:
+                                        "Servicio no encontrado"
+
+                                });
+
+                        }
+
+
+                        res.json({
+
+                            mensaje:
+                                "Servicio actualizado correctamente",
+
+                            foto:
+                                foto
+
+                        });
+
+                    }
+                );
+
+
+                return;
+
+            }
+
+
+            // ========================================
+            // EDITAR SIN CAMBIAR FOTO
+            // ========================================
+
+            const sql = `
+                UPDATE servicios
+
+                SET
+                    nombre = ?,
+                    descripcion = ?,
+                    precio = ?,
+                    duracion = ?,
+                    estado = ?
+
+                WHERE id_servicio = ?
+            `;
+
+
+            const valores = [
+
+                nombre.trim(),
+
+                descripcion ||
+                    null,
+
+                Number(
+                    precio
+                ),
+
+                Number(
+                    duracion
+                ),
+
+                estado ? 1 : 0,
+
+                id
+
+            ];
+
+
+            conexion.query(
+                sql,
+                valores,
+                (
+                    error,
+                    resultado
+                ) => {
+
+                    if (error) {
+
+                        console.error(
+                            "❌ Error al editar servicio:",
+                            error
+                        );
+
+
+                        return res
+                            .status(500)
+                            .json({
+
+                                error:
+                                    "No se pudo editar el servicio"
+
+                            });
+
+                    }
+
+
+                    if (
+                        resultado.affectedRows === 0
+                    ) {
+
+                        return res
+                            .status(404)
+                            .json({
+
+                                error:
+                                    "Servicio no encontrado"
+
+                            });
+
+                    }
+
+
+                    res.json({
+
+                        mensaje:
+                            "Servicio actualizado correctamente"
+
                     });
 
                 }
+            );
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "❌ Error al editar servicio:",
+                error
+            );
 
 
-                if (
-                    resultado.affectedRows === 0
-                ) {
+            res
+                .status(500)
+                .json({
 
-                    return res.status(404).json({
-                        error:
-                            "Servicio no encontrado"
-                    });
-
-                }
-
-
-                res.json({
-
-                    mensaje:
-                        "Servicio actualizado correctamente"
+                    error:
+                        error.message ||
+                        "No se pudo procesar la imagen"
 
                 });
 
-            }
-        );
+        }
 
     }
 );
@@ -463,9 +811,13 @@ router.patch(
     "/:id/estado",
     (req, res) => {
 
-        const id = req.params.id;
+        const id =
+            req.params.id;
 
-        const { estado } = req.body;
+
+        const {
+            estado
+        } = req.body;
 
 
         const nuevoEstado =
@@ -488,14 +840,21 @@ router.patch(
                 nuevoEstado,
                 id
             ],
-            (error, resultado) => {
+            (
+                error,
+                resultado
+            ) => {
 
                 if (error) {
 
-                    return res.status(500).json({
-                        error:
-                            "No se pudo cambiar el estado"
-                    });
+                    return res
+                        .status(500)
+                        .json({
+
+                            error:
+                                "No se pudo cambiar el estado"
+
+                        });
 
                 }
 
@@ -504,10 +863,14 @@ router.patch(
                     resultado.affectedRows === 0
                 ) {
 
-                    return res.status(404).json({
-                        error:
-                            "Servicio no encontrado"
-                    });
+                    return res
+                        .status(404)
+                        .json({
+
+                            error:
+                                "Servicio no encontrado"
+
+                        });
 
                 }
 
@@ -539,7 +902,8 @@ router.delete(
     "/:id",
     (req, res) => {
 
-        const id = req.params.id;
+        const id =
+            req.params.id;
 
 
         const sql = `
@@ -551,7 +915,10 @@ router.delete(
         conexion.query(
             sql,
             [id],
-            (error, resultado) => {
+            (
+                error,
+                resultado
+            ) => {
 
                 if (error) {
 
@@ -560,10 +927,15 @@ router.delete(
                         error
                     );
 
-                    return res.status(500).json({
-                        error:
-                            "No se pudo eliminar el servicio. Puede tener reservas asociadas."
-                    });
+
+                    return res
+                        .status(500)
+                        .json({
+
+                            error:
+                                "No se pudo eliminar el servicio. Puede tener reservas asociadas."
+
+                        });
 
                 }
 
@@ -572,10 +944,14 @@ router.delete(
                     resultado.affectedRows === 0
                 ) {
 
-                    return res.status(404).json({
-                        error:
-                            "Servicio no encontrado"
-                    });
+                    return res
+                        .status(404)
+                        .json({
+
+                            error:
+                                "Servicio no encontrado"
+
+                        });
 
                 }
 
@@ -589,6 +965,72 @@ router.delete(
 
             }
         );
+
+    }
+);
+
+
+// ========================================
+// MANEJO DE ERRORES DE MULTER
+// ========================================
+
+router.use(
+    (
+        error,
+        req,
+        res,
+        next
+    ) => {
+
+        if (
+            error instanceof
+            multer.MulterError
+        ) {
+
+            if (
+                error.code ===
+                "LIMIT_FILE_SIZE"
+            ) {
+
+                return res
+                    .status(400)
+                    .json({
+
+                        error:
+                            "La imagen supera el tamaño máximo permitido de 5 MB."
+
+                    });
+
+            }
+
+
+            return res
+                .status(400)
+                .json({
+
+                    error:
+                        error.message
+
+                });
+
+        }
+
+
+        if (error) {
+
+            return res
+                .status(400)
+                .json({
+
+                    error:
+                        error.message
+
+                });
+
+        }
+
+
+        next();
 
     }
 );

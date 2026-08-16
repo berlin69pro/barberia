@@ -1,52 +1,36 @@
 const express = require("express");
-const path = require("path");
 const multer = require("multer");
+const { v2: cloudinary } = require("cloudinary");
 const conexion = require("./database");
 
 const router = express.Router();
 
 
 // ========================================
-// CONFIGURACIÓN DE MULTER
+// CONFIGURACIÓN CLOUDINARY
 // ========================================
 
-const almacenamiento = multer.diskStorage({
+cloudinary.config({
 
-    destination: (req, file, cb) => {
+    cloud_name:
+        process.env.CLOUDINARY_CLOUD_NAME,
 
-        cb(
-            null,
-            path.join(
-                __dirname,
-                "../frontend/uploads"
-            )
-        );
+    api_key:
+        process.env.CLOUDINARY_API_KEY,
 
-    },
-
-    filename: (req, file, cb) => {
-
-        const extension =
-            path.extname(file.originalname);
-
-        const nombreArchivo =
-            "barbero-" +
-            Date.now() +
-            extension;
-
-        cb(
-            null,
-            nombreArchivo
-        );
-
-    }
+    api_secret:
+        process.env.CLOUDINARY_API_SECRET
 
 });
 
 
 // ========================================
-// FILTRO DE IMÁGENES
+// MULTER - MEMORIA
 // ========================================
+
+const almacenamiento =
+    multer.memoryStorage();
+
 
 const filtroImagen = (
     req,
@@ -101,104 +85,190 @@ const subirImagen =
 
 
 // ========================================
-// OBTENER TODOS LOS BARBEROS
+// SUBIR IMAGEN A CLOUDINARY
 // ========================================
 
-router.get("/", (req, res) => {
+function subirACloudinary(
+    archivo
+) {
 
-    const sql = `
-        SELECT *
-        FROM barberos
-        ORDER BY id_barbero DESC
-    `;
+    return new Promise(
+        (
+            resolve,
+            reject
+        ) => {
 
-    conexion.query(
-        sql,
-        (error, resultados) => {
+            const stream =
+                cloudinary.uploader.upload_stream(
 
-            if (error) {
+                    {
+                        folder:
+                            "barberia/barberos",
 
-                console.error(
-                    "❌ Error al obtener barberos:",
-                    error
+                        resource_type:
+                            "image"
+
+                    },
+
+                    (
+                        error,
+                        resultado
+                    ) => {
+
+                        if (error) {
+
+                            reject(
+                                error
+                            );
+
+                        } else {
+
+                            resolve(
+                                resultado
+                            );
+
+                        }
+
+                    }
+
                 );
 
-                return res.status(500).json({
 
-                    error:
-                        "Error al obtener los barberos"
-
-                });
-
-            }
-
-            res.json(
-                resultados
+            stream.end(
+                archivo.buffer
             );
 
         }
     );
 
-});
+}
+
+
+// ========================================
+// OBTENER TODOS LOS BARBEROS
+// ========================================
+
+router.get(
+    "/",
+    (req, res) => {
+
+        const sql = `
+            SELECT *
+            FROM barberos
+            ORDER BY id_barbero DESC
+        `;
+
+
+        conexion.query(
+            sql,
+            (
+                error,
+                resultados
+            ) => {
+
+                if (error) {
+
+                    console.error(
+                        "❌ Error al obtener barberos:",
+                        error
+                    );
+
+
+                    return res
+                        .status(500)
+                        .json({
+
+                            error:
+                                "Error al obtener los barberos"
+
+                        });
+
+                }
+
+
+                res.json(
+                    resultados
+                );
+
+            }
+        );
+
+    }
+);
 
 
 // ========================================
 // OBTENER UN BARBERO
 // ========================================
 
-router.get("/:id", (req, res) => {
+router.get(
+    "/:id",
+    (req, res) => {
 
-    const id =
-        req.params.id;
+        const id =
+            req.params.id;
 
-    const sql = `
-        SELECT *
-        FROM barberos
-        WHERE id_barbero = ?
-    `;
 
-    conexion.query(
-        sql,
-        [id],
-        (error, resultados) => {
+        const sql = `
+            SELECT *
+            FROM barberos
+            WHERE id_barbero = ?
+        `;
 
-            if (error) {
 
-                console.error(
-                    "❌ Error al obtener barbero:",
-                    error
+        conexion.query(
+            sql,
+            [id],
+            (
+                error,
+                resultados
+            ) => {
+
+                if (error) {
+
+                    console.error(
+                        "❌ Error al obtener barbero:",
+                        error
+                    );
+
+
+                    return res
+                        .status(500)
+                        .json({
+
+                            error:
+                                "Error al obtener el barbero"
+
+                        });
+
+                }
+
+
+                if (
+                    resultados.length === 0
+                ) {
+
+                    return res
+                        .status(404)
+                        .json({
+
+                            error:
+                                "Barbero no encontrado"
+
+                        });
+
+                }
+
+
+                res.json(
+                    resultados[0]
                 );
 
-                return res.status(500).json({
-
-                    error:
-                        "Error al obtener el barbero"
-
-                });
-
             }
+        );
 
-            if (
-                resultados.length === 0
-            ) {
-
-                return res.status(404).json({
-
-                    error:
-                        "Barbero no encontrado"
-
-                });
-
-            }
-
-            res.json(
-                resultados[0]
-            );
-
-        }
-    );
-
-});
+    }
+);
 
 
 // ========================================
@@ -208,45 +278,14 @@ router.get("/:id", (req, res) => {
 router.post(
     "/",
     subirImagen.single("foto"),
-    (req, res) => {
+    async (
+        req,
+        res
+    ) => {
 
-        const {
-            nombre,
-            descripcion,
-            especialidad,
-            telefono,
-            instagram,
-            tiktok,
-            facebook,
-            whatsapp
-        } = req.body;
+        try {
 
-
-        if (
-            !nombre ||
-            !nombre.trim()
-        ) {
-
-            return res.status(400).json({
-
-                error:
-                    "El nombre del barbero es obligatorio"
-
-            });
-
-        }
-
-
-        const foto =
-            req.file
-                ? "/uploads/" +
-                  req.file.filename
-                : null;
-
-
-        const sql = `
-            INSERT INTO barberos
-            (
+            const {
                 nombre,
                 descripcion,
                 especialidad,
@@ -254,61 +293,168 @@ router.post(
                 instagram,
                 tiktok,
                 facebook,
-                whatsapp,
-                foto,
-                estado
-            )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, TRUE)
-        `;
+                whatsapp
+            } = req.body;
 
 
-        conexion.query(
-            sql,
-            [
-                nombre.trim(),
-                descripcion || null,
-                especialidad || null,
-                telefono || null,
-                instagram || null,
-                tiktok || null,
-                facebook || null,
-                whatsapp || null,
-                foto
-            ],
-            (error, resultado) => {
+            // ========================================
+            // VALIDAR NOMBRE
+            // ========================================
 
-                if (error) {
+            if (
+                !nombre ||
+                !nombre.trim()
+            ) {
 
-                    console.error(
-                        "❌ Error al agregar barbero:",
-                        error
-                    );
-
-                    return res.status(500).json({
+                return res
+                    .status(400)
+                    .json({
 
                         error:
-                            "No se pudo agregar el barbero"
+                            "El nombre del barbero es obligatorio"
 
                     });
 
+            }
+
+
+            // ========================================
+            // SUBIR FOTO
+            // ========================================
+
+            let foto = null;
+
+
+            if (req.file) {
+
+                const resultado =
+                    await subirACloudinary(
+                        req.file
+                    );
+
+
+                foto =
+                    resultado.secure_url;
+
+            }
+
+
+            // ========================================
+            // GUARDAR EN AIVEN
+            // ========================================
+
+            const sql = `
+                INSERT INTO barberos
+                (
+                    nombre,
+                    descripcion,
+                    especialidad,
+                    telefono,
+                    instagram,
+                    tiktok,
+                    facebook,
+                    whatsapp,
+                    foto,
+                    estado
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, TRUE)
+            `;
+
+
+            conexion.query(
+                sql,
+                [
+
+                    nombre.trim(),
+
+                    descripcion ||
+                        null,
+
+                    especialidad ||
+                        null,
+
+                    telefono ||
+                        null,
+
+                    instagram ||
+                        null,
+
+                    tiktok ||
+                        null,
+
+                    facebook ||
+                        null,
+
+                    whatsapp ||
+                        null,
+
+                    foto
+
+                ],
+                (
+                    error,
+                    resultado
+                ) => {
+
+                    if (error) {
+
+                        console.error(
+                            "❌ Error al agregar barbero:",
+                            error
+                        );
+
+
+                        return res
+                            .status(500)
+                            .json({
+
+                                error:
+                                    "No se pudo agregar el barbero"
+
+                            });
+
+                    }
+
+
+                    res
+                        .status(201)
+                        .json({
+
+                            mensaje:
+                                "Barbero agregado correctamente",
+
+                            id_barbero:
+                                resultado.insertId,
+
+                            foto:
+                                foto
+
+                        });
+
                 }
+            );
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "❌ Error al subir imagen del barbero:",
+                error
+            );
 
 
-                res.status(201).json({
+            res
+                .status(500)
+                .json({
 
-                    mensaje:
-                        "Barbero agregado correctamente",
-
-                    id_barbero:
-                        resultado.insertId,
-
-                    foto:
-                        foto
+                    error:
+                        error.message ||
+                        "No se pudo procesar la imagen"
 
                 });
 
-            }
-        );
+        }
 
     }
 );
@@ -321,189 +467,312 @@ router.post(
 router.put(
     "/:id",
     subirImagen.single("foto"),
-    (req, res) => {
+    async (
+        req,
+        res
+    ) => {
 
-        const id =
-            req.params.id;
+        try {
 
-
-        const {
-            nombre,
-            descripcion,
-            especialidad,
-            telefono,
-            instagram,
-            tiktok,
-            facebook,
-            whatsapp,
-            estado
-        } = req.body;
+            const id =
+                req.params.id;
 
 
-        if (
-            !nombre ||
-            !nombre.trim()
-        ) {
-
-            return res.status(400).json({
-
-                error:
-                    "El nombre del barbero es obligatorio"
-
-            });
-
-        }
+            const {
+                nombre,
+                descripcion,
+                especialidad,
+                telefono,
+                instagram,
+                tiktok,
+                facebook,
+                whatsapp,
+                estado
+            } = req.body;
 
 
-        let sql;
+            // ========================================
+            // VALIDAR NOMBRE
+            // ========================================
 
-        let valores;
+            if (
+                !nombre ||
+                !nombre.trim()
+            ) {
 
+                return res
+                    .status(400)
+                    .json({
 
-        if (req.file) {
+                        error:
+                            "El nombre del barbero es obligatorio"
 
-            const foto =
-                "/uploads/" +
-                req.file.filename;
+                    });
 
-
-            sql = `
-                UPDATE barberos
-
-                SET
-                    nombre = ?,
-                    descripcion = ?,
-                    especialidad = ?,
-                    telefono = ?,
-                    instagram = ?,
-                    tiktok = ?,
-                    facebook = ?,
-                    whatsapp = ?,
-                    foto = ?,
-                    estado = ?
-
-                WHERE id_barbero = ?
-            `;
+            }
 
 
-            valores = [
+            // ========================================
+            // SI HAY NUEVA FOTO
+            // ========================================
 
-                nombre.trim(),
+            if (req.file) {
 
-                descripcion || null,
-
-                especialidad || null,
-
-                telefono || null,
-
-                instagram || null,
-
-                tiktok || null,
-
-                facebook || null,
-
-                whatsapp || null,
-
-                foto,
-
-                estado ? 1 : 0,
-
-                id
-
-            ];
-
-        } else {
-
-            sql = `
-                UPDATE barberos
-
-                SET
-                    nombre = ?,
-                    descripcion = ?,
-                    especialidad = ?,
-                    telefono = ?,
-                    instagram = ?,
-                    tiktok = ?,
-                    facebook = ?,
-                    whatsapp = ?,
-                    estado = ?
-
-                WHERE id_barbero = ?
-            `;
-
-
-            valores = [
-
-                nombre.trim(),
-
-                descripcion || null,
-
-                especialidad || null,
-
-                telefono || null,
-
-                instagram || null,
-
-                tiktok || null,
-
-                facebook || null,
-
-                whatsapp || null,
-
-                estado ? 1 : 0,
-
-                id
-
-            ];
-
-        }
-
-
-        conexion.query(
-            sql,
-            valores,
-            (error, resultado) => {
-
-                if (error) {
-
-                    console.error(
-                        "❌ Error al editar barbero:",
-                        error
+                const resultado =
+                    await subirACloudinary(
+                        req.file
                     );
 
-                    return res.status(500).json({
 
-                        error:
-                            "No se pudo editar el barbero"
+                const foto =
+                    resultado.secure_url;
+
+
+                const sql = `
+                    UPDATE barberos
+
+                    SET
+                        nombre = ?,
+                        descripcion = ?,
+                        especialidad = ?,
+                        telefono = ?,
+                        instagram = ?,
+                        tiktok = ?,
+                        facebook = ?,
+                        whatsapp = ?,
+                        foto = ?,
+                        estado = ?
+
+                    WHERE id_barbero = ?
+                `;
+
+
+                const valores = [
+
+                    nombre.trim(),
+
+                    descripcion ||
+                        null,
+
+                    especialidad ||
+                        null,
+
+                    telefono ||
+                        null,
+
+                    instagram ||
+                        null,
+
+                    tiktok ||
+                        null,
+
+                    facebook ||
+                        null,
+
+                    whatsapp ||
+                        null,
+
+                    foto,
+
+                    estado ? 1 : 0,
+
+                    id
+
+                ];
+
+
+                conexion.query(
+                    sql,
+                    valores,
+                    (
+                        error,
+                        resultadoSQL
+                    ) => {
+
+                        if (error) {
+
+                            console.error(
+                                "❌ Error al editar barbero:",
+                                error
+                            );
+
+
+                            return res
+                                .status(500)
+                                .json({
+
+                                    error:
+                                        "No se pudo editar el barbero"
+
+                                });
+
+                        }
+
+
+                        if (
+                            resultadoSQL.affectedRows === 0
+                        ) {
+
+                            return res
+                                .status(404)
+                                .json({
+
+                                    error:
+                                        "Barbero no encontrado"
+
+                                });
+
+                        }
+
+
+                        res.json({
+
+                            mensaje:
+                                "Barbero actualizado correctamente",
+
+                            foto:
+                                foto
+
+                        });
+
+                    }
+                );
+
+
+                return;
+
+            }
+
+
+            // ========================================
+            // EDITAR SIN CAMBIAR FOTO
+            // ========================================
+
+            const sql = `
+                UPDATE barberos
+
+                SET
+                    nombre = ?,
+                    descripcion = ?,
+                    especialidad = ?,
+                    telefono = ?,
+                    instagram = ?,
+                    tiktok = ?,
+                    facebook = ?,
+                    whatsapp = ?,
+                    estado = ?
+
+                WHERE id_barbero = ?
+            `;
+
+
+            const valores = [
+
+                nombre.trim(),
+
+                descripcion ||
+                    null,
+
+                especialidad ||
+                    null,
+
+                telefono ||
+                    null,
+
+                instagram ||
+                    null,
+
+                tiktok ||
+                    null,
+
+                facebook ||
+                    null,
+
+                whatsapp ||
+                    null,
+
+                estado ? 1 : 0,
+
+                id
+
+            ];
+
+
+            conexion.query(
+                sql,
+                valores,
+                (
+                    error,
+                    resultado
+                ) => {
+
+                    if (error) {
+
+                        console.error(
+                            "❌ Error al editar barbero:",
+                            error
+                        );
+
+
+                        return res
+                            .status(500)
+                            .json({
+
+                                error:
+                                    "No se pudo editar el barbero"
+
+                                });
+
+                    }
+
+
+                    if (
+                        resultado.affectedRows === 0
+                    ) {
+
+                        return res
+                            .status(404)
+                            .json({
+
+                                error:
+                                    "Barbero no encontrado"
+
+                            });
+
+                    }
+
+
+                    res.json({
+
+                        mensaje:
+                            "Barbero actualizado correctamente"
 
                     });
 
                 }
+            );
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "❌ Error al editar barbero:",
+                error
+            );
 
 
-                if (
-                    resultado.affectedRows === 0
-                ) {
+            res
+                .status(500)
+                .json({
 
-                    return res.status(404).json({
-
-                        error:
-                            "Barbero no encontrado"
-
-                    });
-
-                }
-
-
-                res.json({
-
-                    mensaje:
-                        "Barbero actualizado correctamente"
+                    error:
+                        error.message ||
+                        "No se pudo procesar la imagen"
 
                 });
 
-            }
-        );
+        }
 
     }
 );
@@ -519,6 +788,7 @@ router.patch(
 
         const id =
             req.params.id;
+
 
         const {
             estado
@@ -545,7 +815,10 @@ router.patch(
                 nuevoEstado,
                 id
             ],
-            (error, resultado) => {
+            (
+                error,
+                resultado
+            ) => {
 
                 if (error) {
 
@@ -554,12 +827,15 @@ router.patch(
                         error
                     );
 
-                    return res.status(500).json({
 
-                        error:
-                            "No se pudo cambiar el estado"
+                    return res
+                        .status(500)
+                        .json({
 
-                    });
+                            error:
+                                "No se pudo cambiar el estado"
+
+                        });
 
                 }
 
@@ -568,12 +844,14 @@ router.patch(
                     resultado.affectedRows === 0
                 ) {
 
-                    return res.status(404).json({
+                    return res
+                        .status(404)
+                        .json({
 
-                        error:
-                            "Barbero no encontrado"
+                            error:
+                                "Barbero no encontrado"
 
-                    });
+                        });
 
                 }
 
@@ -618,7 +896,10 @@ router.delete(
         conexion.query(
             sql,
             [id],
-            (error, resultado) => {
+            (
+                error,
+                resultado
+            ) => {
 
                 if (error) {
 
@@ -627,12 +908,15 @@ router.delete(
                         error
                     );
 
-                    return res.status(500).json({
 
-                        error:
-                            "No se pudo eliminar el barbero. Puede tener reservas asociadas."
+                    return res
+                        .status(500)
+                        .json({
 
-                    });
+                            error:
+                                "No se pudo eliminar el barbero. Puede tener reservas asociadas."
+
+                        });
 
                 }
 
@@ -641,12 +925,14 @@ router.delete(
                     resultado.affectedRows === 0
                 ) {
 
-                    return res.status(404).json({
+                    return res
+                        .status(404)
+                        .json({
 
-                        error:
-                            "Barbero no encontrado"
+                            error:
+                                "Barbero no encontrado"
 
-                    });
+                        });
 
                 }
 
@@ -660,6 +946,72 @@ router.delete(
 
             }
         );
+
+    }
+);
+
+
+// ========================================
+// MANEJO DE ERRORES DE MULTER
+// ========================================
+
+router.use(
+    (
+        error,
+        req,
+        res,
+        next
+    ) => {
+
+        if (
+            error instanceof
+            multer.MulterError
+        ) {
+
+            if (
+                error.code ===
+                "LIMIT_FILE_SIZE"
+            ) {
+
+                return res
+                    .status(400)
+                    .json({
+
+                        error:
+                            "La imagen supera el tamaño máximo permitido de 5 MB."
+
+                    });
+
+            }
+
+
+            return res
+                .status(400)
+                .json({
+
+                    error:
+                        error.message
+
+                });
+
+        }
+
+
+        if (error) {
+
+            return res
+                .status(400)
+                .json({
+
+                    error:
+                        error.message
+
+                });
+
+        }
+
+
+        next();
 
     }
 );

@@ -1,155 +1,73 @@
 const express = require("express");
 const conexion = require("./database");
 const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
+const { v2: cloudinary } = require("cloudinary");
 
 const router = express.Router();
 
 
 // ========================================
-// DETECTAR ENTORNO
+// CONFIGURACIÓN CLOUDINARY
 // ========================================
 
-const esVercel = process.env.VERCEL === "1";
+cloudinary.config({
+
+    cloud_name:
+        process.env.CLOUDINARY_CLOUD_NAME,
+
+    api_key:
+        process.env.CLOUDINARY_API_KEY,
+
+    api_secret:
+        process.env.CLOUDINARY_API_SECRET
+
+});
 
 
 // ========================================
-// CARPETA DE IMÁGENES
+// MULTER - MEMORIA
 // ========================================
 
-const carpetaUploads = path.join(
-    __dirname,
-    "../uploads/promociones"
-);
+const almacenamiento =
+    multer.memoryStorage();
 
 
-// ========================================
-// CREAR CARPETA SOLO EN LOCAL
-// ========================================
+const filtroImagen = (
+    req,
+    file,
+    cb
+) => {
 
-if (!esVercel) {
+    const tiposPermitidos = [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "image/jpg"
+    ];
 
-    if (!fs.existsSync(carpetaUploads)) {
 
-        fs.mkdirSync(
-            carpetaUploads,
-            {
-                recursive: true
-            }
+    if (
+        tiposPermitidos.includes(
+            file.mimetype
+        )
+    ) {
+
+        cb(
+            null,
+            true
+        );
+
+    } else {
+
+        cb(
+            new Error(
+                "Solo se permiten imágenes JPG, PNG o WEBP"
+            )
         );
 
     }
 
-}
-
-
-// ========================================
-// CONFIGURACIÓN MULTER
-// ========================================
-
-let almacenamiento;
-
-if (esVercel) {
-
-    // En Vercel no escribimos archivos en /uploads.
-    almacenamiento = multer.memoryStorage();
-
-} else {
-
-    // En la computadora continúa funcionando
-    // exactamente con la carpeta uploads.
-
-    almacenamiento = multer.diskStorage({
-
-        destination: function (
-            req,
-            file,
-            cb
-        ) {
-
-            cb(
-                null,
-                carpetaUploads
-            );
-
-        },
-
-        filename: function (
-            req,
-            file,
-            cb
-        ) {
-
-            const extension =
-                path.extname(
-                    file.originalname
-                ).toLowerCase();
-
-
-            const nombre =
-                "promocion-" +
-                Date.now() +
-                "-" +
-                Math.round(
-                    Math.random() * 100000
-                ) +
-                extension;
-
-
-            cb(
-                null,
-                nombre
-            );
-
-        }
-
-    });
-
-}
-
-
-// ========================================
-// FILTRO DE IMÁGENES
-// ========================================
-
-const filtroImagen =
-    function (
-        req,
-        file,
-        cb
-    ) {
-
-        const tiposPermitidos = [
-            "image/jpeg",
-            "image/png",
-            "image/webp",
-            "image/jpg"
-        ];
-
-
-        if (
-            tiposPermitidos.includes(
-                file.mimetype
-            )
-        ) {
-
-            cb(
-                null,
-                true
-            );
-
-        } else {
-
-            cb(
-                new Error(
-                    "Solo se permiten imágenes JPG, PNG o WEBP"
-                )
-            );
-
-        }
-
-    };
+};
 
 
 const upload =
@@ -169,6 +87,66 @@ const upload =
         }
 
     });
+
+
+// ========================================
+// SUBIR IMAGEN A CLOUDINARY
+// ========================================
+
+function subirACloudinary(
+    archivo
+) {
+
+    return new Promise(
+        (
+            resolve,
+            reject
+        ) => {
+
+            const stream =
+                cloudinary.uploader.upload_stream(
+
+                    {
+                        folder:
+                            "barberia/promociones",
+
+                        resource_type:
+                            "image"
+
+                    },
+
+                    (
+                        error,
+                        resultado
+                    ) => {
+
+                        if (error) {
+
+                            reject(
+                                error
+                            );
+
+                        } else {
+
+                            resolve(
+                                resultado
+                            );
+
+                        }
+
+                    }
+
+                );
+
+
+            stream.end(
+                archivo.buffer
+            );
+
+        }
+    );
+
+}
 
 
 // ========================================
@@ -198,7 +176,10 @@ router.get(
 
         conexion.query(
             sql,
-            (error, resultados) => {
+            (
+                error,
+                resultados
+            ) => {
 
                 if (error) {
 
@@ -208,12 +189,14 @@ router.get(
                     );
 
 
-                    return res.status(500).json({
+                    return res
+                        .status(500)
+                        .json({
 
-                        error:
-                            "Error al obtener promociones"
+                            error:
+                                "Error al obtener promociones"
 
-                    });
+                        });
 
                 }
 
@@ -257,16 +240,21 @@ router.get(
         conexion.query(
             sql,
             [req.params.id],
-            (error, resultados) => {
+            (
+                error,
+                resultados
+            ) => {
 
                 if (error) {
 
-                    return res.status(500).json({
+                    return res
+                        .status(500)
+                        .json({
 
-                        error:
-                            "Error al obtener la promoción"
+                            error:
+                                "Error al obtener la promoción"
 
-                    });
+                        });
 
                 }
 
@@ -275,12 +263,14 @@ router.get(
                     resultados.length === 0
                 ) {
 
-                    return res.status(404).json({
+                    return res
+                        .status(404)
+                        .json({
 
-                        error:
-                            "Promoción no encontrada"
+                            error:
+                                "Promoción no encontrada"
 
-                    });
+                        });
 
                 }
 
@@ -303,16 +293,15 @@ router.get(
 router.post(
     "/upload",
     upload.single("imagen"),
-    (req, res) => {
+    async (
+        req,
+        res
+    ) => {
 
-        let archivoSubido = null;
+        let resultadoCloudinary = null;
 
 
         try {
-
-            archivoSubido =
-                req.file;
-
 
             const titulo =
                 req.body.titulo
@@ -360,28 +349,14 @@ router.post(
 
             if (!titulo) {
 
-                if (
-                    archivoSubido &&
-                    archivoSubido.path
-                ) {
+                return res
+                    .status(400)
+                    .json({
 
-                    try {
+                        error:
+                            "El título es obligatorio"
 
-                        fs.unlinkSync(
-                            archivoSubido.path
-                        );
-
-                    } catch (e) {}
-
-                }
-
-
-                return res.status(400).json({
-
-                    error:
-                        "El título es obligatorio"
-
-                });
+                    });
 
             }
 
@@ -392,96 +367,56 @@ router.post(
                 )
             ) {
 
-                if (
-                    archivoSubido &&
-                    archivoSubido.path
-                ) {
+                return res
+                    .status(400)
+                    .json({
 
-                    try {
+                        error:
+                            "El precio de promoción es obligatorio"
 
-                        fs.unlinkSync(
-                            archivoSubido.path
-                        );
-
-                    } catch (e) {}
-
-                }
-
-
-                return res.status(400).json({
-
-                    error:
-                        "El precio de promoción es obligatorio"
-
-                });
+                    });
 
             }
 
 
             if (!fechaInicio) {
 
-                if (
-                    archivoSubido &&
-                    archivoSubido.path
-                ) {
+                return res
+                    .status(400)
+                    .json({
 
-                    try {
+                        error:
+                            "La fecha de inicio es obligatoria"
 
-                        fs.unlinkSync(
-                            archivoSubido.path
-                        );
-
-                    } catch (e) {}
-
-                }
-
-
-                return res.status(400).json({
-
-                    error:
-                        "La fecha de inicio es obligatoria"
-
-                });
+                    });
 
             }
 
 
             if (!fechaFin) {
 
-                if (
-                    archivoSubido &&
-                    archivoSubido.path
-                ) {
+                return res
+                    .status(400)
+                    .json({
 
-                    try {
+                        error:
+                            "La fecha de fin es obligatoria"
 
-                        fs.unlinkSync(
-                            archivoSubido.path
-                        );
-
-                    } catch (e) {}
-
-                }
-
-
-                return res.status(400).json({
-
-                    error:
-                        "La fecha de fin es obligatoria"
-
-                });
+                    });
 
             }
 
 
-            if (!archivoSubido) {
+            if (!req.file) {
 
-                return res.status(400).json({
+                return res
+                    .status(400)
+                    .json({
 
-                    error:
-                        "Debes seleccionar una imagen"
+                        error:
+                            "Debes seleccionar una imagen"
 
-                });
+                    });
 
             }
 
@@ -495,58 +430,34 @@ router.post(
                 fechaInicio
             ) {
 
-                if (
-                    archivoSubido.path
-                ) {
+                return res
+                    .status(400)
+                    .json({
 
-                    try {
+                        error:
+                            "La fecha final no puede ser anterior a la fecha inicial"
 
-                        fs.unlinkSync(
-                            archivoSubido.path
-                        );
-
-                    } catch (e) {}
-
-                }
-
-
-                return res.status(400).json({
-
-                    error:
-                        "La fecha final no puede ser anterior a la fecha inicial"
-
-                });
+                    });
 
             }
 
 
             // ========================================
-            // VERCEL
+            // SUBIR A CLOUDINARY
             // ========================================
 
-            if (esVercel) {
+            resultadoCloudinary =
+                await subirACloudinary(
+                    req.file
+                );
 
-                return res.status(503).json({
-
-                    error:
-                        "La carga de imágenes de promociones necesita almacenamiento externo en producción."
-
-                });
-
-            }
-
-
-            // ========================================
-            // RUTA IMAGEN
-            // ========================================
 
             const rutaImagen =
-                "/uploads/promociones/" +
-                archivoSubido.filename;
+                resultadoCloudinary.secure_url;
 
 
             // ========================================
-            // INSERTAR
+            // INSERTAR EN AIVEN
             // ========================================
 
             const sql = `
@@ -576,24 +487,12 @@ router.post(
                     fechaFin,
                     rutaImagen
                 ],
-                (error, resultado) => {
+                (
+                    error,
+                    resultado
+                ) => {
 
                     if (error) {
-
-                        if (
-                            archivoSubido.path
-                        ) {
-
-                            try {
-
-                                fs.unlinkSync(
-                                    archivoSubido.path
-                                );
-
-                            } catch (e) {}
-
-                        }
-
 
                         console.error(
                             "❌ Error al crear promoción:",
@@ -601,28 +500,32 @@ router.post(
                         );
 
 
-                        return res.status(500).json({
+                        return res
+                            .status(500)
+                            .json({
 
-                            error:
-                                "No se pudo guardar la promoción"
+                                error:
+                                    "No se pudo guardar la promoción"
 
-                        });
+                            });
 
                     }
 
 
-                    res.status(201).json({
+                    res
+                        .status(201)
+                        .json({
 
-                        mensaje:
-                            "Promoción creada correctamente",
+                            mensaje:
+                                "Promoción creada correctamente",
 
-                        id_promocion:
-                            resultado.insertId,
+                            id_promocion:
+                                resultado.insertId,
 
-                        imagen:
-                            rutaImagen
+                            imagen:
+                                rutaImagen
 
-                    });
+                        });
 
                 }
             );
@@ -631,35 +534,21 @@ router.post(
 
         catch (error) {
 
-            if (
-                archivoSubido &&
-                archivoSubido.path
-            ) {
-
-                try {
-
-                    fs.unlinkSync(
-                        archivoSubido.path
-                    );
-
-                } catch (e) {}
-
-            }
-
-
             console.error(
                 "❌ Error al crear promoción:",
                 error
             );
 
 
-            res.status(500).json({
+            res
+                .status(500)
+                .json({
 
-                error:
-                    error.message ||
-                    "Error al crear promoción"
+                    error:
+                        error.message ||
+                        "Error al crear promoción"
 
-            });
+                });
 
         }
 
@@ -696,16 +585,21 @@ router.patch(
                 estado,
                 req.params.id
             ],
-            (error, resultado) => {
+            (
+                error,
+                resultado
+            ) => {
 
                 if (error) {
 
-                    return res.status(500).json({
+                    return res
+                        .status(500)
+                        .json({
 
-                        error:
-                            "No se pudo cambiar el estado"
+                            error:
+                                "No se pudo cambiar el estado"
 
-                    });
+                        });
 
                 }
 
@@ -714,12 +608,14 @@ router.patch(
                     resultado.affectedRows === 0
                 ) {
 
-                    return res.status(404).json({
+                    return res
+                        .status(404)
+                        .json({
 
-                        error:
-                            "Promoción no encontrada"
+                            error:
+                                "Promoción no encontrada"
 
-                    });
+                        });
 
                 }
 
@@ -756,16 +652,21 @@ router.delete(
         conexion.query(
             buscarSql,
             [req.params.id],
-            (error, resultados) => {
+            (
+                error,
+                resultados
+            ) => {
 
                 if (error) {
 
-                    return res.status(500).json({
+                    return res
+                        .status(500)
+                        .json({
 
-                        error:
-                            "Error al buscar la promoción"
+                            error:
+                                "Error al buscar la promoción"
 
-                    });
+                        });
 
                 }
 
@@ -774,18 +675,16 @@ router.delete(
                     resultados.length === 0
                 ) {
 
-                    return res.status(404).json({
+                    return res
+                        .status(404)
+                        .json({
 
-                        error:
-                            "Promoción no encontrada"
+                            error:
+                                "Promoción no encontrada"
 
-                    });
+                        });
 
                 }
-
-
-                const imagen =
-                    resultados[0].imagen;
 
 
                 const eliminarSql = `
@@ -801,59 +700,14 @@ router.delete(
 
                         if (error) {
 
-                            return res.status(500).json({
+                            return res
+                                .status(500)
+                                .json({
 
-                                error:
-                                    "No se pudo eliminar la promoción"
+                                    error:
+                                        "No se pudo eliminar la promoción"
 
-                            });
-
-                        }
-
-
-                        // ========================================
-                        // ELIMINAR ARCHIVO SOLO EN LOCAL
-                        // ========================================
-
-                        if (
-                            !esVercel &&
-                            imagen &&
-                            imagen.startsWith(
-                                "/uploads/"
-                            )
-                        ) {
-
-                            const archivo =
-                                path.join(
-                                    __dirname,
-                                    "..",
-                                    imagen
-                                );
-
-
-                            if (
-                                fs.existsSync(
-                                    archivo
-                                )
-                            ) {
-
-                                try {
-
-                                    fs.unlinkSync(
-                                        archivo
-                                    );
-
-                                }
-                                catch (e) {
-
-                                    console.error(
-                                        "No se pudo eliminar imagen:",
-                                        e
-                                    );
-
-                                }
-
-                            }
+                                });
 
                         }
 
@@ -870,6 +724,72 @@ router.delete(
 
             }
         );
+
+    }
+);
+
+
+// ========================================
+// MANEJO DE ERRORES DE MULTER
+// ========================================
+
+router.use(
+    (
+        error,
+        req,
+        res,
+        next
+    ) => {
+
+        if (
+            error instanceof
+            multer.MulterError
+        ) {
+
+            if (
+                error.code ===
+                "LIMIT_FILE_SIZE"
+            ) {
+
+                return res
+                    .status(400)
+                    .json({
+
+                        error:
+                            "La imagen supera el tamaño máximo permitido de 5 MB."
+
+                    });
+
+            }
+
+
+            return res
+                .status(400)
+                .json({
+
+                    error:
+                        error.message
+
+                });
+
+        }
+
+
+        if (error) {
+
+            return res
+                .status(400)
+                .json({
+
+                    error:
+                        error.message
+
+                });
+
+        }
+
+
+        next();
 
     }
 );

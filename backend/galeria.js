@@ -1,164 +1,74 @@
 const express = require("express");
 const conexion = require("./database");
 const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
+const { v2: cloudinary } = require("cloudinary");
 
 const router = express.Router();
 
 
 // ========================================
-// DETECTAR ENTORNO
+// CONFIGURACIÓN CLOUDINARY
 // ========================================
 
-const esVercel = process.env.VERCEL === "1";
+cloudinary.config({
+
+    cloud_name:
+        process.env.CLOUDINARY_CLOUD_NAME,
+
+    api_key:
+        process.env.CLOUDINARY_API_KEY,
+
+    api_secret:
+        process.env.CLOUDINARY_API_SECRET
+
+});
 
 
 // ========================================
-// CONFIGURACIÓN DE ALMACENAMIENTO
+// MULTER - MEMORIA
 // ========================================
 
-// EN LOCAL:
-// Guarda las imágenes en /uploads normalmente.
-//
-// EN VERCEL:
-// No intentamos crear /uploads porque el sistema
-// de archivos del despliegue no permite hacerlo.
-
-const carpetaUploads = path.join(
-    __dirname,
-    "../uploads"
-);
+const almacenamiento =
+    multer.memoryStorage();
 
 
-if (!esVercel) {
+const filtroImagen = (
+    req,
+    file,
+    cb
+) => {
 
-    if (!fs.existsSync(carpetaUploads)) {
+    const tiposPermitidos = [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "image/jpg"
+    ];
 
-        fs.mkdirSync(
-            carpetaUploads,
-            {
-                recursive: true
-            }
+
+    if (
+        tiposPermitidos.includes(
+            file.mimetype
+        )
+    ) {
+
+        cb(
+            null,
+            true
+        );
+
+    } else {
+
+        cb(
+            new Error(
+                "Solo se permiten imágenes JPG, PNG o WEBP"
+            )
         );
 
     }
 
-}
+};
 
-
-// ========================================
-// CONFIGURACIÓN MULTER
-// ========================================
-
-let almacenamiento;
-
-if (esVercel) {
-
-    // En Vercel usamos memoria temporal.
-    // Esto evita que la aplicación falle al iniciar.
-
-    almacenamiento = multer.memoryStorage();
-
-} else {
-
-    // En local seguimos utilizando /uploads.
-
-    almacenamiento = multer.diskStorage({
-
-        destination: function (
-            req,
-            file,
-            cb
-        ) {
-
-            cb(
-                null,
-                carpetaUploads
-            );
-
-        },
-
-        filename: function (
-            req,
-            file,
-            cb
-        ) {
-
-            const extension =
-                path.extname(
-                    file.originalname
-                ).toLowerCase();
-
-
-            const nombre =
-                "foto-" +
-                Date.now() +
-                "-" +
-                Math.round(
-                    Math.random() * 100000
-                ) +
-                extension;
-
-
-            cb(
-                null,
-                nombre
-            );
-
-        }
-
-    });
-
-}
-
-
-// ========================================
-// FILTRO DE IMÁGENES
-// ========================================
-
-const filtroImagen =
-    function (
-        req,
-        file,
-        cb
-    ) {
-
-        const tiposPermitidos = [
-            "image/jpeg",
-            "image/png",
-            "image/webp",
-            "image/jpg"
-        ];
-
-
-        if (
-            tiposPermitidos.includes(
-                file.mimetype
-            )
-        ) {
-
-            cb(
-                null,
-                true
-            );
-
-        } else {
-
-            cb(
-                new Error(
-                    "Solo se permiten imágenes JPG, PNG o WEBP"
-                )
-            );
-
-        }
-
-    };
-
-
-// ========================================
-// UPLOAD
-// ========================================
 
 const upload =
     multer({
@@ -177,6 +87,66 @@ const upload =
         }
 
     });
+
+
+// ========================================
+// SUBIR IMAGEN A CLOUDINARY
+// ========================================
+
+function subirACloudinary(
+    archivo
+) {
+
+    return new Promise(
+        (
+            resolve,
+            reject
+        ) => {
+
+            const stream =
+                cloudinary.uploader.upload_stream(
+
+                    {
+                        folder:
+                            "barberia/galeria",
+
+                        resource_type:
+                            "image"
+
+                    },
+
+                    (
+                        error,
+                        resultado
+                    ) => {
+
+                        if (error) {
+
+                            reject(
+                                error
+                            );
+
+                        } else {
+
+                            resolve(
+                                resultado
+                            );
+
+                        }
+
+                    }
+
+                );
+
+
+            stream.end(
+                archivo.buffer
+            );
+
+        }
+    );
+
+}
 
 
 // ========================================
@@ -202,7 +172,10 @@ router.get(
 
         conexion.query(
             sql,
-            (error, resultados) => {
+            (
+                error,
+                resultados
+            ) => {
 
                 if (error) {
 
@@ -210,6 +183,7 @@ router.get(
                         "❌ Error al obtener galería:",
                         error
                     );
+
 
                     return res
                         .status(500)
@@ -258,7 +232,10 @@ router.get(
         conexion.query(
             sql,
             [req.params.id],
-            (error, resultados) => {
+            (
+                error,
+                resultados
+            ) => {
 
                 if (error) {
 
@@ -308,7 +285,10 @@ router.get(
 router.post(
     "/upload",
     upload.single("imagen"),
-    (req, res) => {
+    async (
+        req,
+        res
+    ) => {
 
         try {
 
@@ -320,23 +300,6 @@ router.post(
 
                         error:
                             "Debes seleccionar una imagen"
-
-                    });
-
-            }
-
-
-            // En Vercel todavía no guardamos físicamente
-            // la imagen porque /uploads no es permanente.
-
-            if (esVercel) {
-
-                return res
-                    .status(503)
-                    .json({
-
-                        error:
-                            "La carga de fotografías necesita almacenamiento externo en producción."
 
                     });
 
@@ -355,21 +318,11 @@ router.post(
                     : null;
 
 
+            // ========================================
+            // VALIDAR TÍTULO
+            // ========================================
+
             if (!titulo) {
-
-                if (
-                    req.file.path &&
-                    fs.existsSync(
-                        req.file.path
-                    )
-                ) {
-
-                    fs.unlinkSync(
-                        req.file.path
-                    );
-
-                }
-
 
                 return res
                     .status(400)
@@ -383,10 +336,23 @@ router.post(
             }
 
 
-            const rutaImagen =
-                "/uploads/" +
-                req.file.filename;
+            // ========================================
+            // SUBIR A CLOUDINARY
+            // ========================================
 
+            const resultado =
+                await subirACloudinary(
+                    req.file
+                );
+
+
+            const rutaImagen =
+                resultado.secure_url;
+
+
+            // ========================================
+            // GUARDAR EN AIVEN
+            // ========================================
 
             const sql = `
                 INSERT INTO galeria
@@ -407,27 +373,12 @@ router.post(
                     descripcion,
                     rutaImagen
                 ],
-                (error, resultado) => {
+                (
+                    error,
+                    resultadoSQL
+                ) => {
 
                     if (error) {
-
-                        try {
-
-                            if (
-                                req.file.path &&
-                                fs.existsSync(
-                                    req.file.path
-                                )
-                            ) {
-
-                                fs.unlinkSync(
-                                    req.file.path
-                                );
-
-                            }
-
-                        } catch (e) {}
-
 
                         console.error(
                             "❌ Error al guardar fotografía:",
@@ -455,7 +406,7 @@ router.post(
                                 "Fotografía subida correctamente",
 
                             id_foto:
-                                resultado.insertId,
+                                resultadoSQL.insertId,
 
                             ruta_imagen:
                                 rutaImagen
@@ -525,7 +476,10 @@ router.patch(
                 valor,
                 req.params.id
             ],
-            (error, resultado) => {
+            (
+                error,
+                resultado
+            ) => {
 
                 if (error) {
 
@@ -589,7 +543,10 @@ router.delete(
         conexion.query(
             buscarSql,
             [req.params.id],
-            (error, resultados) => {
+            (
+                error,
+                resultados
+            ) => {
 
                 if (error) {
 
@@ -621,11 +578,6 @@ router.delete(
                 }
 
 
-                const ruta =
-                    resultados[0]
-                        .ruta_imagen;
-
-
                 const eliminarSql = `
                     DELETE FROM galeria
                     WHERE id_foto = ?
@@ -651,52 +603,6 @@ router.delete(
                         }
 
 
-                        // Solo intentamos borrar el archivo
-                        // cuando estamos trabajando localmente.
-
-                        if (
-                            !esVercel &&
-                            ruta &&
-                            ruta.startsWith(
-                                "/uploads/"
-                            )
-                        ) {
-
-                            const archivo =
-                                path.join(
-                                    __dirname,
-                                    "..",
-                                    ruta
-                                );
-
-
-                            if (
-                                fs.existsSync(
-                                    archivo
-                                )
-                            ) {
-
-                                try {
-
-                                    fs.unlinkSync(
-                                        archivo
-                                    );
-
-                                }
-                                catch (e) {
-
-                                    console.error(
-                                        "No se pudo eliminar archivo:",
-                                        e
-                                    );
-
-                                }
-
-                            }
-
-                        }
-
-
                         res.json({
 
                             mensaje:
@@ -709,6 +615,72 @@ router.delete(
 
             }
         );
+
+    }
+);
+
+
+// ========================================
+// MANEJO DE ERRORES DE MULTER
+// ========================================
+
+router.use(
+    (
+        error,
+        req,
+        res,
+        next
+    ) => {
+
+        if (
+            error instanceof
+            multer.MulterError
+        ) {
+
+            if (
+                error.code ===
+                "LIMIT_FILE_SIZE"
+            ) {
+
+                return res
+                    .status(400)
+                    .json({
+
+                        error:
+                            "La imagen supera el tamaño máximo permitido de 5 MB."
+
+                    });
+
+            }
+
+
+            return res
+                .status(400)
+                .json({
+
+                    error:
+                        error.message
+
+                });
+
+        }
+
+
+        if (error) {
+
+            return res
+                .status(400)
+                .json({
+
+                    error:
+                        error.message
+
+                });
+
+        }
+
+
+        next();
 
     }
 );

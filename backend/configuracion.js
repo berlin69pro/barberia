@@ -1,171 +1,158 @@
 const express = require("express");
-const path = require("path");
-const fs = require("fs");
 const multer = require("multer");
+const { v2: cloudinary } = require("cloudinary");
 const conexion = require("./database");
 
 const router = express.Router();
 
 
 // ========================================
-// DETECTAR ENTORNO
+// CONFIGURACIÓN CLOUDINARY
 // ========================================
 
-const esVercel = process.env.VERCEL === "1";
+cloudinary.config({
 
+    cloud_name:
+        process.env.CLOUDINARY_CLOUD_NAME,
 
-// ========================================
-// CARPETA DE SUBIDA
-// ========================================
+    api_key:
+        process.env.CLOUDINARY_API_KEY,
 
-const carpetaUploads = path.join(
-    __dirname,
-    "../uploads"
-);
-
-
-// ========================================
-// CREAR CARPETA SOLO EN LOCAL
-// ========================================
-
-if (!esVercel) {
-
-    if (!fs.existsSync(carpetaUploads)) {
-
-        fs.mkdirSync(
-            carpetaUploads,
-            {
-                recursive: true
-            }
-        );
-
-    }
-
-}
-
-
-// ========================================
-// CONFIGURACIÓN DE MULTER
-// ========================================
-
-let almacenamiento;
-
-if (esVercel) {
-
-    // En Vercel usamos memoria.
-    // No intentamos escribir en /uploads.
-
-    almacenamiento =
-        multer.memoryStorage();
-
-} else {
-
-    almacenamiento =
-        multer.diskStorage({
-
-            destination: (
-                req,
-                file,
-                cb
-            ) => {
-
-                cb(
-                    null,
-                    carpetaUploads
-                );
-
-            },
-
-            filename: (
-                req,
-                file,
-                cb
-            ) => {
-
-                const extension =
-                    path.extname(
-                        file.originalname
-                    ).toLowerCase();
-
-
-                const prefijo =
-                    file.fieldname === "qr_pago"
-                        ? "qr"
-                        : "logo";
-
-
-                const nombre =
-                    `${prefijo}-${Date.now()}${extension}`;
-
-
-                cb(
-                    null,
-                    nombre
-                );
-
-            }
-
-        });
-
-}
-
-
-const subirArchivos = multer({
-
-    storage:
-        almacenamiento,
-
-    limits: {
-
-        fileSize:
-            10 * 1024 * 1024
-
-    },
-
-    fileFilter:
-        (req, file, cb) => {
-
-            const extensiones = [
-
-                ".jpg",
-                ".jpeg",
-                ".png",
-                ".webp"
-
-            ];
-
-
-            const extension =
-                path.extname(
-                    file.originalname
-                ).toLowerCase();
-
-
-            if (
-                extensiones.includes(
-                    extension
-                )
-            ) {
-
-                cb(
-                    null,
-                    true
-                );
-
-            }
-            else {
-
-                cb(
-                    new Error(
-                        "Solo se permiten imágenes JPG, JPEG, PNG o WEBP"
-                    )
-                );
-
-            }
-
-        }
+    api_secret:
+        process.env.CLOUDINARY_API_SECRET
 
 });
+
+
+// ========================================
+// MULTER - MEMORIA
+// ========================================
+
+const almacenamiento =
+    multer.memoryStorage();
+
+
+const subirArchivos =
+    multer({
+
+        storage:
+            almacenamiento,
+
+        limits: {
+
+            fileSize:
+                10 * 1024 * 1024
+
+        },
+
+        fileFilter:
+            (req, file, cb) => {
+
+                const extensiones = [
+
+                    ".jpg",
+                    ".jpeg",
+                    ".png",
+                    ".webp"
+
+                ];
+
+
+                const extension =
+                    "." +
+                    file.originalname
+                        .split(".")
+                        .pop()
+                        .toLowerCase();
+
+
+                if (
+                    extensiones.includes(
+                        extension
+                    )
+                ) {
+
+                    cb(
+                        null,
+                        true
+                    );
+
+                }
+                else {
+
+                    cb(
+                        new Error(
+                            "Solo se permiten imágenes JPG, JPEG, PNG o WEBP"
+                        )
+                    );
+
+                }
+
+            }
+
+    });
+
+
+// ========================================
+// SUBIR IMAGEN A CLOUDINARY
+// ========================================
+
+function subirACloudinary(
+    archivo,
+    carpeta
+) {
+
+    return new Promise(
+        (
+            resolve,
+            reject
+        ) => {
+
+            const stream =
+                cloudinary.uploader.upload_stream(
+
+                    {
+                        folder:
+                            carpeta,
+
+                        resource_type:
+                            "image"
+
+                    },
+
+                    (
+                        error,
+                        resultado
+                    ) => {
+
+                        if (error) {
+
+                            reject(
+                                error
+                            );
+
+                        }
+                        else {
+
+                            resolve(
+                                resultado
+                            );
+
+                        }
+
+                    }
+
+                );
+
+
+            stream.end(
+                archivo.buffer
+            );
+
+        }
+    );
+
+}
 
 
 // ========================================
@@ -226,7 +213,10 @@ router.get(
 
             sql,
 
-            (error, resultados) => {
+            (
+                error,
+                resultados
+            ) => {
 
                 if (error) {
 
@@ -235,12 +225,15 @@ router.get(
                         error
                     );
 
-                    return res.status(500).json({
 
-                        error:
-                            "No se pudo obtener la configuración"
+                    return res
+                        .status(500)
+                        .json({
 
-                    });
+                            error:
+                                "No se pudo obtener la configuración"
+
+                        });
 
                 }
 
@@ -342,593 +335,657 @@ router.put(
 
     ]),
 
-    (req, res) => {
+    async (
+        req,
+        res
+    ) => {
 
-        const {
+        try {
 
-            nombre_barberia,
+            const {
 
-            descripcion,
+                nombre_barberia,
 
-            telefono,
+                descripcion,
 
-            whatsapp,
+                telefono,
 
-            direccion,
+                whatsapp,
 
-            google_maps,
+                direccion,
 
-            instagram,
+                google_maps,
 
-            facebook,
+                instagram,
 
-            tiktok,
+                facebook,
 
-            horario_general,
+                tiktok,
 
-            monto_adelanto,
+                horario_general,
 
-            eliminar_qr
+                monto_adelanto,
 
-        } = req.body;
+                eliminar_qr
 
+            } = req.body;
 
-        // ========================================
-        // VALIDAR NOMBRE
-        // ========================================
 
-        if (
+            // ========================================
+            // VALIDAR NOMBRE
+            // ========================================
 
-            !nombre_barberia ||
+            if (
 
-            !nombre_barberia.trim()
+                !nombre_barberia ||
 
-        ) {
+                !nombre_barberia.trim()
 
-            return res.status(400).json({
+            ) {
 
-                error:
-                    "El nombre de la barbería es obligatorio"
-
-            });
-
-        }
-
-
-        // ========================================
-        // ADELANTO OBLIGATORIO
-        // ========================================
-
-        const adelanto =
-            1;
-
-
-        const monto =
-            Number(
-                monto_adelanto
-            );
-
-
-        if (
-
-            !Number.isFinite(
-                monto
-            ) ||
-
-            monto <= 0
-
-        ) {
-
-            return res.status(400).json({
-
-                error:
-                    "El monto del adelanto debe ser mayor a Bs 0"
-
-            });
-
-        }
-
-
-        // ========================================
-        // ARCHIVO LOGO
-        // ========================================
-
-        const archivoLogo =
-
-            req.files &&
-
-            req.files.logo &&
-
-            req.files.logo[0]
-
-                ? req.files.logo[0]
-
-                : null;
-
-
-        // ========================================
-        // ARCHIVO QR
-        // ========================================
-
-        const archivoQR =
-
-            req.files &&
-
-            req.files.qr_pago &&
-
-            req.files.qr_pago[0]
-
-                ? req.files.qr_pago[0]
-
-                : null;
-
-
-        // ========================================
-        // BUSCAR CONFIGURACIÓN EXISTENTE
-        // ========================================
-
-        const buscar = `
-
-            SELECT
-
-                id_configuracion,
-
-                logo,
-
-                qr_pago
-
-            FROM configuracion
-
-            ORDER BY
-                id_configuracion ASC
-
-            LIMIT 1
-
-        `;
-
-
-        conexion.query(
-
-            buscar,
-
-            (error, resultados) => {
-
-                if (error) {
-
-                    console.error(
-                        "❌ Error al buscar configuración:",
-                        error
-                    );
-
-                    return res.status(500).json({
+                return res
+                    .status(400)
+                    .json({
 
                         error:
-                            "No se pudo verificar la configuración"
+                            "El nombre de la barbería es obligatorio"
 
                     });
 
-                }
+            }
 
 
-                let logo =
+            // ========================================
+            // ADELANTO OBLIGATORIO
+            // ========================================
 
-                    resultados.length > 0
+            const adelanto =
+                1;
 
-                        ? resultados[0].logo
 
-                        : null;
-
-
-                let qrPago =
-
-                    resultados.length > 0
-
-                        ? resultados[0].qr_pago
-
-                        : null;
-
-
-                // ========================================
-                // NUEVO LOGO
-                // ========================================
-
-                if (
-                    archivoLogo
-                ) {
-
-                    if (esVercel) {
-
-                        return res.status(503).json({
-
-                            error:
-                                "La carga de imágenes necesita almacenamiento externo en producción."
-
-                        });
-
-                    }
-
-
-                    logo =
-                        `/uploads/${archivoLogo.filename}`;
-
-                }
-
-
-                // ========================================
-                // NUEVO QR
-                // ========================================
-
-                if (
-                    archivoQR
-                ) {
-
-                    if (esVercel) {
-
-                        return res.status(503).json({
-
-                            error:
-                                "La carga de imágenes necesita almacenamiento externo en producción."
-
-                        });
-
-                    }
-
-
-                    qrPago =
-                        `/uploads/${archivoQR.filename}`;
-
-                }
-
-
-                // ========================================
-                // ELIMINAR QR
-                // ========================================
-
-                if (
-
-                    eliminar_qr === "1" &&
-
-                    !archivoQR
-
-                ) {
-
-                    qrPago =
-                        null;
-
-                }
-
-
-                // ========================================
-                // ACTUALIZAR CONFIGURACIÓN
-                // ========================================
-
-                if (
-
-                    resultados.length > 0
-
-                ) {
-
-                    const id =
-                        resultados[0]
-                            .id_configuracion;
-
-
-                    const actualizar = `
-
-                        UPDATE configuracion
-
-                        SET
-
-                            nombre_barberia = ?,
-
-                            descripcion = ?,
-
-                            logo = ?,
-
-                            telefono = ?,
-
-                            whatsapp = ?,
-
-                            direccion = ?,
-
-                            google_maps = ?,
-
-                            instagram = ?,
-
-                            facebook = ?,
-
-                            tiktok = ?,
-
-                            horario_general = ?,
-
-                            qr_pago = ?,
-
-                            adelanto_obligatorio = ?,
-
-                            monto_adelanto = ?,
-
-                            fecha_actualizacion =
-                                CURRENT_TIMESTAMP
-
-                        WHERE
-
-                            id_configuracion = ?
-
-                    `;
-
-
-                    conexion.query(
-
-                        actualizar,
-
-                        [
-
-                            nombre_barberia.trim(),
-
-                            descripcion ||
-                                null,
-
-                            logo,
-
-                            telefono ||
-                                null,
-
-                            whatsapp ||
-                                null,
-
-                            direccion ||
-                                null,
-
-                            google_maps ||
-                                null,
-
-                            instagram ||
-                                null,
-
-                            facebook ||
-                                null,
-
-                            tiktok ||
-                                null,
-
-                            horario_general ||
-                                null,
-
-                            qrPago,
-
-                            adelanto,
-
-                            monto.toFixed(2),
-
-                            id
-
-                        ],
-
-                        (error) => {
-
-                            if (error) {
-
-                                console.error(
-                                    "❌ Error al actualizar configuración:",
-                                    error
-                                );
-
-                                return res.status(500).json({
-
-                                    error:
-                                        "No se pudo actualizar la configuración"
-
-                                });
-
-                            }
-
-
-                            return res.json({
-
-                                mensaje:
-                                    "Configuración actualizada correctamente",
-
-                                id_configuracion:
-                                    id,
-
-                                logo:
-                                    logo,
-
-                                qr_pago:
-                                    qrPago,
-
-                                adelanto_obligatorio:
-                                    adelanto,
-
-                                monto_adelanto:
-                                    Number(
-                                        monto.toFixed(2)
-                                    )
-
-                            });
-
-                        }
-
-                    );
-
-
-                    return;
-
-                }
-
-
-                // ========================================
-                // CREAR CONFIGURACIÓN
-                // ========================================
-
-                const insertar = `
-
-                    INSERT INTO configuracion
-
-                    (
-
-                        nombre_barberia,
-
-                        descripcion,
-
-                        logo,
-
-                        telefono,
-
-                        whatsapp,
-
-                        direccion,
-
-                        google_maps,
-
-                        instagram,
-
-                        facebook,
-
-                        tiktok,
-
-                        horario_general,
-
-                        qr_pago,
-
-                        adelanto_obligatorio,
-
-                        monto_adelanto
-
-                    )
-
-                    VALUES
-
-                    (
-
-                        ?,
-
-                        ?,
-
-                        ?,
-
-                        ?,
-
-                        ?,
-
-                        ?,
-
-                        ?,
-
-                        ?,
-
-                        ?,
-
-                        ?,
-
-                        ?,
-
-                        ?,
-
-                        ?,
-
-                        ?
-
-                    )
-
-                `;
-
-
-                conexion.query(
-
-                    insertar,
-
-                    [
-
-                        nombre_barberia.trim(),
-
-                        descripcion ||
-                            null,
-
-                        logo,
-
-                        telefono ||
-                            null,
-
-                        whatsapp ||
-                            null,
-
-                        direccion ||
-                            null,
-
-                        google_maps ||
-                            null,
-
-                        instagram ||
-                            null,
-
-                        facebook ||
-                            null,
-
-                        tiktok ||
-                            null,
-
-                        horario_general ||
-                            null,
-
-                        qrPago,
-
-                        adelanto,
-
-                        monto.toFixed(2)
-
-                    ],
-
-                    (error, resultado) => {
-
-                        if (error) {
-
-                            console.error(
-                                "❌ Error al crear configuración:",
-                                error
-                            );
-
-                            return res.status(500).json({
-
-                                error:
-                                    "No se pudo crear la configuración"
-
-                            });
-
-                        }
-
-
-                        return res.status(201).json({
-
-                            mensaje:
-                                "Configuración creada correctamente",
-
-                            id_configuracion:
-                                resultado.insertId,
-
-                            logo:
-                                logo,
-
-                            qr_pago:
-                                qrPago,
-
-                            adelanto_obligatorio:
-                                adelanto,
-
-                            monto_adelanto:
-                                Number(
-                                    monto.toFixed(2)
-                                )
-
-                        });
-
-                    }
-
+            const monto =
+                Number(
+                    monto_adelanto
                 );
+
+
+            if (
+
+                !Number.isFinite(
+                    monto
+                ) ||
+
+                monto <= 0
+
+            ) {
+
+                return res
+                    .status(400)
+                    .json({
+
+                        error:
+                            "El monto del adelanto debe ser mayor a Bs 0"
+
+                    });
 
             }
 
-        );
+
+            // ========================================
+            // ARCHIVO LOGO
+            // ========================================
+
+            const archivoLogo =
+
+                req.files &&
+
+                req.files.logo &&
+
+                req.files.logo[0]
+
+                    ? req.files.logo[0]
+
+                    : null;
+
+
+            // ========================================
+            // ARCHIVO QR
+            // ========================================
+
+            const archivoQR =
+
+                req.files &&
+
+                req.files.qr_pago &&
+
+                req.files.qr_pago[0]
+
+                    ? req.files.qr_pago[0]
+
+                    : null;
+
+
+            // ========================================
+            // BUSCAR CONFIGURACIÓN EXISTENTE
+            // ========================================
+
+            const buscar = `
+
+                SELECT
+
+                    id_configuracion,
+
+                    logo,
+
+                    qr_pago
+
+                FROM configuracion
+
+                ORDER BY
+                    id_configuracion ASC
+
+                LIMIT 1
+
+            `;
+
+
+            conexion.query(
+
+                buscar,
+
+                async (
+                    error,
+                    resultados
+                ) => {
+
+                    if (error) {
+
+                        console.error(
+                            "❌ Error al buscar configuración:",
+                            error
+                        );
+
+
+                        return res
+                            .status(500)
+                            .json({
+
+                                error:
+                                    "No se pudo verificar la configuración"
+
+                            });
+
+                    }
+
+
+                    try {
+
+                        let logo =
+
+                            resultados.length > 0
+
+                                ? resultados[0].logo
+
+                                : null;
+
+
+                        let qrPago =
+
+                            resultados.length > 0
+
+                                ? resultados[0].qr_pago
+
+                                : null;
+
+
+                        // ========================================
+                        // SUBIR NUEVO LOGO
+                        // ========================================
+
+                        if (
+                            archivoLogo
+                        ) {
+
+                            const resultadoLogo =
+                                await subirACloudinary(
+                                    archivoLogo,
+                                    "barberia/configuracion/logo"
+                                );
+
+
+                            logo =
+                                resultadoLogo.secure_url;
+
+                        }
+
+
+                        // ========================================
+                        // SUBIR NUEVO QR
+                        // ========================================
+
+                        if (
+                            archivoQR
+                        ) {
+
+                            const resultadoQR =
+                                await subirACloudinary(
+                                    archivoQR,
+                                    "barberia/configuracion/qr"
+                                );
+
+
+                            qrPago =
+                                resultadoQR.secure_url;
+
+                        }
+
+
+                        // ========================================
+                        // ELIMINAR QR
+                        // ========================================
+
+                        if (
+
+                            eliminar_qr === "1" &&
+
+                            !archivoQR
+
+                        ) {
+
+                            qrPago =
+                                null;
+
+                        }
+
+
+                        // ========================================
+                        // ACTUALIZAR CONFIGURACIÓN EXISTENTE
+                        // ========================================
+
+                        if (
+
+                            resultados.length > 0
+
+                        ) {
+
+                            const id =
+                                resultados[0]
+                                    .id_configuracion;
+
+
+                            const actualizar = `
+
+                                UPDATE configuracion
+
+                                SET
+
+                                    nombre_barberia = ?,
+
+                                    descripcion = ?,
+
+                                    logo = ?,
+
+                                    telefono = ?,
+
+                                    whatsapp = ?,
+
+                                    direccion = ?,
+
+                                    google_maps = ?,
+
+                                    instagram = ?,
+
+                                    facebook = ?,
+
+                                    tiktok = ?,
+
+                                    horario_general = ?,
+
+                                    qr_pago = ?,
+
+                                    adelanto_obligatorio = ?,
+
+                                    monto_adelanto = ?,
+
+                                    fecha_actualizacion =
+                                        CURRENT_TIMESTAMP
+
+                                WHERE
+
+                                    id_configuracion = ?
+
+                            `;
+
+
+                            conexion.query(
+
+                                actualizar,
+
+                                [
+
+                                    nombre_barberia.trim(),
+
+                                    descripcion ||
+                                        null,
+
+                                    logo,
+
+                                    telefono ||
+                                        null,
+
+                                    whatsapp ||
+                                        null,
+
+                                    direccion ||
+                                        null,
+
+                                    google_maps ||
+                                        null,
+
+                                    instagram ||
+                                        null,
+
+                                    facebook ||
+                                        null,
+
+                                    tiktok ||
+                                        null,
+
+                                    horario_general ||
+                                        null,
+
+                                    qrPago,
+
+                                    adelanto,
+
+                                    monto.toFixed(2),
+
+                                    id
+
+                                ],
+
+                                (
+                                    error
+                                ) => {
+
+                                    if (error) {
+
+                                        console.error(
+                                            "❌ Error al actualizar configuración:",
+                                            error
+                                        );
+
+
+                                        return res
+                                            .status(500)
+                                            .json({
+
+                                                error:
+                                                    "No se pudo actualizar la configuración"
+
+                                            });
+
+                                    }
+
+
+                                    return res.json({
+
+                                        mensaje:
+                                            "Configuración actualizada correctamente",
+
+                                        id_configuracion:
+                                            id,
+
+                                        logo:
+                                            logo,
+
+                                        qr_pago:
+                                            qrPago,
+
+                                        adelanto_obligatorio:
+                                            adelanto,
+
+                                        monto_adelanto:
+                                            Number(
+                                                monto.toFixed(2)
+                                            )
+
+                                    });
+
+                                }
+
+                            );
+
+
+                            return;
+
+                        }
+
+
+                        // ========================================
+                        // CREAR CONFIGURACIÓN
+                        // ========================================
+
+                        const insertar = `
+
+                            INSERT INTO configuracion
+
+                            (
+
+                                nombre_barberia,
+
+                                descripcion,
+
+                                logo,
+
+                                telefono,
+
+                                whatsapp,
+
+                                direccion,
+
+                                google_maps,
+
+                                instagram,
+
+                                facebook,
+
+                                tiktok,
+
+                                horario_general,
+
+                                qr_pago,
+
+                                adelanto_obligatorio,
+
+                                monto_adelanto
+
+                            )
+
+                            VALUES
+
+                            (
+
+                                ?,
+
+                                ?,
+
+                                ?,
+
+                                ?,
+
+                                ?,
+
+                                ?,
+
+                                ?,
+
+                                ?,
+
+                                ?,
+
+                                ?,
+
+                                ?,
+
+                                ?,
+
+                                ?,
+
+                                ?
+
+                            )
+
+                        `;
+
+
+                        conexion.query(
+
+                            insertar,
+
+                            [
+
+                                nombre_barberia.trim(),
+
+                                descripcion ||
+                                    null,
+
+                                logo,
+
+                                telefono ||
+                                    null,
+
+                                whatsapp ||
+                                    null,
+
+                                direccion ||
+                                    null,
+
+                                google_maps ||
+                                    null,
+
+                                instagram ||
+                                    null,
+
+                                facebook ||
+                                    null,
+
+                                tiktok ||
+                                    null,
+
+                                horario_general ||
+                                    null,
+
+                                qrPago,
+
+                                adelanto,
+
+                                monto.toFixed(2)
+
+                            ],
+
+                            (
+                                error,
+                                resultado
+                            ) => {
+
+                                if (error) {
+
+                                    console.error(
+                                        "❌ Error al crear configuración:",
+                                        error
+                                    );
+
+
+                                    return res
+                                        .status(500)
+                                        .json({
+
+                                            error:
+                                                "No se pudo crear la configuración"
+
+                                        });
+
+                                }
+
+
+                                return res
+                                    .status(201)
+                                    .json({
+
+                                        mensaje:
+                                            "Configuración creada correctamente",
+
+                                        id_configuracion:
+                                            resultado.insertId,
+
+                                        logo:
+                                            logo,
+
+                                        qr_pago:
+                                            qrPago,
+
+                                        adelanto_obligatorio:
+                                            adelanto,
+
+                                        monto_adelanto:
+                                            Number(
+                                                monto.toFixed(2)
+                                            )
+
+                                    });
+
+                            }
+
+                        );
+
+                    }
+
+                    catch (errorInterno) {
+
+                        console.error(
+                            "❌ Error procesando imágenes de configuración:",
+                            errorInterno
+                        );
+
+
+                        return res
+                            .status(500)
+                            .json({
+
+                                error:
+                                    errorInterno.message ||
+                                    "No se pudieron procesar las imágenes"
+
+                            });
+
+                    }
+
+                }
+
+            );
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "❌ Error general en configuración:",
+                error
+            );
+
+
+            return res
+                .status(500)
+                .json({
+
+                    error:
+                        error.message ||
+                        "Error al guardar configuración"
+
+                });
+
+        }
 
     }
 
@@ -941,7 +998,12 @@ router.put(
 
 router.use(
 
-    (error, req, res, next) => {
+    (
+        error,
+        req,
+        res,
+        next
+    ) => {
 
         if (
 
@@ -957,12 +1019,14 @@ router.use(
 
             ) {
 
-                return res.status(400).json({
+                return res
+                    .status(400)
+                    .json({
 
-                    error:
-                        "La imagen supera el tamaño máximo permitido de 10 MB."
+                        error:
+                            "La imagen supera el tamaño máximo permitido de 10 MB."
 
-                });
+                    });
 
             }
 
@@ -974,34 +1038,40 @@ router.use(
 
             ) {
 
-                return res.status(400).json({
+                return res
+                    .status(400)
+                    .json({
 
-                    error:
-                        "Se recibió un archivo en un campo no permitido."
+                        error:
+                            "Se recibió un archivo en un campo no permitido."
 
-                });
+                    });
 
             }
 
 
-            return res.status(400).json({
+            return res
+                .status(400)
+                .json({
 
-                error:
-                    `Error al subir el archivo: ${error.message}`
+                    error:
+                        `Error al subir el archivo: ${error.message}`
 
-            });
+                });
 
         }
 
 
         if (error) {
 
-            return res.status(400).json({
+            return res
+                .status(400)
+                .json({
 
-                error:
-                    error.message
+                    error:
+                        error.message
 
-            });
+                });
 
         }
 
