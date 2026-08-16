@@ -43,7 +43,25 @@ app.use(
 
 
 // ========================================
-// ARCHIVOS SUBIDOS
+// ARCHIVOS PÚBLICOS
+// ========================================
+// Permite acceder a:
+// /images/fondo-barberia.png
+// desde la carpeta:
+// /public/images/fondo-barberia.png
+
+app.use(
+    express.static(
+        path.join(
+            __dirname,
+            "../public"
+        )
+    )
+);
+
+
+// ========================================
+// ARCHIVOS SUBIDOS ANTIGUOS
 // ========================================
 
 app.use(
@@ -256,9 +274,6 @@ app.use(
 // ========================================
 // SERVIDOR
 // ========================================
-
-// En local inicia el servidor.
-// En Vercel se exporta la aplicación.
 
 if (require.main === module) {
 
