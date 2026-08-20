@@ -1144,6 +1144,2725 @@ footer strong{color:var(--gold2)}
     color:#ddd;
 }
 
+
+/* ==========================================================
+   CLUB PONTE PERRO — NUEVO DISEÑO
+   NEGRO / BLANCO / GRIS
+   ========================================================== */
+
+:root{
+    --pp-black:#050505 !important;
+    --pp-black2:#0a0a0a !important;
+    --pp-dark:#111111 !important;
+    --pp-dark2:#171717 !important;
+    --pp-gray:#242424 !important;
+    --pp-gray2:#3a3a3a !important;
+    --pp-light:#b8b8b8 !important;
+    --pp-white:#f5f5f5 !important;
+    --pp-soft:#dedede !important;
+}
+
+/* Base */
+html,body{
+    background:var(--pp-black) !important;
+    color:var(--pp-white) !important;
+}
+body{
+    overflow-x:hidden;
+}
+a{
+    color:inherit;
+}
+
+/* Barra */
+.navbar{
+    background:#050505 !important;
+    border-right:1px solid #2b2b2b !important;
+    box-shadow:10px 0 30px rgba(0,0,0,.35) !important;
+}
+.logo{
+    border-bottom:1px solid #292929 !important;
+}
+.logo span{
+    color:#fff !important;
+}
+.logo span:first-child{
+    color:#8f8f8f !important;
+}
+.menu a{
+    color:#999 !important;
+    border-left:2px solid transparent !important;
+    border-radius:0 !important;
+    background:transparent !important;
+}
+.menu a:hover,
+.menu a:first-child{
+    color:#fff !important;
+    background:#151515 !important;
+    border-left-color:#fff !important;
+}
+.btn-reservar{
+    background:#fff !important;
+    color:#050505 !important;
+    border:1px solid #fff !important;
+    border-radius:2px !important;
+    box-shadow:none !important;
+}
+.btn-reservar:hover{
+    background:#d0d0d0 !important;
+    border-color:#d0d0d0 !important;
+}
+
+/* Hero */
+.hero{
+    background:
+        linear-gradient(90deg,rgba(0,0,0,.95),rgba(0,0,0,.62) 55%,rgba(0,0,0,.78)),
+        linear-gradient(0deg,rgba(0,0,0,.62),transparent),
+        url('/images/fondo-barberia.png') center/cover no-repeat !important;
+}
+.hero-small{
+    color:#bcbcbc !important;
+    letter-spacing:5px !important;
+}
+.hero h1,
+.hero h1 span{
+    color:#fff !important;
+    text-shadow:none !important;
+}
+.hero p{
+    color:#b1b1b1 !important;
+}
+.btn-principal{
+    background:#fff !important;
+    color:#050505 !important;
+    border:1px solid #fff !important;
+    border-radius:2px !important;
+}
+.btn-principal:hover{
+    background:#d0d0d0 !important;
+    border-color:#d0d0d0 !important;
+}
+.btn-secundario{
+    background:transparent !important;
+    color:#fff !important;
+    border:1px solid #777 !important;
+    border-radius:2px !important;
+}
+.btn-secundario:hover{
+    background:#fff !important;
+    color:#050505 !important;
+    border-color:#fff !important;
+}
+
+/* Secciones */
+section{
+    background:#080808 !important;
+}
+#servicios{background:#0b0b0b !important}
+#barberos{background:#050505 !important}
+#galeria{background:#0b0b0b !important}
+#promociones{background:#070707 !important}
+#reserva{background:#050505 !important}
+#contacto{background:#0b0b0b !important}
+
+.section-title:before{
+    background:#fff !important;
+    width:48px !important;
+    height:2px !important;
+}
+.section-title h2{
+    color:#fff !important;
+}
+.section-title p{
+    color:#777 !important;
+}
+
+/* Tarjetas de servicios */
+.card{
+    background:#111 !important;
+    border:1px solid #303030 !important;
+    border-radius:2px !important;
+    box-shadow:none !important;
+}
+.card:hover{
+    border-color:#777 !important;
+    transform:translateY(-4px) !important;
+    box-shadow:0 18px 40px rgba(0,0,0,.35) !important;
+}
+.card h3{
+    color:#fff !important;
+}
+.card p{
+    color:#8f8f8f !important;
+}
+.card-numero{
+    color:#666 !important;
+    font-family:'Bebas Neue',sans-serif;
+    font-size:14px;
+    letter-spacing:2px;
+}
+.servicio-publico-meta{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin:18px 0 14px;
+    padding-top:12px;
+    border-top:1px solid #292929;
+}
+.servicio-publico-meta > span:first-child{
+    color:#8b8b8b !important;
+    font-family:'Oswald',sans-serif;
+    font-size:10px;
+    letter-spacing:1px;
+}
+.precio-segun-barbero{
+    color:#fff !important;
+    font-size:9px;
+    letter-spacing:1px;
+    font-family:'Oswald',sans-serif;
+}
+.btn-card{
+    border:1px solid #666 !important;
+    color:#fff !important;
+    background:transparent !important;
+    border-radius:2px !important;
+}
+.btn-card:hover{
+    background:#fff !important;
+    color:#050505 !important;
+    border-color:#fff !important;
+}
+.servicio-sin-imagen{
+    background:#181818 !important;
+    color:#777 !important;
+}
+
+/* Barberos */
+.barbero{
+    background:#111 !important;
+    border:1px solid #303030 !important;
+    border-radius:2px !important;
+}
+.barbero:hover{
+    border-color:#777 !important;
+}
+.barbero img{
+    border-color:#555 !important;
+}
+.barbero:hover img{
+    border-color:#fff !important;
+}
+
+/* Reserva */
+.reserva-box{
+    background:#0c0c0c !important;
+    border:1px solid #303030 !important;
+    border-radius:2px !important;
+    box-shadow:0 25px 70px rgba(0,0,0,.25) !important;
+}
+.reserva-cabecera{
+    background:#0a0a0a !important;
+    border-bottom:1px solid #303030 !important;
+}
+.reserva-paso .numero{
+    background:#161616 !important;
+    border-color:#555 !important;
+    color:#aaa !important;
+}
+.reserva-paso.activo .numero,
+.reserva-paso.completo .numero{
+    background:#fff !important;
+    border-color:#fff !important;
+    color:#050505 !important;
+}
+.reserva-panel-titulo{
+    color:#fff !important;
+}
+.reserva-panel-ayuda{
+    color:#777;
+    margin:-12px 0 22px;
+    font-size:11px;
+}
+.reserva-servicio,
+.reserva-barbero,
+.reserva-dia,
+.reserva-hora{
+    background:#121212 !important;
+    border-color:#333 !important;
+    border-radius:2px !important;
+    color:#fff !important;
+}
+.reserva-servicio:hover,
+.reserva-barbero:hover,
+.reserva-dia:hover,
+.reserva-hora:hover{
+    border-color:#888 !important;
+}
+.reserva-servicio.seleccionado,
+.reserva-barbero.seleccionado,
+.reserva-dia.seleccionado{
+    border-color:#fff !important;
+    box-shadow:inset 0 0 0 1px #fff !important;
+    background:#1b1b1b !important;
+}
+.reserva-hora.seleccionado{
+    background:#fff !important;
+    border-color:#fff !important;
+    color:#050505 !important;
+}
+.reserva-precio{
+    color:#fff !important;
+}
+.reserva-elegir{
+    color:#999 !important;
+    font-family:'Oswald',sans-serif;
+    font-size:9px;
+    letter-spacing:1px;
+}
+.reserva-servicio-meta{
+    border-top:1px solid #2b2b2b;
+    padding-top:11px;
+}
+.servicio-booking-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:13px;
+}
+.servicio-booking-icon{
+    color:#aaa;
+    font-size:20px;
+}
+.servicio-booking-duracion{
+    color:#777;
+    font-family:'Oswald',sans-serif;
+    font-size:9px;
+    letter-spacing:1px;
+}
+.reserva-seleccion-resumen{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    padding:13px 15px;
+    margin-bottom:20px;
+    background:#151515;
+    border:1px solid #333;
+    border-left:3px solid #fff;
+}
+.reserva-seleccion-resumen span{
+    color:#777;
+    font-family:'Oswald',sans-serif;
+    font-size:9px;
+    letter-spacing:1.5px;
+}
+.reserva-seleccion-resumen strong{
+    color:#fff;
+    font-size:14px;
+}
+.reserva-btn{
+    border-radius:2px !important;
+    border-color:#555 !important;
+    background:#111 !important;
+}
+.reserva-btn:hover{
+    background:#fff !important;
+    color:#050505 !important;
+    border-color:#fff !important;
+}
+.reserva-btn.dorado{
+    background:#fff !important;
+    color:#050505 !important;
+    border-color:#fff !important;
+}
+.reserva-btn.dorado:hover{
+    background:#ccc !important;
+    border-color:#ccc !important;
+}
+.reserva-resumen-lateral{
+    background:#111 !important;
+    border-left:1px solid #303030 !important;
+}
+.reserva-side-row{
+    border-bottom-color:#2b2b2b !important;
+}
+.reserva-side-row span{
+    color:#777 !important;
+}
+.reserva-total span:last-child{
+    color:#fff !important;
+}
+
+/* QR / pago */
+.pago-box{
+    background:#111 !important;
+    border:1px solid #333 !important;
+    border-radius:2px !important;
+}
+.pago-titulo,
+.pago-monto{
+    color:#fff !important;
+}
+.pago-check{
+    border-color:#444 !important;
+    background:#171717 !important;
+}
+.pago-check input{
+    accent-color:#fff !important;
+}
+
+/* Contacto / footer */
+.contacto-card{
+    background:#111 !important;
+    border-color:#303030 !important;
+    border-radius:2px !important;
+}
+.contacto-card:hover{
+    border-color:#777 !important;
+}
+.contacto-card .icono{
+    color:#fff !important;
+}
+footer{
+    background:#050505 !important;
+    border-top:1px solid #292929 !important;
+}
+footer strong{
+    color:#fff !important;
+}
+
+/* Móvil */
+@media(max-width:900px){
+    .navbar{
+        background:#050505 !important;
+    }
+    .menu{
+        background:#070707 !important;
+    }
+    .hero{
+        background:
+            linear-gradient(90deg,rgba(0,0,0,.96),rgba(0,0,0,.70)),
+            url('/images/fondo-barberia.png') center/cover no-repeat !important;
+    }
+}
+
+
+/* ============================================================
+   CLUB PONTE PERRO — ESTILO DE REFERENCIA
+   NEGRO + BLANCO + GRIS AZULADO
+   ============================================================ */
+:root{
+    --pp-bg:#151515;
+    --pp-bg2:#1d1d1d;
+    --pp-black:#080808;
+    --pp-white:#f5f5f3;
+    --pp-gray:#a7b0bb;
+    --pp-gray2:#6f747a;
+    --pp-line:#343434;
+}
+
+/* ---------- BASE ---------- */
+html,body{
+    background:var(--pp-bg) !important;
+    color:var(--pp-white) !important;
+}
+body:before{display:none !important;}
+main,footer{
+    margin-left:0 !important;
+}
+section{
+    padding:100px 12px !important;
+    background:var(--pp-bg) !important;
+}
+.section-title{
+    max-width:1240px !important;
+    margin:0 auto 45px !important;
+}
+.section-title:before{display:none !important;}
+.section-title h2{
+    font-family:'Bebas Neue',Impact,sans-serif !important;
+    font-size:clamp(48px,6vw,76px) !important;
+    line-height:.88 !important;
+    letter-spacing:-1px !important;
+    color:#f4f4f1 !important;
+}
+.section-title p{
+    color:#999 !important;
+    font-family:'Montserrat',sans-serif !important;
+    max-width:700px;
+}
+
+/* ---------- NAVBAR ---------- */
+.navbar{
+    position:fixed !important;
+    top:0 !important;
+    left:0 !important;
+    right:0 !important;
+    bottom:auto !important;
+    width:100% !important;
+    height:74px !important;
+    min-height:74px !important;
+    padding:0 25px !important;
+    display:flex !important;
+    flex-direction:row !important;
+    align-items:center !important;
+    justify-content:space-between !important;
+    background:#090909 !important;
+    border:0 !important;
+    border-bottom:2px solid var(--pp-gray) !important;
+    box-shadow:none !important;
+    backdrop-filter:none !important;
+}
+.logo{
+    min-height:0 !important;
+    height:100% !important;
+    padding:0 !important;
+    border:0 !important;
+    flex:0 0 220px !important;
+    display:flex !important;
+    flex-direction:row !important;
+    align-items:center !important;
+    justify-content:flex-start !important;
+    gap:8px !important;
+    text-align:left !important;
+}
+.logo span:first-child{
+    display:grid !important;
+    place-items:center !important;
+    width:30px !important;
+    height:36px !important;
+    background:var(--pp-gray) !important;
+    color:#111 !important;
+    font-family:'Bebas Neue' !important;
+    font-size:27px !important;
+    line-height:1 !important;
+    letter-spacing:0 !important;
+}
+.logo span:last-child{
+    color:#eee !important;
+    font-family:'Bebas Neue' !important;
+    font-size:24px !important;
+    letter-spacing:.3px !important;
+}
+.logo img{display:none !important;}
+
+.menu{
+    margin:0 !important;
+    display:flex !important;
+    flex-direction:row !important;
+    align-items:center !important;
+    justify-content:center !important;
+    gap:34px !important;
+    flex:1 !important;
+}
+.menu a{
+    min-height:0 !important;
+    padding:10px 0 !important;
+    border:0 !important;
+    background:transparent !important;
+    color:#a7a7a7 !important;
+    font-family:'Oswald',sans-serif !important;
+    font-size:13px !important;
+    font-weight:700 !important;
+    letter-spacing:.7px !important;
+    transform:none !important;
+}
+.menu a:hover,
+.menu a:first-child{
+    color:#fff !important;
+    background:transparent !important;
+    border:0 !important;
+    transform:none !important;
+}
+.btn-reservar{
+    margin:0 !important;
+    min-height:44px !important;
+    width:100px !important;
+    flex:0 0 100px !important;
+    background:var(--pp-gray) !important;
+    color:#111 !important;
+    border:0 !important;
+    border-radius:0 !important;
+    font-family:'Bebas Neue',sans-serif !important;
+    font-size:16px !important;
+    letter-spacing:.6px !important;
+}
+.btn-reservar:hover{
+    background:#fff !important;
+    color:#111 !important;
+    box-shadow:none !important;
+    transform:none !important;
+}
+
+/* ---------- HERO ---------- */
+.hero{
+    min-height:calc(100vh - 74px) !important;
+    height:calc(100vh - 74px) !important;
+    margin-top:74px !important;
+    padding:80px 24px 60px !important;
+    align-items:center !important;
+    background:
+        linear-gradient(90deg,rgba(0,0,0,.88) 0%,rgba(0,0,0,.56) 55%,rgba(0,0,0,.60) 100%),
+        linear-gradient(0deg,rgba(0,0,0,.35),transparent 60%),
+        url('/images/fondo-barberia.png') center/cover no-repeat !important;
+    border-bottom:0 !important;
+}
+.hero:after{display:none !important;}
+.hero-content{
+    max-width:760px !important;
+    margin:0 !important;
+}
+.hero-small{
+    display:inline-block;
+    margin-bottom:25px !important;
+    padding:8px 18px !important;
+    background:var(--pp-gray) !important;
+    color:#111 !important;
+    font-family:'Oswald',sans-serif !important;
+    font-size:11px !important;
+    font-weight:700 !important;
+    letter-spacing:2px !important;
+}
+.hero h1{
+    margin-bottom:22px !important;
+    font-size:clamp(90px,11vw,170px) !important;
+    line-height:.78 !important;
+    letter-spacing:-2px !important;
+    text-shadow:none !important;
+}
+.hero h1 span{
+    color:var(--pp-gray) !important;
+}
+.hero p{
+    max-width:590px !important;
+    color:#c0c0c0 !important;
+    font-family:'Montserrat',sans-serif !important;
+    font-size:15px !important;
+    line-height:1.55 !important;
+}
+.hero-buttons{
+    gap:10px !important;
+}
+.btn-principal,
+.btn-secundario{
+    min-height:50px !important;
+    border-radius:0 !important;
+    font-family:'Bebas Neue',sans-serif !important;
+    font-size:17px !important;
+    letter-spacing:1px !important;
+}
+.btn-principal{
+    background:var(--pp-gray) !important;
+    color:#101010 !important;
+    border:0 !important;
+}
+.btn-secundario{
+    background:transparent !important;
+    color:#fff !important;
+    border:1px solid #8c9298 !important;
+}
+.btn-principal:hover{
+    background:#fff !important;
+}
+.btn-secundario:hover{
+    background:#fff !important;
+    color:#111 !important;
+}
+
+/* ---------- MARQUEE ---------- */
+.pp-marquee{
+    height:58px;
+    overflow:hidden;
+    background:var(--pp-gray);
+    color:#111;
+    display:flex;
+    align-items:center;
+    border-bottom:1px solid #111;
+}
+.pp-marquee-track{
+    display:flex;
+    align-items:center;
+    gap:38px;
+    white-space:nowrap;
+    min-width:max-content;
+    animation:ppMarquee 28s linear infinite;
+    font-family:'Bebas Neue',sans-serif;
+    font-size:20px;
+    letter-spacing:1px;
+}
+.pp-marquee-track span{display:inline-flex;align-items:center;gap:10px;}
+@keyframes ppMarquee{
+    from{transform:translateX(0)}
+    to{transform:translateX(-45%)}
+}
+
+/* ---------- SERVICES ---------- */
+#servicios{
+    background:#151515 !important;
+}
+#servicios .section-title{
+    position:relative;
+}
+#servicios .section-title h2{
+    max-width:720px;
+}
+.pp-section-tag{
+    display:inline-block;
+    padding:6px 13px;
+    margin-bottom:18px;
+    background:var(--pp-gray);
+    color:#111;
+    font:700 10px 'Oswald',sans-serif;
+    letter-spacing:2px;
+}
+#servicios .grid{
+    max-width:1240px !important;
+    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+    gap:24px !important;
+}
+#servicios .card{
+    min-height:265px;
+    padding:26px !important;
+    border-radius:0 !important;
+    background:#202020 !important;
+    border:1px solid #363636 !important;
+    box-shadow:none !important;
+}
+#servicios .card:hover{
+    transform:translateY(-3px) !important;
+    border-color:#707070 !important;
+}
+#servicios .card-imagen,
+#servicios .servicio-sin-imagen{
+    display:none !important;
+}
+#servicios .card-numero{
+    display:inline-block;
+    padding:5px 9px;
+    background:var(--pp-gray);
+    color:#111;
+    font:700 9px 'Oswald',sans-serif;
+    letter-spacing:1px;
+}
+#servicios .card h3{
+    margin-top:25px !important;
+    font-size:26px !important;
+    font-family:'Bebas Neue',sans-serif !important;
+}
+#servicios .card p{
+    color:#999 !important;
+    font-size:12px !important;
+}
+#servicios .servicio-publico-meta{
+    margin-top:23px !important;
+    padding-top:14px !important;
+    border-top:1px solid #393939 !important;
+}
+#servicios .precio-segun-barbero{
+    color:var(--pp-gray) !important;
+}
+#servicios .btn-card{
+    border:0 !important;
+    background:transparent !important;
+    padding-left:0 !important;
+    font-size:13px !important;
+}
+#servicios .btn-card:hover{
+    color:#fff !important;
+    background:transparent !important;
+}
+
+/* ---------- ABOUT ---------- */
+.pp-about{
+    max-width:1240px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:60px;
+    align-items:center;
+    background:#151515 !important;
+    padding-left:12px !important;
+    padding-right:12px !important;
+}
+.pp-about-media{
+    position:relative;
+    min-height:500px;
+}
+.pp-about-image{
+    position:absolute;
+    inset:0 30px 0 0;
+    background:
+        linear-gradient(0deg,rgba(0,0,0,.28),rgba(0,0,0,.08)),
+        url('/images/fondo-barberia.png') center/cover no-repeat;
+    border-left:15px solid var(--pp-gray);
+}
+.pp-year{
+    position:absolute;
+    right:0;
+    bottom:0;
+    background:#0b0b0b;
+    padding:25px 30px 20px;
+    border-right:6px solid var(--pp-gray);
+}
+.pp-year strong{
+    display:block;
+    color:var(--pp-gray);
+    font:70px/ .8 'Bebas Neue',sans-serif;
+}
+.pp-year span{
+    color:#ddd;
+    font:700 10px 'Oswald',sans-serif;
+    letter-spacing:2px;
+}
+.pp-about-content .pp-section-tag{margin-bottom:18px}
+.pp-about-content h2{
+    font:72px/.82 'Bebas Neue',sans-serif;
+    color:#f5f5f2;
+    letter-spacing:-1px;
+}
+.pp-about-content h2 span{color:var(--pp-gray)}
+.pp-about-content > p{
+    max-width:580px;
+    margin:28px 0;
+    color:#9a9a9a;
+    font-size:14px;
+    line-height:1.75;
+}
+.pp-values{
+    display:grid;
+    gap:18px;
+}
+.pp-value{
+    display:grid;
+    grid-template-columns:42px 1fr;
+    gap:15px;
+    align-items:start;
+}
+.pp-check{
+    width:40px;height:40px;
+    display:grid;place-items:center;
+    background:var(--pp-gray);
+    color:#111;
+    font-size:22px;
+}
+.pp-value strong{
+    display:block;
+    color:#fff;
+    font:20px 'Bebas Neue',sans-serif;
+    letter-spacing:.5px;
+}
+.pp-value span{
+    display:block;
+    margin-top:4px;
+    color:#858585;
+    font-size:11px;
+}
+
+/* ---------- BARBERS / GALLERY / PROMOS ---------- */
+#barberos{background:#111 !important}
+#barberos .card{
+    background:#1d1d1d !important;
+    border-radius:0 !important;
+}
+.barbero{
+    border-radius:0 !important;
+}
+.barbero img{
+    border-radius:0 !important;
+    border-color:var(--pp-gray) !important;
+}
+.barbero:hover img{
+    border-color:#fff !important;
+    box-shadow:none !important;
+}
+.barbero-red{
+    border-radius:0 !important;
+}
+.barbero-red:hover{
+    background:var(--pp-gray) !important;
+    border-color:var(--pp-gray) !important;
+}
+#galeria{background:#151515 !important}
+.galeria-item{
+    border-radius:0 !important;
+}
+#promociones{background:#111 !important}
+.card-promocion-publica,
+.promocion-publica{
+    border-radius:0 !important;
+}
+
+/* ---------- RESERVA ---------- */
+#reserva{
+    background:#101010 !important;
+}
+.reserva-box{
+    border-radius:0 !important;
+    background:#181818 !important;
+    border-color:#3a3a3a !important;
+}
+.reserva-cabecera{
+    border-bottom-color:#3a3a3a !important;
+}
+.reserva-btn.dorado{
+    background:var(--pp-gray) !important;
+    border-color:var(--pp-gray) !important;
+    color:#111 !important;
+}
+.reserva-btn.dorado:hover{
+    background:#fff !important;
+}
+.reserva-servicio,
+.reserva-barbero,
+.reserva-dia,
+.reserva-hora{
+    border-radius:0 !important;
+    background:#202020 !important;
+}
+.reserva-servicio.seleccionado,
+.reserva-barbero.seleccionado,
+.reserva-dia.seleccionado{
+    border-color:#fff !important;
+    box-shadow:inset 0 0 0 1px #fff !important;
+}
+.reserva-hora.seleccionado{
+    background:#fff !important;
+    color:#111 !important;
+}
+
+/* ---------- CONTACT ---------- */
+#contacto{background:#151515 !important}
+.contacto-card{
+    border-radius:0 !important;
+    background:#202020 !important;
+}
+footer{
+    background:#090909 !important;
+    border-top:1px solid #3a3a3a !important;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:900px){
+    .navbar{
+        height:70px !important;
+        min-height:70px !important;
+        padding:0 15px !important;
+    }
+    .logo{flex:0 0 auto !important}
+    .logo span:last-child{font-size:20px !important}
+    .menu{
+        gap:16px !important;
+        overflow-x:auto;
+        justify-content:flex-end !important;
+        margin-right:10px !important;
+    }
+    .menu a{
+        font-size:10px !important;
+        white-space:nowrap;
+    }
+    .btn-reservar{width:82px !important;flex-basis:82px !important;font-size:13px !important}
+    .hero{
+        margin-top:70px !important;
+        min-height:680px !important;
+        height:680px !important;
+    }
+    #servicios .grid{
+        grid-template-columns:1fr 1fr !important;
+    }
+    .pp-about{
+        grid-template-columns:1fr !important;
+        gap:35px;
+    }
+    .pp-about-media{min-height:420px}
+}
+@media(max-width:600px){
+    .navbar{
+        height:66px !important;
+        min-height:66px !important;
+        padding:0 10px !important;
+    }
+    .logo span:first-child{
+        width:27px !important;height:32px !important;font-size:23px !important;
+    }
+    .logo span:last-child{font-size:18px !important}
+    .menu{
+        display:none !important;
+    }
+    .btn-reservar{
+        width:90px !important;
+        flex-basis:90px !important;
+        min-height:40px !important;
+    }
+    .hero{
+        margin-top:66px !important;
+        min-height:680px !important;
+        height:680px !important;
+        padding:80px 22px !important;
+    }
+    .hero h1{
+        font-size:78px !important;
+        line-height:.78 !important;
+    }
+    .hero-small{
+        font-size:9px !important;
+        letter-spacing:1.5px !important;
+    }
+    .hero-buttons{
+        flex-direction:column !important;
+    }
+    .hero-buttons a{width:100% !important}
+    .pp-marquee{height:50px}
+    .pp-marquee-track{font-size:17px;gap:25px}
+    section{padding:75px 12px !important}
+    #servicios .grid{
+        grid-template-columns:1fr !important;
+    }
+    .pp-about-content h2{
+        font-size:55px !important;
+    }
+    .pp-about-image{
+        inset:0 15px 0 0;
+    }
+    .pp-year{
+        padding:18px 20px;
+    }
+    .pp-year strong{font-size:55px}
+}
+
+
+/* ===== AJUSTE FINAL: NITIDEZ, CONTRASTE Y CELULAR ===== */
+html{
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+}
+body{
+  -webkit-font-smoothing:antialiased !important;
+  -moz-osx-font-smoothing:grayscale !important;
+  text-rendering:optimizeLegibility !important;
+}
+.hero h1,.hero h1 span,.section-title h2,.pp-about-content h2,
+.logo span,.menu a,.btn-principal,.btn-secundario,.btn-reservar,
+.btn-card,.pp-section-tag,.pp-marquee-track{
+  opacity:1 !important;
+  filter:none !important;
+}
+.btn-principal{
+  background:#f2f2f2 !important;
+  color:#080808 !important;
+  border:2px solid #f2f2f2 !important;
+  font-weight:800 !important;
+}
+.btn-secundario{
+  background:#171717 !important;
+  color:#fff !important;
+  border:2px solid #b8bec5 !important;
+  font-weight:800 !important;
+}
+.btn-reservar{
+  background:#aeb7c1 !important;
+  color:#080808 !important;
+  border:2px solid #aeb7c1 !important;
+  font-weight:900 !important;
+}
+.btn-card{
+  color:#fff !important;
+  border:1px solid #9da5ad !important;
+  font-weight:800 !important;
+}
+.btn-secundario:hover,.btn-card:hover{
+  background:#fff !important;
+  color:#080808 !important;
+}
+.hero p,.section-title p,.pp-about-content > p{
+  color:#c2c2c2 !important;
+}
+.card p,.pp-value span{
+  color:#aaa !important;
+}
+.menu a{
+  color:#c2c2c2 !important;
+  font-weight:800 !important;
+}
+#servicios .card,.barbero,.contacto-card{
+  background:#222 !important;
+  border-color:#444 !important;
+}
+.reserva-box{
+  background:#1b1b1b !important;
+  border-color:#484848 !important;
+}
+.reserva-servicio,.reserva-barbero,.reserva-dia,.reserva-hora{
+  background:#242424 !important;
+  border-color:#4a4a4a !important;
+  color:#fff !important;
+}
+.reserva-btn{
+  background:#242424 !important;
+  color:#fff !important;
+  border:1px solid #777 !important;
+}
+.reserva-btn.dorado{
+  background:#f2f2f2 !important;
+  color:#080808 !important;
+  border-color:#f2f2f2 !important;
+  font-weight:900 !important;
+}
+
+/* ===== CELULAR: DISEÑO MOBILE FIRST ===== */
+@media(max-width:900px){
+  body{font-size:15px !important;}
+  .navbar{
+    height:64px !important;
+    min-height:64px !important;
+    padding:0 12px !important;
+    z-index:10000 !important;
+  }
+  .logo{height:64px !important;flex:1 1 auto !important;}
+  .logo span:first-child{
+    width:26px !important;height:31px !important;font-size:22px !important;
+  }
+  .logo span:last-child{font-size:19px !important;}
+  .menu{display:none !important;}
+  .btn-reservar{
+    width:94px !important;
+    min-width:94px !important;
+    height:40px !important;
+    min-height:40px !important;
+    font-size:13px !important;
+    padding:0 8px !important;
+  }
+  .hero{
+    margin-top:64px !important;
+    height:auto !important;
+    min-height:calc(100svh - 64px) !important;
+    padding:72px 22px 55px !important;
+    align-items:flex-start !important;
+  }
+  .hero-content{
+    width:100% !important;
+    max-width:100% !important;
+    padding-top:20px !important;
+  }
+  .hero-small{
+    font-size:9px !important;
+    line-height:1.2 !important;
+    letter-spacing:1.5px !important;
+    padding:8px 11px !important;
+  }
+  .hero h1{
+    font-size:clamp(64px,19vw,92px) !important;
+    line-height:.80 !important;
+    letter-spacing:-1.2px !important;
+  }
+  .hero p{
+    font-size:14px !important;
+    line-height:1.55 !important;
+    max-width:330px !important;
+  }
+  .hero-buttons{
+    width:100% !important;
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:10px !important;
+  }
+  .hero-buttons a{width:100% !important;min-height:50px !important;}
+  .pp-marquee{height:46px !important;}
+  .pp-marquee-track{font-size:15px !important;gap:22px !important;}
+  section{padding:65px 16px !important;}
+  .section-title{margin-bottom:30px !important;}
+  .section-title h2{font-size:clamp(43px,13vw,60px) !important;line-height:.88 !important;}
+  #servicios .grid{grid-template-columns:1fr !important;gap:14px !important;}
+  #servicios .card{min-height:0 !important;padding:21px !important;}
+  #servicios .card h3{font-size:25px !important;line-height:1 !important;}
+  #servicios .card p{font-size:12px !important;line-height:1.55 !important;}
+  .pp-about{
+    padding:65px 16px !important;
+    display:flex !important;
+    flex-direction:column !important;
+    gap:35px !important;
+  }
+  .pp-about-media{width:100% !important;min-height:350px !important;}
+  .pp-about-content{width:100% !important;}
+  .pp-about-content h2{font-size:clamp(48px,14vw,66px) !important;line-height:.84 !important;}
+  .pp-about-content > p{font-size:13px !important;line-height:1.65 !important;}
+  .reserva-box{width:100% !important;overflow:hidden !important;}
+  .reserva-panel{padding:22px 15px !important;}
+  .reserva-panel-titulo{font-size:27px !important;}
+  .reserva-barberos-grid,.reserva-servicios-grid{
+    grid-template-columns:1fr !important;gap:12px !important;
+  }
+  .reserva-dias,.reserva-horas{
+    display:grid !important;
+    grid-template-columns:repeat(2,1fr) !important;
+    gap:8px !important;
+  }
+  .reserva-acciones{
+    display:grid !important;
+    grid-template-columns:1fr 1fr !important;
+    gap:8px !important;
+  }
+  .reserva-btn{min-height:48px !important;font-size:13px !important;}
+  .reserva-resumen-lateral{width:100% !important;margin-top:15px !important;}
+  .pago-box{width:100% !important;}
+  .pago-box img{max-width:240px !important;width:100% !important;height:auto !important;}
+  .contacto-grid{grid-template-columns:1fr !important;gap:12px !important;}
+  .galeria-grid{grid-template-columns:repeat(2,1fr) !important;gap:8px !important;}
+}
+@media(max-width:420px){
+  .logo span:last-child{font-size:17px !important;}
+  .btn-reservar{width:88px !important;min-width:88px !important;font-size:12px !important;}
+  .hero{padding-left:17px !important;padding-right:17px !important;}
+  .hero h1{font-size:68px !important;}
+  .pp-about-media{min-height:300px !important;}
+  .reserva-dias,.reserva-horas,.reserva-acciones{grid-template-columns:1fr !important;}
+  .galeria-grid{grid-template-columns:1fr !important;}
+}
+
+
+/* ============================================================
+   CINTA MÓVIL — MÁS CLARA Y VISIBLE
+   ============================================================ */
+.pp-marquee{
+    position:relative !important;
+    height:72px !important;
+    display:flex !important;
+    align-items:center !important;
+    overflow:hidden !important;
+    background:#d9dee4 !important;
+    color:#080808 !important;
+    border-top:2px solid #ffffff !important;
+    border-bottom:2px solid #080808 !important;
+    box-shadow:0 3px 0 rgba(0,0,0,.25) !important;
+}
+.pp-marquee:before,
+.pp-marquee:after{
+    content:"" !important;
+    position:absolute !important;
+    top:0 !important;
+    bottom:0 !important;
+    width:55px !important;
+    z-index:2 !important;
+    pointer-events:none !important;
+}
+.pp-marquee:before{
+    left:0 !important;
+    background:linear-gradient(90deg,#d9dee4,rgba(217,222,228,0)) !important;
+}
+.pp-marquee:after{
+    right:0 !important;
+    background:linear-gradient(270deg,#d9dee4,rgba(217,222,228,0)) !important;
+}
+.pp-marquee-track{
+    position:relative !important;
+    z-index:1 !important;
+    display:flex !important;
+    align-items:center !important;
+    gap:45px !important;
+    min-width:max-content !important;
+    padding-left:20px !important;
+    color:#080808 !important;
+    font-family:'Bebas Neue',Impact,sans-serif !important;
+    font-size:25px !important;
+    font-weight:900 !important;
+    letter-spacing:1.6px !important;
+    line-height:1 !important;
+    text-shadow:none !important;
+    animation:ppMarquee 24s linear infinite !important;
+}
+.pp-marquee-track span{
+    color:#080808 !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    gap:12px !important;
+    white-space:nowrap !important;
+}
+.pp-marquee-track span::first-letter{
+    color:#555f69 !important;
+}
+@keyframes ppMarquee{
+    from{transform:translateX(0)}
+    to{transform:translateX(-45%)}
+}
+
+/* ============================================================
+   MOBILE — CINTA MÁS GRANDE Y LEGIBLE
+   ============================================================ */
+@media(max-width:900px){
+    .pp-marquee{
+        height:58px !important;
+    }
+    .pp-marquee-track{
+        font-size:20px !important;
+        gap:30px !important;
+        letter-spacing:1.2px !important;
+        animation-duration:20s !important;
+    }
+}
+@media(max-width:420px){
+    .pp-marquee{
+        height:54px !important;
+    }
+    .pp-marquee-track{
+        font-size:18px !important;
+        gap:25px !important;
+        letter-spacing:1px !important;
+        animation-duration:18s !important;
+    }
+}
+
+
+/* ============================================================
+   PONTE PERRO — AJUSTE DEFINITIVO
+   RESPONSIVE REAL + IMÁGENES + TARJETAS + MENÚ MÓVIL
+   ============================================================ */
+
+/* ---------- BASE / FLEXBOX ---------- */
+*,
+*::before,
+*::after{
+    box-sizing:border-box !important;
+}
+html{
+    width:100%;
+    overflow-x:hidden !important;
+    scroll-behavior:smooth;
+}
+body{
+    width:100%;
+    max-width:100%;
+    overflow-x:hidden !important;
+    margin:0;
+}
+main{
+    width:100%;
+    min-width:0;
+}
+section{
+    width:100%;
+    max-width:100%;
+}
+.grid,
+.contacto-grid,
+.reserva-barberos-grid,
+.reserva-servicios-grid{
+    min-width:0 !important;
+}
+img{
+    max-width:100%;
+}
+
+/* ---------- TEXTO MÁS NÍTIDO ---------- */
+body,
+button,
+a,
+input,
+select,
+textarea{
+    -webkit-font-smoothing:antialiased !important;
+    -moz-osx-font-smoothing:grayscale !important;
+    text-rendering:optimizeLegibility !important;
+}
+
+/* ---------- COLORES / CONTRASTE ---------- */
+:root{
+    --pp-black:#080808;
+    --pp-bg:#151515;
+    --pp-card:#202020;
+    --pp-card2:#252525;
+    --pp-line:#454545;
+    --pp-white:#f7f7f5;
+    --pp-gray:#c1c8cf;
+    --pp-gray-dark:#8d969f;
+}
+
+/* ---------- HEADER DESKTOP ---------- */
+.navbar{
+    width:100% !important;
+    height:74px !important;
+    min-height:74px !important;
+    display:flex !important;
+    align-items:center !important;
+    gap:20px !important;
+    padding:0 25px !important;
+    position:fixed !important;
+    top:0 !important;
+    left:0 !important;
+    right:0 !important;
+    z-index:9999 !important;
+    background:#080808 !important;
+    border-bottom:2px solid #9ea7b0 !important;
+}
+.logo{
+    flex:0 0 210px !important;
+    width:210px !important;
+    height:74px !important;
+    display:flex !important;
+    align-items:center !important;
+    gap:8px !important;
+    text-decoration:none !important;
+}
+.logo span:first-child{
+    width:30px !important;
+    height:36px !important;
+    display:grid !important;
+    place-items:center !important;
+    background:#c1c8cf !important;
+    color:#101010 !important;
+    font-family:'Bebas Neue',sans-serif !important;
+    font-size:25px !important;
+    line-height:1 !important;
+    letter-spacing:0 !important;
+}
+.logo span:last-child{
+    color:#f5f5f5 !important;
+    font-family:'Bebas Neue',sans-serif !important;
+    font-size:24px !important;
+    line-height:1 !important;
+}
+.menu{
+    flex:1 1 auto !important;
+    min-width:0 !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    gap:30px !important;
+    overflow:visible !important;
+}
+.menu a{
+    flex:0 0 auto !important;
+    color:#c5c5c5 !important;
+    background:transparent !important;
+    border:0 !important;
+    padding:9px 0 !important;
+    font-family:'Oswald',sans-serif !important;
+    font-size:13px !important;
+    font-weight:800 !important;
+    white-space:nowrap !important;
+    text-decoration:none !important;
+}
+.menu a:hover,
+.menu a:first-child{
+    color:#fff !important;
+    background:transparent !important;
+    border:0 !important;
+}
+.btn-reservar{
+    flex:0 0 120px !important;
+    width:120px !important;
+    height:44px !important;
+    min-height:44px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    padding:0 8px !important;
+    background:#c1c8cf !important;
+    color:#080808 !important;
+    border:2px solid #c1c8cf !important;
+    border-radius:0 !important;
+    font-family:'Bebas Neue',sans-serif !important;
+    font-size:16px !important;
+    font-weight:900 !important;
+    text-align:center !important;
+    white-space:nowrap !important;
+}
+.btn-reservar:hover{
+    background:#fff !important;
+    border-color:#fff !important;
+}
+
+/* Hidden on desktop */
+.pp-menu-toggle{
+    display:none !important;
+}
+
+/* ---------- HERO ---------- */
+.hero{
+    width:100% !important;
+    max-width:none !important;
+    margin-top:74px !important;
+    min-height:calc(100svh - 74px) !important;
+    height:auto !important;
+    padding:95px 7vw 75px !important;
+    display:flex !important;
+    align-items:center !important;
+    background:
+        linear-gradient(90deg,rgba(0,0,0,.92),rgba(0,0,0,.55) 55%,rgba(0,0,0,.62)),
+        url('/images/fondo-barberia.png') center/cover no-repeat !important;
+}
+.hero-content{
+    width:100% !important;
+    max-width:760px !important;
+}
+.hero h1{
+    font-family:'Bebas Neue',Impact,sans-serif !important;
+    font-size:clamp(82px,10vw,155px) !important;
+    line-height:.79 !important;
+    letter-spacing:-1.5px !important;
+    color:#fff !important;
+    opacity:1 !important;
+}
+.hero h1 span{
+    color:#c1c8cf !important;
+}
+.hero p{
+    max-width:560px !important;
+    color:#d1d1d1 !important;
+    font-size:15px !important;
+    line-height:1.6 !important;
+}
+.hero-buttons{
+    display:flex !important;
+    flex-wrap:wrap !important;
+    gap:12px !important;
+}
+.btn-principal,
+.btn-secundario{
+    min-height:52px !important;
+    padding:0 25px !important;
+    border-radius:0 !important;
+    font-weight:900 !important;
+}
+.btn-principal{
+    background:#f2f2f2 !important;
+    color:#080808 !important;
+    border:2px solid #f2f2f2 !important;
+}
+.btn-secundario{
+    background:#151515 !important;
+    color:#fff !important;
+    border:2px solid #aab2ba !important;
+}
+
+/* ---------- CINTA ---------- */
+.pp-marquee{
+    width:100% !important;
+    height:72px !important;
+    overflow:hidden !important;
+    display:flex !important;
+    align-items:center !important;
+    background:#e1e5e9 !important;
+    color:#050505 !important;
+    border-top:2px solid #fff !important;
+    border-bottom:2px solid #111 !important;
+}
+.pp-marquee-track{
+    display:flex !important;
+    flex:0 0 auto !important;
+    align-items:center !important;
+    width:max-content !important;
+    min-width:max-content !important;
+    gap:48px !important;
+    color:#050505 !important;
+    font-family:'Bebas Neue',Impact,sans-serif !important;
+    font-size:26px !important;
+    font-weight:900 !important;
+    letter-spacing:1.5px !important;
+    animation:ppMarquee 22s linear infinite !important;
+}
+.pp-marquee-track span{
+    color:#050505 !important;
+    white-space:nowrap !important;
+    text-shadow:none !important;
+}
+@keyframes ppMarquee{
+    from{transform:translate3d(0,0,0)}
+    to{transform:translate3d(-45%,0,0)}
+}
+
+/* ---------- SERVICIOS CON IMAGEN ---------- */
+#servicios .grid{
+    width:100% !important;
+    max-width:1240px !important;
+    margin:0 auto !important;
+    display:grid !important;
+    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+    gap:22px !important;
+}
+#servicios .card{
+    width:100% !important;
+    min-width:0 !important;
+    overflow:hidden !important;
+    padding:0 !important;
+    background:#202020 !important;
+    border:1px solid #444 !important;
+    border-radius:10px !important;
+}
+#servicios .card:hover{
+    border-color:#aeb6bd !important;
+    transform:translateY(-4px) !important;
+}
+#servicios .card-imagen,
+#servicios .servicio-sin-imagen{
+    width:100% !important;
+    height:210px !important;
+    min-height:210px !important;
+    margin:0 !important;
+    display:block !important;
+    object-fit:cover !important;
+    border:0 !important;
+    border-radius:0 !important;
+}
+#servicios .servicio-sin-imagen{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    background:#303030 !important;
+    color:#9ca5ad !important;
+}
+#servicios .card-contenido{
+    padding:22px !important;
+}
+#servicios .card h3{
+    margin:14px 0 9px !important;
+    color:#fff !important;
+    font-size:27px !important;
+    line-height:1 !important;
+}
+#servicios .card p{
+    min-height:48px !important;
+    color:#b5b5b5 !important;
+    font-size:12px !important;
+    line-height:1.55 !important;
+}
+#servicios .card-numero{
+    background:#c1c8cf !important;
+    color:#080808 !important;
+    padding:5px 9px !important;
+}
+#servicios .servicio-publico-meta{
+    display:flex !important;
+    flex-wrap:wrap !important;
+    justify-content:space-between !important;
+    gap:8px !important;
+    border-top:1px solid #444 !important;
+    padding-top:13px !important;
+}
+#servicios .servicio-publico-meta span{
+    color:#d0d0d0 !important;
+}
+#servicios .precio-segun-barbero{
+    color:#c1c8cf !important;
+    font-weight:800 !important;
+}
+#servicios .btn-card{
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    margin-top:16px !important;
+    padding:11px 15px !important;
+    color:#080808 !important;
+    background:#c1c8cf !important;
+    border:2px solid #c1c8cf !important;
+    border-radius:3px !important;
+    font-weight:900 !important;
+}
+#servicios .btn-card:hover{
+    color:#080808 !important;
+    background:#fff !important;
+}
+
+/* ---------- TARJETAS GENERALES: NO CUADRADAS GRANDES ---------- */
+.card,
+.barbero,
+.contacto-card,
+.galeria-item,
+.promocion-publica,
+.card-promocion-publica{
+    border-radius:10px !important;
+}
+.barbero{
+    overflow:hidden !important;
+    background:#202020 !important;
+    border:1px solid #444 !important;
+}
+
+/* ---------- NOSOTROS ---------- */
+.pp-about{
+    width:100% !important;
+    max-width:1240px !important;
+    margin:0 auto !important;
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
+    gap:55px !important;
+}
+.pp-about-media,
+.pp-about-content{
+    min-width:0 !important;
+}
+.pp-about-image{
+    width:100% !important;
+    min-height:470px !important;
+    border-radius:10px !important;
+    background-position:center !important;
+}
+.pp-about-content h2{
+    color:#fff !important;
+}
+.pp-about-content h2 span{
+    color:#aeb7c0 !important;
+}
+
+/* ---------- RESERVA ---------- */
+.reserva-box{
+    width:100% !important;
+    max-width:1100px !important;
+    margin:0 auto !important;
+    border-radius:10px !important;
+    overflow:hidden !important;
+}
+.reserva-servicio,
+.reserva-barbero,
+.reserva-dia,
+.reserva-hora{
+    border-radius:8px !important;
+}
+.reserva-btn{
+    border-radius:4px !important;
+}
+
+/* ============================================================
+   MOBILE REAL
+   ============================================================ */
+@media(max-width:900px){
+
+    .navbar{
+        height:66px !important;
+        min-height:66px !important;
+        padding:0 12px !important;
+        gap:10px !important;
+    }
+
+    .logo{
+        flex:1 1 auto !important;
+        width:auto !important;
+        height:66px !important;
+        min-width:0 !important;
+    }
+
+    .logo span:first-child{
+        width:27px !important;
+        height:33px !important;
+        flex:0 0 27px !important;
+    }
+
+    .logo span:last-child{
+        font-size:19px !important;
+        white-space:nowrap !important;
+    }
+
+    .menu{
+        position:absolute !important;
+        top:66px !important;
+        left:0 !important;
+        right:0 !important;
+        width:100% !important;
+        height:auto !important;
+        max-height:0 !important;
+        overflow:hidden !important;
+        display:flex !important;
+        flex-direction:column !important;
+        align-items:stretch !important;
+        justify-content:flex-start !important;
+        gap:0 !important;
+        padding:0 !important;
+        background:#101010 !important;
+        border-bottom:0 solid #444 !important;
+        box-shadow:0 14px 25px rgba(0,0,0,.45) !important;
+        transition:max-height .3s ease,border-bottom-width .3s ease !important;
+    }
+
+    .menu.menu-abierto{
+        max-height:430px !important;
+        border-bottom-width:1px !important;
+    }
+
+    .menu a{
+        width:100% !important;
+        min-height:50px !important;
+        display:flex !important;
+        align-items:center !important;
+        padding:0 22px !important;
+        border-bottom:1px solid #292929 !important;
+        color:#eee !important;
+        background:#101010 !important;
+        font-size:13px !important;
+    }
+
+    .menu a:hover,
+    .menu a:first-child{
+        color:#080808 !important;
+        background:#c1c8cf !important;
+    }
+
+    .btn-reservar{
+        flex:0 0 96px !important;
+        width:96px !important;
+        height:40px !important;
+        min-height:40px !important;
+        font-size:13px !important;
+        line-height:1 !important;
+        padding:0 5px !important;
+    }
+
+    /* Botón hamburguesa REAL */
+    .pp-menu-toggle{
+        flex:0 0 42px !important;
+        width:42px !important;
+        height:42px !important;
+        display:flex !important;
+        flex-direction:column !important;
+        justify-content:center !important;
+        align-items:center !important;
+        gap:5px !important;
+        padding:0 !important;
+        background:#202020 !important;
+        border:1px solid #8f99a2 !important;
+        border-radius:4px !important;
+        cursor:pointer !important;
+    }
+
+    .pp-menu-toggle span{
+        display:block !important;
+        width:20px !important;
+        height:2px !important;
+        background:#fff !important;
+        transition:.2s !important;
+    }
+
+    .pp-menu-toggle.activo span:nth-child(1){
+        transform:translateY(7px) rotate(45deg) !important;
+    }
+    .pp-menu-toggle.activo span:nth-child(2){
+        opacity:0 !important;
+    }
+    .pp-menu-toggle.activo span:nth-child(3){
+        transform:translateY(-7px) rotate(-45deg) !important;
+    }
+
+    .hero{
+        margin-top:66px !important;
+        min-height:calc(100svh - 66px) !important;
+        height:auto !important;
+        padding:76px 18px 55px !important;
+        align-items:flex-start !important;
+    }
+
+    .hero-content{
+        max-width:100% !important;
+        width:100% !important;
+    }
+
+    .hero-small{
+        max-width:100% !important;
+        font-size:9px !important;
+        letter-spacing:1.3px !important;
+        line-height:1.25 !important;
+        padding:8px 10px !important;
+    }
+
+    .hero h1{
+        max-width:100% !important;
+        font-size:clamp(62px,18vw,90px) !important;
+        line-height:.80 !important;
+        letter-spacing:-1px !important;
+        overflow-wrap:normal !important;
+    }
+
+    .hero p{
+        max-width:100% !important;
+        font-size:14px !important;
+        line-height:1.55 !important;
+    }
+
+    .hero-buttons{
+        width:100% !important;
+        display:flex !important;
+        flex-direction:column !important;
+        gap:9px !important;
+    }
+
+    .hero-buttons a{
+        width:100% !important;
+        min-height:50px !important;
+    }
+
+    /* Cinta clara */
+    .pp-marquee{
+        height:58px !important;
+        background:#e7ebee !important;
+    }
+
+    .pp-marquee-track{
+        font-size:20px !important;
+        gap:30px !important;
+        animation-duration:19s !important;
+    }
+
+    /* Servicios */
+    #servicios{
+        padding:65px 14px !important;
+    }
+
+    #servicios .grid{
+        grid-template-columns:1fr !important;
+        gap:16px !important;
+    }
+
+    #servicios .card{
+        width:100% !important;
+        border-radius:10px !important;
+    }
+
+    #servicios .card-imagen,
+    #servicios .servicio-sin-imagen{
+        height:205px !important;
+        min-height:205px !important;
+    }
+
+    #servicios .card-contenido{
+        padding:20px !important;
+    }
+
+    #servicios .card h3{
+        font-size:26px !important;
+    }
+
+    #servicios .card p{
+        min-height:auto !important;
+    }
+
+    /* Nosotros */
+    .pp-about{
+        display:flex !important;
+        flex-direction:column !important;
+        width:100% !important;
+        gap:35px !important;
+        padding-left:14px !important;
+        padding-right:14px !important;
+    }
+
+    .pp-about-media{
+        width:100% !important;
+        min-height:320px !important;
+    }
+
+    .pp-about-image{
+        min-height:320px !important;
+    }
+
+    .pp-about-content{
+        width:100% !important;
+    }
+
+    .pp-about-content h2{
+        font-size:clamp(47px,14vw,68px) !important;
+        line-height:.84 !important;
+    }
+
+    /* Reserva */
+    #reserva{
+        padding:60px 12px !important;
+    }
+
+    .reserva-box{
+        width:100% !important;
+        max-width:100% !important;
+        border-radius:10px !important;
+    }
+
+    .reserva-panel{
+        width:100% !important;
+        padding:20px 14px !important;
+    }
+
+    .reserva-barberos-grid,
+    .reserva-servicios-grid{
+        width:100% !important;
+        grid-template-columns:1fr !important;
+        gap:12px !important;
+    }
+
+    .reserva-dias{
+        display:grid !important;
+        grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+        gap:8px !important;
+    }
+
+    .reserva-horas{
+        display:grid !important;
+        grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+        gap:8px !important;
+    }
+
+    .reserva-acciones{
+        display:flex !important;
+        flex-wrap:wrap !important;
+        gap:8px !important;
+    }
+
+    .reserva-acciones .reserva-btn{
+        flex:1 1 140px !important;
+        min-height:48px !important;
+    }
+
+    .reserva-resumen-lateral{
+        width:100% !important;
+    }
+
+    /* Galería */
+    .galeria-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+        gap:9px !important;
+    }
+}
+
+@media(max-width:430px){
+
+    .navbar{
+        padding:0 9px !important;
+    }
+
+    .logo span:last-child{
+        font-size:16px !important;
+    }
+
+    .btn-reservar{
+        flex-basis:88px !important;
+        width:88px !important;
+        font-size:12px !important;
+    }
+
+    .pp-menu-toggle{
+        flex-basis:40px !important;
+        width:40px !important;
+    }
+
+    .hero{
+        padding:70px 15px 50px !important;
+    }
+
+    .hero h1{
+        font-size:66px !important;
+    }
+
+    .hero-small{
+        font-size:8px !important;
+    }
+
+    .pp-marquee{
+        height:54px !important;
+    }
+
+    .pp-marquee-track{
+        font-size:18px !important;
+        gap:24px !important;
+        animation-duration:17s !important;
+    }
+
+    #servicios .card-imagen,
+    #servicios .servicio-sin-imagen{
+        height:190px !important;
+        min-height:190px !important;
+    }
+
+    .reserva-dias,
+    .reserva-horas{
+        grid-template-columns:1fr !important;
+    }
+
+    .galeria-grid{
+        grid-template-columns:1fr !important;
+    }
+}
+
+
+/* ============================================================
+   CONTRASTE FINAL DE BOTONES
+   ============================================================ */
+.btn-principal,
+.btn-reservar,
+.reserva-btn.dorado,
+#servicios .btn-card{
+    background:#ffffff !important;
+    color:#080808 !important;
+    border-color:#ffffff !important;
+    text-shadow:none !important;
+    opacity:1 !important;
+}
+
+.btn-principal:hover,
+.btn-reservar:hover,
+.reserva-btn.dorado:hover,
+#servicios .btn-card:hover{
+    background:#e4e4e4 !important;
+    color:#080808 !important;
+    border-color:#e4e4e4 !important;
+}
+
+.btn-secundario,
+.reserva-btn:not(.dorado){
+    background:#181818 !important;
+    color:#ffffff !important;
+    border-color:#aeb7c0 !important;
+}
+
+.btn-secundario:hover,
+.reserva-btn:not(.dorado):hover{
+    background:#ffffff !important;
+    color:#080808 !important;
+    border-color:#ffffff !important;
+}
+
+/* Si existe algún botón gris claro, siempre usar negro y aumentar peso */
+button[style*="background"],
+a[style*="background"]{
+    text-shadow:none !important;
+}
+
+/* ============================================================
+   IMÁGENES DE SERVICIOS — TAMAÑO LIMPIO
+   ============================================================ */
+#servicios .card{
+    overflow:hidden !important;
+}
+
+#servicios .card-imagen{
+    display:block !important;
+    width:100% !important;
+    height:190px !important;
+    min-height:190px !important;
+    object-fit:cover !important;
+    object-position:center !important;
+    margin:0 !important;
+    border:0 !important;
+    border-radius:0 !important;
+    background:#303030 !important;
+}
+
+#servicios .card-contenido{
+    padding:19px 20px 21px !important;
+}
+
+/* El cuadrado de tijeras SOLO aparece si realmente no hay imagen */
+#servicios .servicio-sin-imagen{
+    width:100% !important;
+    height:150px !important;
+    min-height:150px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    background:#2b2b2b !important;
+    color:#9da6ae !important;
+    font-size:34px !important;
+    margin:0 !important;
+}
+
+/* Nunca mostrar un segundo cuadro de tijeras debajo de una foto */
+#servicios .card-imagen + .servicio-sin-imagen{
+    display:none !important;
+}
+
+/* En pantallas pequeñas las fotos no deben ocupar media pantalla */
+@media(max-width:900px){
+    #servicios .card-imagen{
+        height:175px !important;
+        min-height:175px !important;
+    }
+
+    #servicios .servicio-sin-imagen{
+        height:135px !important;
+        min-height:135px !important;
+    }
+}
+
+@media(max-width:430px){
+    #servicios .card-imagen{
+        height:160px !important;
+        min-height:160px !important;
+    }
+
+    #servicios .servicio-sin-imagen{
+        height:125px !important;
+        min-height:125px !important;
+    }
+}
+
+
+/* ============================================================
+   CORRECCIÓN GLOBAL DE CONTRASTE — NINGÚN TEXTO NEGRO SOBRE GRIS
+   ============================================================ */
+
+/* ETIQUETAS / TITULARES SOBRE FONDO GRIS */
+.pp-section-tag{
+    background:#111111 !important;
+    color:#ffffff !important;
+    border:2px solid #c8ced4 !important;
+    font-weight:900 !important;
+    text-shadow:none !important;
+}
+
+#servicios .pp-section-tag{
+    background:#111111 !important;
+    color:#ffffff !important;
+}
+
+/* TÍTULOS Y TEXTOS DE SECCIÓN */
+.section-title h2,
+.section-title p,
+.pp-about-content h2,
+.pp-about-content p{
+    opacity:1 !important;
+    text-shadow:none !important;
+}
+
+.section-title h2,
+.pp-about-content h2{
+    color:#ffffff !important;
+}
+.section-title p,
+.pp-about-content p{
+    color:#d0d0d0 !important;
+}
+
+/* CINTA: GRIS CLARO -> NEGRO LEGIBLE */
+.pp-marquee{
+    background:#f0f2f4 !important;
+    color:#050505 !important;
+}
+.pp-marquee-track,
+.pp-marquee-track span{
+    color:#050505 !important;
+    background:transparent !important;
+    font-weight:900 !important;
+}
+
+/* BOTÓN GRIS: SI EL FONDO ES CLARO, TEXTO NEGRO */
+.btn-reservar,
+.btn-principal,
+.reserva-btn.dorado,
+#servicios .btn-card{
+    background:#e7eaed !important;
+    color:#050505 !important;
+    border:2px solid #ffffff !important;
+    font-weight:900 !important;
+}
+
+/* BOTÓN OSCURO: TEXTO BLANCO */
+.btn-secundario,
+.reserva-btn:not(.dorado){
+    background:#111111 !important;
+    color:#ffffff !important;
+    border:2px solid #c5cbd1 !important;
+    font-weight:900 !important;
+}
+
+/* SERVICIOS */
+#servicios{
+    background:#181818 !important;
+}
+#servicios .section-title{
+    color:#fff !important;
+}
+#servicios .card{
+    background:#242424 !important;
+    border:1px solid #555 !important;
+}
+#servicios .card h3{
+    color:#ffffff !important;
+}
+#servicios .card p{
+    color:#d0d0d0 !important;
+}
+#servicios .card-numero{
+    background:#111111 !important;
+    color:#ffffff !important;
+    border:1px solid #c8ced4 !important;
+}
+#servicios .servicio-publico-meta span{
+    color:#e2e2e2 !important;
+}
+#servicios .precio-segun-barbero{
+    color:#d7dde2 !important;
+}
+
+/* BARBEROS */
+#barberos{
+    background:#111111 !important;
+}
+#barberos .section-title h2,
+#barberos .section-title p{
+    color:#fff !important;
+}
+.barbero{
+    background:#242424 !important;
+    border-color:#555 !important;
+}
+.barbero h3{
+    color:#fff !important;
+}
+.barbero p{
+    color:#d0d0d0 !important;
+}
+
+/* GALERÍA / PROMOCIONES */
+#galeria,
+#promociones{
+    background:#181818 !important;
+}
+#galeria .section-title h2,
+#promociones .section-title h2{
+    color:#fff !important;
+}
+#galeria .section-title p,
+#promociones .section-title p{
+    color:#d0d0d0 !important;
+}
+
+/* RESERVA */
+#reserva{
+    background:#101010 !important;
+}
+.reserva-box{
+    background:#1d1d1d !important;
+    border-color:#555 !important;
+}
+.reserva-cabecera{
+    background:#111 !important;
+}
+.reserva-panel-titulo{
+    color:#fff !important;
+}
+.reserva-panel-ayuda{
+    color:#c8c8c8 !important;
+}
+.reserva-subtitulo{
+    color:#fff !important;
+}
+.reserva-servicio,
+.reserva-barbero,
+.reserva-dia,
+.reserva-hora{
+    background:#292929 !important;
+    color:#fff !important;
+    border-color:#606060 !important;
+}
+.reserva-servicio h3,
+.reserva-barbero h3{
+    color:#fff !important;
+}
+.reserva-servicio p,
+.reserva-barbero p{
+    color:#d0d0d0 !important;
+}
+.reserva-seleccion-resumen{
+    background:#111 !important;
+    color:#fff !important;
+    border-color:#606060 !important;
+}
+.reserva-seleccion-resumen span{
+    color:#bfc5ca !important;
+}
+.reserva-seleccion-resumen strong{
+    color:#fff !important;
+}
+
+/* CONTACTO */
+#contacto{
+    background:#181818 !important;
+}
+.contacto-card{
+    background:#242424 !important;
+    border-color:#555 !important;
+}
+.contacto-card h3{
+    color:#fff !important;
+}
+.contacto-card p{
+    color:#d0d0d0 !important;
+}
+
+/* FOOTER */
+footer{
+    background:#080808 !important;
+    color:#d0d0d0 !important;
+}
+footer strong{
+    color:#fff !important;
+}
+
+/* Evitar estilos inline que provoquen texto negro en elementos claros */
+.pp-section-tag,
+.btn-reservar,
+.btn-principal,
+.reserva-btn.dorado,
+#servicios .btn-card{
+    -webkit-text-fill-color:currentColor !important;
+}
+
+/* MOBILE */
+@media(max-width:900px){
+    .pp-section-tag{
+        color:#fff !important;
+        background:#111 !important;
+    }
+
+    .btn-reservar,
+    .btn-principal,
+    .reserva-btn.dorado,
+    #servicios .btn-card{
+        background:#f0f2f4 !important;
+        color:#050505 !important;
+    }
+
+    .btn-secundario,
+    .reserva-btn:not(.dorado){
+        background:#111 !important;
+        color:#fff !important;
+    }
+}
+
+
+/* ============================================================
+   CLUB PONTE PERRO — PULIDO VISUAL FINAL
+   CONTRASTE COMPLETO + LOGO + BOTONES + MOBILE
+   ============================================================ */
+
+/* LOGO: siempre visible en el header */
+.logo span:first-child{
+    background:#ffffff !important;
+    color:#080808 !important;
+    border:2px solid #cfd4d9 !important;
+}
+.logo span:last-child{
+    color:#ffffff !important;
+    background:transparent !important;
+    text-shadow:0 2px 8px rgba(0,0,0,.85) !important;
+    opacity:1 !important;
+}
+
+/* El nombre no debe quedar gris sobre negro */
+#heroNombre{
+    background:#cfd5db !important;
+    color:#080808 !important;
+    border:2px solid #ffffff !important;
+    font-weight:900 !important;
+    text-shadow:none !important;
+}
+
+/* HERO: texto principal */
+.hero h1,
+.hero h1 span{
+    color:#ffffff !important;
+    text-shadow:0 3px 12px rgba(0,0,0,.85) !important;
+}
+.hero h1 span{
+    color:#d5dbe0 !important;
+}
+.hero p{
+    color:#ffffff !important;
+    text-shadow:0 2px 8px rgba(0,0,0,.8) !important;
+}
+
+/* TODOS LOS TITULOS DE SECCION */
+.section-title h2,
+.section-title h2 span{
+    color:#ffffff !important;
+    text-shadow:none !important;
+}
+.section-title p{
+    color:#d7d7d7 !important;
+}
+
+/* ETIQUETAS COMO LO MÁS PEDIDO / NOSOTROS */
+.pp-section-tag{
+    display:inline-flex !important;
+    align-items:center !important;
+    background:#ffffff !important;
+    color:#080808 !important;
+    border:2px solid #ffffff !important;
+    padding:7px 12px !important;
+    font-weight:900 !important;
+    text-shadow:none !important;
+}
+
+/* HEADER */
+.navbar{
+    background:#050505 !important;
+    border-bottom:2px solid #c5ccd2 !important;
+}
+.menu a{
+    color:#e0e0e0 !important;
+    text-shadow:none !important;
+}
+.menu a:hover,
+.menu a:first-child{
+    color:#ffffff !important;
+}
+
+/* BOTÓN RESERVA DEL HEADER */
+.btn-reservar{
+    background:#ffffff !important;
+    color:#050505 !important;
+    border:2px solid #ffffff !important;
+    box-shadow:none !important;
+}
+.btn-reservar:hover{
+    background:#d9dde1 !important;
+    color:#050505 !important;
+}
+
+/* HERO BUTTONS */
+.btn-principal{
+    background:#ffffff !important;
+    color:#050505 !important;
+    border:2px solid #ffffff !important;
+}
+.btn-secundario{
+    background:#080808 !important;
+    color:#ffffff !important;
+    border:2px solid #ffffff !important;
+}
+
+/* SERVICIOS */
+#servicios{
+    background:#171717 !important;
+}
+#servicios .section-title h2,
+#servicios .section-title p{
+    color:#ffffff !important;
+}
+#servicios .card{
+    background:#252525 !important;
+    border:1px solid #606060 !important;
+}
+#servicios .card h3{
+    color:#ffffff !important;
+}
+#servicios .card p{
+    color:#d0d0d0 !important;
+}
+#servicios .card-numero{
+    background:#ffffff !important;
+    color:#050505 !important;
+    border:0 !important;
+}
+#servicios .precio-segun-barbero{
+    color:#ffffff !important;
+}
+#servicios .btn-card{
+    background:#ffffff !important;
+    color:#050505 !important;
+    border:2px solid #ffffff !important;
+}
+
+/* BARBEROS */
+#barberos{
+    background:#0e0e0e !important;
+}
+.barbero{
+    background:#252525 !important;
+    border:1px solid #606060 !important;
+}
+.barbero h3{
+    color:#ffffff !important;
+}
+.barbero p{
+    color:#d0d0d0 !important;
+}
+
+/* NOSOTROS */
+.pp-about{
+    background:#171717 !important;
+}
+.pp-about-content h2,
+.pp-about-content h2 span{
+    color:#ffffff !important;
+}
+.pp-about-content > p{
+    color:#d0d0d0 !important;
+}
+.pp-year{
+    background:#080808 !important;
+    border-right:6px solid #ffffff !important;
+}
+.pp-year strong{
+    color:#ffffff !important;
+}
+.pp-year span{
+    color:#d0d0d0 !important;
+}
+.pp-check{
+    background:#ffffff !important;
+    color:#080808 !important;
+}
+.pp-value strong{
+    color:#ffffff !important;
+}
+.pp-value span{
+    color:#c5c5c5 !important;
+}
+
+/* CINTA */
+.pp-marquee{
+    background:#f4f5f6 !important;
+    border-top:2px solid #ffffff !important;
+    border-bottom:2px solid #080808 !important;
+}
+.pp-marquee-track,
+.pp-marquee-track span{
+    color:#050505 !important;
+    font-weight:900 !important;
+}
+
+/* GALERÍA / PROMOCIONES */
+#galeria,
+#promociones{
+    background:#171717 !important;
+}
+#galeria .section-title h2,
+#promociones .section-title h2{
+    color:#ffffff !important;
+}
+#galeria .section-title p,
+#promociones .section-title p{
+    color:#d0d0d0 !important;
+}
+
+/* RESERVA */
+#reserva{
+    background:#0b0b0b !important;
+}
+.reserva-box{
+    background:#1b1b1b !important;
+    border:1px solid #555 !important;
+}
+.reserva-cabecera{
+    background:#101010 !important;
+}
+.reserva-panel-titulo{
+    color:#ffffff !important;
+}
+.reserva-panel-ayuda,
+.reserva-subtitulo{
+    color:#d0d0d0 !important;
+}
+.reserva-servicio,
+.reserva-barbero,
+.reserva-dia,
+.reserva-hora{
+    background:#282828 !important;
+    color:#ffffff !important;
+    border:1px solid #626262 !important;
+}
+.reserva-servicio h3,
+.reserva-barbero h3{
+    color:#ffffff !important;
+}
+.reserva-servicio p,
+.reserva-barbero p{
+    color:#d0d0d0 !important;
+}
+.reserva-btn.dorado{
+    background:#ffffff !important;
+    color:#050505 !important;
+    border:2px solid #ffffff !important;
+}
+.reserva-btn:not(.dorado){
+    background:#111111 !important;
+    color:#ffffff !important;
+    border:2px solid #bfc6cc !important;
+}
+
+/* CONTACTO */
+#contacto{
+    background:#171717 !important;
+}
+.contacto-card{
+    background:#252525 !important;
+    border:1px solid #606060 !important;
+}
+.contacto-card h3{
+    color:#ffffff !important;
+}
+.contacto-card p{
+    color:#d0d0d0 !important;
+}
+.contacto-card .icono{
+    color:#ffffff !important;
+}
+
+/* FOOTER */
+footer{
+    background:#050505 !important;
+    color:#d0d0d0 !important;
+}
+footer strong{
+    color:#ffffff !important;
+}
+
+/* HAMBURGUESA */
+.pp-menu-toggle{
+    background:#171717 !important;
+    border:2px solid #aeb7bf !important;
+}
+.pp-menu-toggle span{
+    background:#ffffff !important;
+}
+
+/* MOBILE */
+@media(max-width:900px){
+    .logo span:last-child{
+        color:#ffffff !important;
+    }
+
+    .hero h1{
+        color:#ffffff !important;
+        text-shadow:0 3px 10px rgba(0,0,0,.9) !important;
+    }
+
+    .hero h1 span{
+        color:#d9dfe4 !important;
+    }
+
+    .hero p{
+        color:#ffffff !important;
+    }
+
+    .hero-small{
+        background:#d9dfe4 !important;
+        color:#080808 !important;
+        border:2px solid #ffffff !important;
+    }
+
+    .pp-section-tag{
+        background:#ffffff !important;
+        color:#080808 !important;
+    }
+
+    .btn-reservar,
+    .btn-principal,
+    .reserva-btn.dorado,
+    #servicios .btn-card{
+        background:#ffffff !important;
+        color:#080808 !important;
+    }
+
+    .btn-secundario,
+    .reserva-btn:not(.dorado){
+        background:#080808 !important;
+        color:#ffffff !important;
+    }
+}
+
+@media(max-width:430px){
+    .logo span:last-child{
+        font-size:16px !important;
+        color:#fff !important;
+    }
+}
+
 </style>
 
 </head>
@@ -1164,16 +3883,27 @@ footer strong{color:var(--gold2)}
     </a>
 
     <nav class="menu" id="mainMenu">
-        <a href="#inicio">⌂ &nbsp; Inicio</a>
-        <a href="#servicios">✂ &nbsp; Servicios</a>
-        <a href="#barberos">♙ &nbsp; Barberos</a>
-        <a href="#galeria">▣ &nbsp; Galería</a>
-        <a href="#promociones">◇ &nbsp; Promociones</a>
-        <a href="#contacto">◌ &nbsp; Contacto</a>
-        <a href="#reserva">▦ &nbsp; Reserva</a>
+        <a href="#inicio">INICIO</a>
+        <a href="#servicios">SERVICIOS</a>
+        <a href="#nosotros">NOSOTROS</a>
+        <a href="#galeria">GALERÍA</a>
+        <a href="#barberos">BARBEROS</a>
+        <a href="#contacto">CONTACTOS</a>
     </nav>
 
     <a href="#reserva" class="btn-reservar">RESERVA TU CITA</a>
+
+    <button
+        type="button"
+        class="pp-menu-toggle"
+        id="ppMenuToggle"
+        aria-label="Abrir menú"
+        aria-expanded="false"
+    >
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
 
 </header>
 
@@ -1188,17 +3918,17 @@ footer strong{color:var(--gold2)}
 
 <section class="hero" id="inicio">
     <div class="hero-content">
-        <div class="hero-small" id="heroNombre">CLUB PONTE PERRO · BARBERÍA URBANA</div>
+        <div class="hero-small" id="heroNombre">BARBERÍA URBANA · LA PAZ, BOLIVIA</div>
 
         <h1>
-            NO ES SOLO<br>
-            <span>UN CORTE.</span>
-            <br>
-            ES TU <span>ESTILO.</span>
+            PONTE<br>
+            <span>PERRO,</span><br>
+            SALÍ CON<br>
+            <span>ESTILO.</span>
         </h1>
 
         <p id="heroDescripcion">
-            Cortes que hablan por ti. Barba impecable, estilo urbano y actitud de barrio.
+            Cortes con precisión, actitud urbana y un estilo hecho para ti.
         </p>
 
         <div class="hero-buttons">
@@ -1208,6 +3938,23 @@ footer strong{color:var(--gold2)}
     </div>
 </section>
 
+<!-- =====================================================
+     MARQUESINA / IDENTIDAD
+===================================================== -->
+<div class="pp-marquee" aria-label="Ponte Perro">
+    <div class="pp-marquee-track">
+        <span>✦ NAVAJA</span>
+        <span>✦ RITUAL PREMIUM</span>
+        <span>✦ LA PAZ · BOLIVIA</span>
+        <span>✦ PONTE PERRO</span>
+        <span>✦ SKIN FADES</span>
+        <span>✦ CORTES</span>
+        <span>✦ BARBAS</span>
+        <span>✦ NAVAJA</span>
+        <span>✦ RITUAL PREMIUM</span>
+        <span>✦ PONTE PERRO</span>
+    </div>
+</div>
 
 <!-- =====================================================
      SERVICIOS
@@ -1218,12 +3965,13 @@ footer strong{color:var(--gold2)}
 
     <div class="section-title">
 
+        <div class="pp-section-tag">LO MÁS PEDIDO</div>
         <h2>
-            Servicios
+            SERVICIOS DESTACADOS
         </h2>
 
         <p>
-            Calidad, precisión y estilo.
+            Cortes, fades y barba. El precio se muestra según el barbero que elijas.
         </p>
 
     </div>
@@ -1369,11 +4117,11 @@ footer strong{color:var(--gold2)}
 
             <div class="reserva-pasos">
                 <div class="reserva-paso activo" data-reserva-paso="1">
-                    <span class="numero">1</span><span>Servicio</span>
+                    <span class="numero">1</span><span>Barbero</span>
                 </div>
                 <div class="reserva-linea"></div>
                 <div class="reserva-paso" data-reserva-paso="2">
-                    <span class="numero">2</span><span>Barbero y turno</span>
+                    <span class="numero">2</span><span>Servicio y turno</span>
                 </div>
                 <div class="reserva-linea"></div>
                 <div class="reserva-paso" data-reserva-paso="3">
@@ -1388,23 +4136,12 @@ footer strong{color:var(--gold2)}
 
                 <!-- PASO 1 -->
                 <div class="reserva-panel activo" data-reserva-panel="1">
-                    <div class="reserva-panel-titulo">ELEGÍ TU SERVICIO</div>
 
-                    <div class="reserva-servicios-grid" id="bookingServices">
-                        <div class="vacio">Cargando servicios...</div>
+                    <div class="reserva-panel-titulo">ELEGÍ TU BARBERO</div>
+
+                    <div class="reserva-panel-ayuda">
+                        Primero elegí quién realizará tu servicio.
                     </div>
-
-                    <div class="reserva-acciones">
-                        <span></span>
-                        <button type="button" class="reserva-btn dorado" id="reservaNext1">
-                            CONTINUAR →
-                        </button>
-                    </div>
-                </div>
-
-                <!-- PASO 2 -->
-                <div class="reserva-panel" data-reserva-panel="2">
-                    <div class="reserva-panel-titulo">ELEGÍ TU BARBERO Y TURNO</div>
 
                     <div class="reserva-barberos-grid" id="bookingBarbers">
                         <div class="vacio">Cargando barberos...</div>
@@ -1412,18 +4149,44 @@ footer strong{color:var(--gold2)}
 
                     <div class="barbero-perfil-reserva" id="barberProfileReserva" style="display:none"></div>
 
+                    <div class="reserva-acciones">
+                        <span></span>
+                        <button type="button" class="reserva-btn dorado" id="reservaNext1">
+                            CONTINUAR →
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- PASO 2 -->
+                <div class="reserva-panel" data-reserva-panel="2">
+
+                    <div class="reserva-panel-titulo">ELEGÍ SERVICIO Y TURNO</div>
+
+                    <div class="reserva-seleccion-resumen" id="barberoSeleccionadoMini">
+                        <span>BARBERO</span>
+                        <strong>Selecciona un barbero</strong>
+                    </div>
+
+                    <div class="reserva-subtitulo">SERVICIOS DISPONIBLES</div>
+
+                    <div class="reserva-servicios-grid" id="bookingServices">
+                        <div class="vacio">Selecciona primero un barbero.</div>
+                    </div>
+
                     <div class="reserva-subtitulo">ELEGÍ EL DÍA</div>
                     <div class="reserva-dias" id="reservaDias"></div>
 
                     <div class="reserva-subtitulo">ELEGÍ EL HORARIO</div>
                     <div class="reserva-horas" id="reservaHoras">
-                        <div class="vacio">Selecciona barbero y día.</div>
+                        <div class="vacio">Selecciona un servicio y un día.</div>
                     </div>
 
                     <div class="reserva-acciones">
                         <button type="button" class="reserva-btn" id="reservaBack2">← ATRÁS</button>
                         <button type="button" class="reserva-btn dorado" id="reservaNext2">CONTINUAR →</button>
                     </div>
+
                 </div>
 
                 <!-- PASO 3 -->
@@ -2276,33 +5039,27 @@ function configurarRedSocial(
 
 async function cargarServicios() {
 
-    const lista =
-        document.getElementById("serviciosLista");
+    const lista = document.getElementById("serviciosLista");
 
     try {
 
-        const respuesta =
-            await fetch("/api/servicios");
+        const respuesta = await fetch("/api/servicios");
 
         if (!respuesta.ok) {
             throw new Error("Error al cargar servicios");
         }
 
-        const servicios =
-            await respuesta.json();
+        const servicios = await respuesta.json();
 
-        const activos =
-            servicios.filter(
-                servicio =>
-                    Number(servicio.estado) === 1 ||
-                    servicio.estado === true
-            );
+        const activos = Array.isArray(servicios)
+            ? servicios.filter(servicio =>
+                Number(servicio.estado) === 1 ||
+                servicio.estado === true
+            )
+            : [];
 
         if (!activos.length) {
-            mostrarVacio(
-                lista,
-                "No hay servicios disponibles."
-            );
+            mostrarVacio(lista, "No hay servicios disponibles.");
             return;
         }
 
@@ -2310,9 +5067,7 @@ async function cargarServicios() {
 
         activos.forEach(servicio => {
 
-            const card =
-                document.createElement("div");
-
+            const card = document.createElement("div");
             card.className = "card";
 
             const foto =
@@ -2321,66 +5076,68 @@ async function cargarServicios() {
                 servicio.url ||
                 "";
 
-            const imagen =
+                        const imagen =
                 foto
-                ? `
+                    ? `
                     <img
                         class="card-imagen"
                         src="${escapeHTML(foto)}"
                         alt="${escapeHTML(servicio.nombre)}"
                         loading="lazy"
                         onerror="
-                            this.style.display='none';
-                            this.nextElementSibling.style.display='flex';
+                            this.onerror=null;
+                            this.src='/images/servicio-placeholder.png';
+                            this.classList.add('imagen-placeholder');
                         "
                     >
-                    <div
-                        class="servicio-sin-imagen"
-                        style="display:none;"
-                    >✂️</div>
                 `
-                : `
-                    <div class="servicio-sin-imagen">✂️</div>
+                    : `
+                    <div class="servicio-sin-imagen">✂</div>
                 `;
 
             card.innerHTML = `
-
                 ${imagen}
 
-                <h3>
-                    ✂️ ${escapeHTML(servicio.nombre)}
-                </h3>
+                <div class="card-contenido">
 
-                <p>
-                    ${escapeHTML(
-                        servicio.descripcion ||
-                        "Servicio profesional."
-                    )}
-                </p>
+                    <div class="card-numero">
+                        ${String(servicio.id_servicio).padStart(2, "0")}
+                    </div>
 
-                <div class="precio">
-                    Bs ${Number(
-                        servicio.precio || 0
-                    ).toFixed(2)}
+                    <h3>
+                        ${escapeHTML(servicio.nombre)}
+                    </h3>
+
+                    <p>
+                        ${escapeHTML(
+                            servicio.descripcion ||
+                            "Servicio profesional de barbería."
+                        )}
+                    </p>
+
+                    <div class="servicio-publico-meta">
+                        <span>
+                            ${Number(servicio.duracion || 0)} MIN
+                        </span>
+
+                        <span class="precio-segun-barbero">
+                            PRECIO SEGÚN BARBERO
+                        </span>
+                    </div>
+
+                    <a href="#reserva" class="btn-card">
+                        ELEGIR BARBERO →
+                    </a>
+
                 </div>
-
-                <p style="color:#888;font-size:13px;margin-top:7px;">
-                    ⏱️ ${Number(servicio.duracion || 0)} minutos
-                </p>
-
-                <a
-                    href="#reserva"
-                    class="btn-card"
-                >
-                    RESERVAR
-                </a>
-
             `;
 
             lista.appendChild(card);
         });
 
-        cargarServiciosReserva(activos);
+        // Los servicios generales se conservan como catálogo,
+        // pero NO mostramos su precio porque cada barbero tiene el suyo.
+        serviciosReservaData = activos;
 
     }
     catch (error) {
@@ -2395,47 +5152,195 @@ async function cargarServicios() {
 }
 
 
-
 function cargarServiciosReserva(servicios) {
 
-    serviciosReservaData = Array.isArray(servicios) ? servicios : [];
+    serviciosReservaData =
+        Array.isArray(servicios)
+            ? servicios
+            : [];
 
-    const box = document.getElementById("bookingServices");
+    const box =
+        document.getElementById("bookingServices");
+
     if (!box) return;
 
-    box.innerHTML = serviciosReservaData.length
-        ? serviciosReservaData.map(servicio => `
-            <button type="button"
-                class="reserva-servicio ${seleccionReserva.servicio && String(seleccionReserva.servicio.id_servicio)===String(servicio.id_servicio) ? "seleccionado" : ""}"
-                data-booking-service="${escapeHTML(servicio.id_servicio)}">
+    if (!seleccionReserva.barbero) {
 
-                <h3>${escapeHTML(servicio.nombre)}</h3>
+        box.innerHTML = `
+            <div class="vacio">
+                💈 Selecciona primero un barbero para ver sus servicios y precios.
+            </div>
+        `;
 
-                <p>${escapeHTML(servicio.descripcion || "Servicio profesional.")}</p>
+        return;
+    }
+
+    if (!serviciosReservaData.length) {
+
+        box.innerHTML = `
+            <div class="vacio">
+                Este barbero todavía no tiene servicios asignados.
+            </div>
+        `;
+
+        return;
+    }
+
+    box.innerHTML =
+        serviciosReservaData.map(servicio => `
+
+            <button
+                type="button"
+                class="reserva-servicio ${
+                    seleccionReserva.servicio &&
+                    String(seleccionReserva.servicio.id_servicio) ===
+                    String(servicio.id_servicio)
+                        ? "seleccionado"
+                        : ""
+                }"
+                data-booking-service="${escapeHTML(servicio.id_servicio)}"
+            >
+
+                <div class="servicio-booking-top">
+                    <span class="servicio-booking-icon">✂</span>
+                    <span class="servicio-booking-duracion">
+                        ${Number(servicio.duracion || 0)} MIN
+                    </span>
+                </div>
+
+                <h3>
+                    ${escapeHTML(servicio.nombre)}
+                </h3>
+
+                <p>
+                    ${escapeHTML(
+                        servicio.descripcion ||
+                        "Servicio profesional."
+                    )}
+                </p>
 
                 <div class="reserva-servicio-meta">
-                    <span class="reserva-precio">Bs ${Number(servicio.precio || 0).toFixed(0)}</span>
-                    <span class="reserva-duracion">${Number(servicio.duracion || 0)} MIN</span>
-                </div>
-            </button>
-        `).join("")
-        : `<div class="vacio">No hay servicios disponibles.</div>`;
 
-    box.querySelectorAll("[data-booking-service]").forEach(btn => {
-        btn.addEventListener("click", () => {
-            seleccionReserva.servicio = serviciosReservaData.find(
-                servicio => String(servicio.id_servicio) === String(btn.dataset.bookingService)
+                    <span class="reserva-precio">
+                        Bs ${Number(servicio.precio || 0).toFixed(2)}
+                    </span>
+
+                    <span class="reserva-elegir">
+                        ELEGIR →
+                    </span>
+
+                </div>
+
+            </button>
+
+        `).join("");
+
+    box
+        .querySelectorAll("[data-booking-service]")
+        .forEach(btn => {
+
+            btn.addEventListener("click", () => {
+
+                seleccionReserva.servicio =
+                    serviciosReservaData.find(
+                        servicio =>
+                            String(servicio.id_servicio) ===
+                            String(btn.dataset.bookingService)
+                    ) || null;
+
+                seleccionReserva.hora = "";
+
+                pagoRealizado = false;
+
+                actualizarEstadoPagoUI();
+
+                cargarServiciosReserva(
+                    serviciosReservaData
+                );
+
+                renderHorasReserva();
+
+                actualizarResumenReserva();
+
+                actualizarPreviewWhatsApp();
+
+            });
+
+        });
+}
+
+
+async function cargarServiciosDelBarberoReserva(
+    idBarbero
+) {
+
+    const box =
+        document.getElementById("bookingServices");
+
+    if (!box) return;
+
+    box.innerHTML = `
+        <div class="vacio">
+            Cargando servicios de este barbero...
+        </div>
+    `;
+
+    try {
+
+        const respuesta =
+            await fetch(
+                `/api/barberos/${Number(idBarbero)}/servicios`
             );
 
-            seleccionReserva.hora = "";
-            pagoRealizado = false;
-            actualizarEstadoPagoUI();
-            cargarServiciosReserva(serviciosReservaData);
-            renderHorasReserva();
-            actualizarResumenReserva();
-            actualizarPreviewWhatsApp();
-        });
-    });
+        const datos =
+            await respuesta.json();
+
+        if (!respuesta.ok) {
+
+            throw new Error(
+                datos.error ||
+                "No se pudieron cargar los servicios del barbero."
+            );
+
+        }
+
+        if (!Array.isArray(datos)) {
+
+            throw new Error(
+                "La respuesta de servicios no es válida."
+            );
+
+        }
+
+        serviciosReservaData =
+            datos.filter(servicio =>
+                Number(servicio.estado) === 1 ||
+                servicio.estado === true ||
+                servicio.estado === undefined
+            );
+
+        // El precio aquí viene de barbero_servicio.
+        cargarServiciosReserva(
+            serviciosReservaData
+        );
+
+    }
+    catch (error) {
+
+        console.error(
+            "❌ Error servicios del barbero:",
+            error
+        );
+
+        serviciosReservaData = [];
+
+        box.innerHTML = `
+            <div class="vacio error-vacio">
+                ❌ ${escapeHTML(error.message)}
+            </div>
+        `;
+
+    }
 }
 
 
@@ -2469,18 +5374,31 @@ function renderBookingBarbers() {
         : `<div class="vacio">No hay barberos disponibles.</div>`;
 
     box.querySelectorAll("[data-booking-barber]").forEach(btn => {
-        btn.addEventListener("click", () => {
+        btn.addEventListener("click", async () => {
 
             seleccionReserva.barbero = barberosReservaData.find(
                 barbero => String(barbero.id_barbero) === String(btn.dataset.bookingBarber)
-            );
+            ) || null;
 
+            seleccionReserva.servicio = null;
+            seleccionReserva.fecha = "";
             seleccionReserva.hora = "";
+
             pagoRealizado = false;
+
             actualizarEstadoPagoUI();
 
             renderBookingBarbers();
             renderBarberoPerfilReserva();
+
+            actualizarBarberoSeleccionadoMini();
+
+            // Carga los servicios y precios específicos de este barbero.
+            await cargarServiciosDelBarberoReserva(
+                seleccionReserva.barbero.id_barbero
+            );
+
+            renderDiasReserva();
             renderHorasReserva();
             actualizarResumenReserva();
             actualizarPreviewWhatsApp();
@@ -2490,6 +5408,36 @@ function renderBookingBarbers() {
 
 
 function renderBarberoPerfilReserva() {
+
+function actualizarBarberoSeleccionadoMini() {
+
+    const box =
+        document.getElementById(
+            "barberoSeleccionadoMini"
+        );
+
+    if (!box) return;
+
+    if (!seleccionReserva.barbero) {
+
+        box.innerHTML = `
+            <span>BARBERO</span>
+            <strong>Selecciona un barbero</strong>
+        `;
+
+        return;
+    }
+
+    box.innerHTML = `
+        <span>BARBERO SELECCIONADO</span>
+        <strong>
+            ${escapeHTML(
+                seleccionReserva.barbero.nombre
+            )}
+        </strong>
+    `;
+}
+
 
     const box = document.getElementById("barberProfileReserva");
     const barbero = seleccionReserva.barbero;
@@ -3637,12 +6585,20 @@ function crearMensajeWhatsApp(datos) {
 }
 
 
-document.getElementById("reservaNext1")?.addEventListener("click", () => {
+document.getElementById("reservaNext1")?.addEventListener("click", async () => {
 
-    if (!seleccionReserva.servicio) {
-        alert("Selecciona un servicio para continuar.");
+    if (!seleccionReserva.barbero) {
+
+        alert(
+            "Selecciona primero un barbero."
+        );
+
         return;
     }
+
+    await cargarServiciosDelBarberoReserva(
+        seleccionReserva.barbero.id_barbero
+    );
 
     mostrarPasoReserva(2);
 });
@@ -3656,23 +6612,51 @@ document.getElementById("reservaBack2")?.addEventListener("click", () => {
 document.getElementById("reservaNext2")?.addEventListener("click", () => {
 
     if (!seleccionReserva.barbero) {
-        alert("Selecciona un barbero.");
+
+        alert(
+            "Selecciona un barbero."
+        );
+
+        mostrarPasoReserva(1);
+
+        return;
+    }
+
+    if (!seleccionReserva.servicio) {
+
+        alert(
+            "Selecciona un servicio de este barbero."
+        );
+
         return;
     }
 
     if (!seleccionReserva.fecha) {
-        alert("Selecciona un día.");
+
+        alert(
+            "Selecciona un día."
+        );
+
         return;
     }
 
     if (!seleccionReserva.hora) {
-        alert("Selecciona un horario disponible.");
+
+        alert(
+            "Selecciona un horario disponible."
+        );
+
         return;
     }
 
     pagoRealizado = false;
+
     actualizarEstadoPagoUI();
-    cargarQrPagoPublico(window.configuracionPublica || {});
+
+    cargarQrPagoPublico(
+        window.configuracionPublica || {}
+    );
+
     actualizarResumenReserva();
 
     mostrarPasoReserva(3);
@@ -4336,6 +7320,94 @@ document.addEventListener("DOMContentLoaded",()=>{
 
     document.addEventListener("DOMContentLoaded", cargarRedesBarberiaFooter);
 })();
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    document.querySelectorAll('.btn-card[href="#reserva"]').forEach(function (btn) {
+
+        btn.addEventListener("click", function () {
+
+            setTimeout(function () {
+
+                if (typeof mostrarPasoReserva === "function") {
+                    mostrarPasoReserva(1);
+                }
+
+            }, 50);
+
+        });
+
+    });
+
+});
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const toggle = document.getElementById("ppMenuToggle");
+    const menu = document.getElementById("mainMenu");
+
+    if (!toggle || !menu) return;
+
+    toggle.addEventListener("click", function () {
+
+        const abierto =
+            menu.classList.toggle("menu-abierto");
+
+        toggle.classList.toggle("activo", abierto);
+
+        toggle.setAttribute(
+            "aria-expanded",
+            abierto ? "true" : "false"
+        );
+
+        toggle.setAttribute(
+            "aria-label",
+            abierto ? "Cerrar menú" : "Abrir menú"
+        );
+    });
+
+    menu.querySelectorAll("a").forEach(function (link) {
+
+        link.addEventListener("click", function () {
+
+            menu.classList.remove("menu-abierto");
+            toggle.classList.remove("activo");
+
+            toggle.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            toggle.setAttribute(
+                "aria-label",
+                "Abrir menú"
+            );
+        });
+
+    });
+
+    window.addEventListener("resize", function () {
+
+        if (window.innerWidth > 900) {
+
+            menu.classList.remove("menu-abierto");
+            toggle.classList.remove("activo");
+
+            toggle.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+        }
+
+    });
+
+});
 </script>
 
 </body>

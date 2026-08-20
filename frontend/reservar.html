@@ -895,7 +895,141 @@
 
         }
 
-    </style>
+    
+/* ==================================
+   PAGO / QR / ADELANTO
+================================== */
+
+.pago-box{
+    background:#222;
+    border:1px solid #444;
+    border-radius:10px;
+    padding:25px;
+    margin-top:10px;
+}
+
+.pago-titulo{
+    color:#d4af37;
+    font-size:20px;
+    font-weight:900;
+    margin-bottom:8px;
+}
+
+.pago-subtitulo{
+    color:#999;
+    font-size:14px;
+    line-height:1.6;
+    margin-bottom:18px;
+}
+
+.pago-qr-wrap{
+    min-height:240px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#111;
+    border:1px solid #333;
+    border-radius:10px;
+    padding:15px;
+}
+
+.pago-qr-wrap img{
+    width:240px;
+    height:240px;
+    max-width:100%;
+    object-fit:contain;
+    background:white;
+    border-radius:6px;
+}
+
+.pago-qr-cargando,
+.pago-qr-error{
+    color:#999;
+    text-align:center;
+    padding:25px;
+}
+
+.pago-qr-error{
+    color:#ff8b8b;
+}
+
+.pago-monto{
+    color:#d4af37;
+    font-size:24px;
+    font-weight:900;
+    text-align:center;
+    margin-top:18px;
+}
+
+.pago-detalle{
+    text-align:center;
+    color:#999;
+    font-size:13px;
+    line-height:1.8;
+    margin-top:7px;
+}
+
+.pago-check{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:20px;
+    padding:14px;
+    background:#181818;
+    border:1px solid #444;
+    border-radius:8px;
+    cursor:pointer;
+    color:white;
+    font-weight:bold;
+}
+
+.pago-check input{
+    width:20px;
+    height:20px;
+    accent-color:#d4af37;
+    cursor:pointer;
+}
+
+.pago-nota{
+    color:#888;
+    font-size:12px;
+    line-height:1.6;
+    margin-top:12px;
+}
+
+.whatsapp-box{
+    margin-top:18px;
+    padding:18px;
+    background:#181818;
+    border:1px solid #333;
+    border-radius:10px;
+}
+
+.whatsapp-titulo{
+    color:#4caf50;
+    font-weight:900;
+}
+
+.whatsapp-preview{
+    margin-top:10px;
+    color:#999;
+    font-size:13px;
+    line-height:1.6;
+}
+
+.wa-enlace{
+    display:inline-block;
+    margin-top:15px;
+    padding:12px 18px;
+    background:#25D366;
+    color:#111;
+    border-radius:7px;
+    text-decoration:none;
+    font-weight:900;
+}
+
+
+</style>
 
 </head>
 
@@ -962,7 +1096,7 @@
             class="paso activo"
             id="paso1"
         >
-            1. Servicio
+            1. Barbero
         </div>
 
 
@@ -970,7 +1104,7 @@
             class="paso"
             id="paso2"
         >
-            2. Barbero
+            2. Servicio
         </div>
 
 
@@ -1006,7 +1140,7 @@
             </h2>
 
             <p class="seccion-descripcion">
-                Selecciona el servicio que deseas realizarte.
+                Selecciona primero tu barbero para ver los servicios y precios disponibles para él.
             </p>
 
 
@@ -1016,7 +1150,7 @@
             >
 
                 <div class="cargando">
-                    Cargando servicios...
+                    Selecciona un barbero para cargar sus servicios...
                 </div>
 
             </div>
@@ -1035,7 +1169,7 @@
             </h2>
 
             <p class="seccion-descripcion">
-                Selecciona al profesional que prefieras.
+                Selecciona al profesional. Sus servicios y precios se cargarán automáticamente.
             </p>
 
 
@@ -1198,6 +1332,90 @@
 
 
         <!-- ============================
+             PAGO / QR / ADELANTO
+        ============================= -->
+
+        <section class="seccion">
+
+            <div class="pago-box">
+
+                <div class="pago-titulo">
+                    💳 ADELANTO OBLIGATORIO
+                </div>
+
+                <div class="pago-subtitulo">
+                    Escanea el QR del dueño y realiza el adelanto antes de confirmar tu reserva.
+                    El saldo restante se paga en la barbería.
+                </div>
+
+                <div
+                    class="pago-qr-wrap"
+                    id="pagoQrWrap"
+                >
+                    <div class="pago-qr-cargando">
+                        Cargando QR de pago...
+                    </div>
+                </div>
+
+                <div
+                    class="pago-monto"
+                    id="pagoMonto"
+                >
+                    ADELANTO NO CONFIGURADO
+                </div>
+
+                <div
+                    class="pago-detalle"
+                    id="pagoDetalle"
+                >
+                    Total: Bs 0.00 · Adelanto: Bs 0.00 · Saldo: Bs 0.00
+                </div>
+
+                <label class="pago-check">
+
+                    <input
+                        type="checkbox"
+                        id="pagoRealizado"
+                    >
+
+                    <span>
+                        Ya realicé el adelanto
+                    </span>
+
+                </label>
+
+                <div class="pago-nota">
+                    El adelanto es obligatorio para confirmar la reserva.
+                    El QR corresponde al medio de pago configurado por el dueño.
+                    El saldo restante se paga al realizar el servicio.
+                </div>
+
+            </div>
+
+            <div class="whatsapp-box">
+
+                <div class="whatsapp-titulo">
+                    📱 WHATSAPP
+                </div>
+
+                <div class="whatsapp-preview">
+                    Después de registrar la reserva podrás enviarla al WhatsApp del dueño.
+                </div>
+
+                <div
+                    id="whatsappPreview"
+                    class="whatsapp-preview"
+                >
+                    Completa los datos para generar el mensaje.
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ============================
              RESUMEN
         ============================= -->
 
@@ -1320,9 +1538,19 @@ let servicioSeleccionado = null;
 
 let barberoSeleccionado = null;
 
+let serviciosBarbero = [];
+
 let fechaSeleccionada = null;
 
 let horaSeleccionada = null;
+
+let configuracionPublica = null;
+
+let qrPagoPublico = "";
+
+let pagoRealizado = false;
+
+let montoAdelantoPublico = 0;
 
 
 // ========================================
@@ -1391,6 +1619,239 @@ fechaInput.min =
 
 
 // ========================================
+// CONFIGURACIÓN Y PAGO
+// ========================================
+
+async function cargarConfiguracion(){
+
+    try{
+
+        const respuesta =
+            await fetch("/api/configuracion");
+
+        if(!respuesta.ok){
+            throw new Error("No se pudo cargar la configuración de pago.");
+        }
+
+        configuracionPublica =
+            await respuesta.json();
+
+        window.configuracionPublica =
+            configuracionPublica;
+
+        cargarQrPagoPublico();
+
+    }
+    catch(error){
+
+        console.error(
+            "❌ Error al cargar configuración:",
+            error
+        );
+
+        const wrap =
+            document.getElementById("pagoQrWrap");
+
+        if(wrap){
+
+            wrap.innerHTML = `
+                <div class="pago-qr-error">
+                    ❌ No se pudo cargar la configuración de pago.
+                </div>
+            `;
+
+        }
+
+    }
+
+}
+
+
+function cargarQrPagoPublico(){
+
+    const wrap =
+        document.getElementById("pagoQrWrap");
+
+    const monto =
+        document.getElementById("pagoMonto");
+
+    const detalle =
+        document.getElementById("pagoDetalle");
+
+    if(!wrap) return;
+
+    const configuracion =
+        configuracionPublica || {};
+
+    qrPagoPublico =
+        configuracion.qr_pago ||
+        configuracion.qr ||
+        configuracion.qr_pago_url ||
+        "";
+
+    montoAdelantoPublico =
+        Number(
+            configuracion.monto_adelanto ||
+            configuracion.adelanto_monto ||
+            0
+        ) || 0;
+
+    const total =
+        Number(
+            servicioSeleccionado?.precio || 0
+        ) || 0;
+
+    const adelanto =
+        total > 0
+            ? Math.min(
+                montoAdelantoPublico,
+                total
+            )
+            : montoAdelantoPublico;
+
+    const saldo =
+        Math.max(
+            0,
+            total - adelanto
+        );
+
+    if(monto){
+
+        monto.textContent =
+            adelanto > 0
+                ? `Bs ${adelanto.toFixed(2)} DE ADELANTO`
+                : "ADELANTO NO CONFIGURADO";
+
+    }
+
+    if(detalle){
+
+        detalle.innerHTML =
+            `Total: <strong>Bs ${total.toFixed(2)}</strong> · ` +
+            `Adelanto: <strong>Bs ${adelanto.toFixed(2)}</strong> · ` +
+            `Saldo: <strong>Bs ${saldo.toFixed(2)}</strong>`;
+
+    }
+
+    if(qrPagoPublico){
+
+        wrap.innerHTML = `
+            <img
+                src="${escapeHTML(qrPagoPublico)}"
+                alt="QR de pago del dueño"
+                onerror="
+                    this.parentElement.innerHTML =
+                    '<div class=&quot;pago-qr-error&quot;>❌ No se pudo cargar el QR de pago.</div>'
+                "
+            >
+        `;
+
+    }
+    else{
+
+        wrap.innerHTML = `
+            <div class="pago-qr-error">
+                ❌ El dueño todavía no configuró su QR de pago.
+            </div>
+        `;
+
+    }
+
+    actualizarPreviewPago();
+
+}
+
+
+function actualizarPreviewPago(){
+
+    const preview =
+        document.getElementById("whatsappPreview");
+
+    if(!preview) return;
+
+    const nombre =
+        document.getElementById("nombreCliente")?.value.trim() || "";
+
+    const telefono =
+        document.getElementById("telefonoCliente")?.value.trim() || "";
+
+    if(
+        !servicioSeleccionado ||
+        !barberoSeleccionado ||
+        !fechaSeleccionada ||
+        !horaSeleccionada ||
+        !nombre ||
+        !telefono
+    ){
+
+        preview.textContent =
+            "Completa los datos para generar el mensaje.";
+
+        return;
+
+    }
+
+    const total =
+        Number(servicioSeleccionado.precio || 0);
+
+    const adelanto =
+        Math.min(
+            Number(montoAdelantoPublico || 0),
+            total
+        );
+
+    preview.innerHTML = `
+        Reserva para ${escapeHTML(nombre)}
+        · ${escapeHTML(servicioSeleccionado.nombre)}
+        · ${escapeHTML(barberoSeleccionado.nombre)}
+        · ${formatearFecha(fechaSeleccionada)}
+        ${escapeHTML(horaSeleccionada)}
+        · Total Bs ${total.toFixed(2)}
+        · Adelanto Bs ${adelanto.toFixed(2)}
+    `;
+
+}
+
+
+function obtenerNumeroWhatsApp(){
+
+    const configuracion =
+        configuracionPublica || {};
+
+    return String(
+        configuracion.whatsapp ||
+        configuracion.telefono ||
+        ""
+    ).replace(/\D/g,"");
+
+}
+
+
+function crearMensajeWhatsApp(datos){
+
+    return `Hola 👋, hice una reserva en la barbería.
+
+✂️ Servicio: ${datos.servicio}
+💈 Barbero: ${datos.barbero}
+💰 Total: Bs ${datos.total.toFixed(2)}
+💳 Adelanto: Bs ${datos.adelanto.toFixed(2)}
+💵 Saldo: Bs ${datos.saldo.toFixed(2)}
+📅 Fecha: ${datos.fecha}
+🕐 Hora: ${datos.hora}
+👤 Cliente: ${datos.nombre}
+📱 WhatsApp: ${datos.telefono}
+🎫 Código de reserva: ${datos.codigo}` +
+        (
+            datos.observaciones
+                ? `\n📝 Observaciones: ${datos.observaciones}`
+                : ""
+        );
+
+}
+
+
+
+// ========================================
 // CARGAR SERVICIOS
 // ========================================
 
@@ -1418,6 +1879,8 @@ async function cargarServicios() {
 
 
         mostrarServicios();
+        cargarQrPagoPublico();
+        actualizarPreviewPago();
 
     }
 
@@ -1446,167 +1909,118 @@ async function cargarServicios() {
 
 function mostrarServicios() {
 
-    serviciosContenedor.innerHTML =
-        "";
+    serviciosContenedor.innerHTML = "";
 
-
-    if (
-        servicios.length === 0
-    ) {
+    if (!barberoSeleccionado) {
 
         serviciosContenedor.innerHTML = `
-
             <div class="sin-horas">
-
-                No hay servicios disponibles.
-
+                💈 Selecciona primero un barbero para ver sus servicios y precios.
             </div>
-
         `;
 
         return;
-
     }
 
+    if (serviciosBarbero.length === 0) {
 
-    servicios.forEach(
-        servicio => {
+        serviciosContenedor.innerHTML = `
+            <div class="sin-horas">
+                Este barbero todavía no tiene servicios disponibles.
+            </div>
+        `;
 
-            const elemento =
-                document.createElement(
-                    "div"
-                );
+        return;
+    }
 
+    serviciosBarbero.forEach(servicio => {
 
-            elemento.className =
-                "servicio";
+        const elemento = document.createElement("div");
+        elemento.className = "servicio";
 
+        elemento.innerHTML = `
+            <div class="servicio-icono">✂️</div>
 
-            elemento.innerHTML = `
+            <h3>${escapeHTML(servicio.nombre)}</h3>
 
-                <div class="servicio-icono">
-                    ✂️
-                </div>
+            <p>
+                ${escapeHTML(
+                    servicio.descripcion ||
+                    "Servicio profesional de barbería."
+                )}
+            </p>
 
+            <div class="servicio-info">
 
-                <h3>
-                    ${escapeHTML(
-                        servicio.nombre
-                    )}
-                </h3>
+                <span class="precio">
+                    Bs ${Number(servicio.precio).toFixed(2)}
+                </span>
 
+                <span class="duracion">
+                    ⏱️ ${Number(servicio.duracion) || 30} min
+                </span>
 
-                <p>
-                    ${
-                        escapeHTML(
-                            servicio.descripcion ||
-                            "Servicio profesional de barbería."
-                        )
-                    }
-                </p>
+            </div>
+        `;
 
+        elemento.addEventListener("click", () => {
+            seleccionarServicio(servicio, elemento);
+        });
 
-                <div class="servicio-info">
+        serviciosContenedor.appendChild(elemento);
 
-                    <span class="precio">
+    });
 
-                        Bs ${
-                            Number(
-                                servicio.precio
-                            ).toFixed(2)
-                        }
+    // Si el servicio que estaba seleccionado ya no pertenece al barbero,
+    // lo limpiamos para evitar reservar con un precio incorrecto.
+    if (
+        servicioSeleccionado &&
+        !serviciosBarbero.some(
+            s => Number(s.id_servicio) === Number(servicioSeleccionado.id_servicio)
+        )
+    ) {
+        servicioSeleccionado = null;
+        horaSeleccionada = null;
 
-                    </span>
-
-
-                    <span class="duracion">
-
-                        ⏱️ ${
-                            servicio.duracion
-                        } min
-
-                    </span>
-
-                </div>
-
-            `;
-
-
-            elemento.addEventListener(
-                "click",
-                () => {
-
-                    seleccionarServicio(
-                        servicio
-                    );
-
-                }
-            );
-
-
-            serviciosContenedor.appendChild(
-                elemento
-            );
-
-        }
-    );
+        document.getElementById("resumenServicio").textContent = "-";
+        document.getElementById("resumenPrecio").textContent = "-";
+        horasContenedor.innerHTML = `
+            <div class="sin-horas">
+                Selecciona un servicio disponible para este barbero.
+            </div>
+        `;
+    }
 
 }
-
 
 // ========================================
 // SELECCIONAR SERVICIO
 // ========================================
 
-function seleccionarServicio(
-    servicio
-) {
+function seleccionarServicio(servicio, elemento) {
 
-    servicioSeleccionado =
-        servicio;
+    servicioSeleccionado = servicio;
 
-
-    document.querySelectorAll(
-        ".servicio"
-    ).forEach(
-        elemento =>
-            elemento.classList.remove(
-                "seleccionado"
-            )
+    document.querySelectorAll(".servicio").forEach(
+        item => item.classList.remove("seleccionado")
     );
 
+    elemento.classList.add("seleccionado");
 
-    event.currentTarget.classList.add(
-        "seleccionado"
-    );
-
-
-    document.getElementById(
-        "resumenServicio"
-    ).textContent =
+    document.getElementById("resumenServicio").textContent =
         servicio.nombre;
 
+    document.getElementById("resumenPrecio").textContent =
+        `Bs ${Number(servicio.precio).toFixed(2)}`;
 
-    document.getElementById(
-        "resumenPrecio"
-    ).textContent =
-        `Bs ${
-            Number(
-                servicio.precio
-            ).toFixed(2)
-        }`;
+    horaSeleccionada = null;
 
-
-    horaSeleccionada =
-        null;
-
+    cargarQrPagoPublico();
+    actualizarPreviewPago();
 
     cargarHorariosDisponibles();
-
     actualizarPasos();
-
 }
-
 
 // ========================================
 // CARGAR BARBEROS
@@ -1765,7 +2179,65 @@ function mostrarBarberos() {
 
 
 // ========================================
+// CARGAR SERVICIOS DEL BARBERO
+// ========================================
+
+async function cargarServiciosDelBarbero(idBarbero) {
+
+    serviciosContenedor.innerHTML = `
+        <div class="cargando">
+            Cargando servicios y precios de este barbero...
+        </div>
+    `;
+
+    try {
+
+        const respuesta = await fetch(
+            `/api/barberos/${Number(idBarbero)}/servicios`
+        );
+
+        const datos = await respuesta.json();
+
+        if (!respuesta.ok) {
+            throw new Error(
+                datos.error ||
+                "No se pudieron cargar los servicios del barbero."
+            );
+        }
+
+        if (!Array.isArray(datos)) {
+            throw new Error("La respuesta de servicios del barbero no es válida.");
+        }
+
+        serviciosBarbero = datos.filter(servicio =>
+            Number(servicio.estado) === 1 ||
+            servicio.estado === true ||
+            servicio.estado === undefined
+        );
+
+        mostrarServicios();
+
+    } catch (error) {
+
+        console.error(error);
+
+        serviciosBarbero = [];
+
+        serviciosContenedor.innerHTML = `
+            <div class="sin-horas">
+                ❌ ${escapeHTML(error.message)}
+            </div>
+        `;
+
+    }
+}
+
+
+// ========================================
 // SELECCIONAR BARBERO
+// ========================================
+
+
 // ========================================
 
 function seleccionarBarbero(
@@ -1798,11 +2270,26 @@ function seleccionarBarbero(
         barbero.nombre;
 
 
-    horaSeleccionada =
-        null;
+    horaSeleccionada = null;
 
+    // Los servicios y sus precios dependen del barbero.
+    servicioSeleccionado = null;
+    document.getElementById("resumenServicio").textContent = "-";
+    document.getElementById("resumenPrecio").textContent = "-";
+    document.getElementById("resumenHora").textContent = "-";
 
-    cargarHorariosDisponibles();
+    horasContenedor.innerHTML = `
+        <div class="sin-horas">
+            Selecciona un servicio disponible para este barbero.
+        </div>
+    `;
+
+    cargarServiciosDelBarbero(
+        barbero.id_barbero
+    );
+
+    cargarQrPagoPublico();
+    actualizarPreviewPago();
 
     actualizarPasos();
 
@@ -1834,6 +2321,7 @@ fechaInput.addEventListener(
 
 
         cargarHorariosDisponibles();
+        actualizarPreviewPago();
 
         actualizarPasos();
 
@@ -2280,6 +2768,7 @@ function seleccionarHora(
     ).textContent =
         hora;
 
+    actualizarPreviewPago();
 
     actualizarPasos();
 
@@ -2298,211 +2787,257 @@ document.getElementById(
 
         ocultarMensaje();
 
-
-        if (
-            !servicioSeleccionado
-        ) {
-
+        if(!servicioSeleccionado){
             mostrarMensaje(
                 "Selecciona un servicio.",
                 "error"
             );
-
             return;
-
         }
 
-
-        if (
-            !barberoSeleccionado
-        ) {
-
+        if(!barberoSeleccionado){
             mostrarMensaje(
                 "Selecciona un barbero.",
                 "error"
             );
-
             return;
-
         }
 
-
-        if (
-            !fechaSeleccionada
-        ) {
-
+        if(!fechaSeleccionada){
             mostrarMensaje(
                 "Selecciona una fecha.",
                 "error"
             );
-
             return;
-
         }
 
-
-        if (
-            !horaSeleccionada
-        ) {
-
+        if(!horaSeleccionada){
             mostrarMensaje(
                 "Selecciona una hora disponible.",
                 "error"
             );
-
             return;
-
         }
 
+        // ==========================================
+        // QR OBLIGATORIO
+        // ==========================================
+
+        if(!qrPagoPublico){
+            mostrarMensaje(
+                "El dueño todavía no configuró el QR de pago. No se puede confirmar la reserva.",
+                "error"
+            );
+            return;
+        }
+
+        // ==========================================
+        // ADELANTO CONFIGURADO
+        // ==========================================
+
+        const totalServicio =
+            Number(
+                servicioSeleccionado.precio || 0
+            );
+
+        const montoAdelanto =
+            Math.min(
+                Number(
+                    montoAdelantoPublico || 0
+                ),
+                totalServicio
+            );
+
+        if(
+            !Number.isFinite(montoAdelanto) ||
+            montoAdelanto <= 0
+        ){
+            mostrarMensaje(
+                "El monto del adelanto no está configurado correctamente.",
+                "error"
+            );
+            return;
+        }
+
+        // ==========================================
+        // CONFIRMAR PAGO
+        // ==========================================
+
+        if(!pagoRealizado){
+
+            mostrarMensaje(
+                "Debes marcar “Ya realicé el adelanto” para confirmar la reserva.",
+                "error"
+            );
+
+            document.getElementById(
+                "pagoRealizado"
+            )?.focus();
+
+            return;
+        }
 
         const nombre =
             document.getElementById(
                 "nombreCliente"
             ).value.trim();
 
-
         const telefono =
             document.getElementById(
                 "telefonoCliente"
             ).value.trim();
-
 
         const correo =
             document.getElementById(
                 "correoCliente"
             ).value.trim();
 
-
         const observaciones =
             document.getElementById(
                 "observaciones"
             ).value.trim();
 
-
-        if (!nombre) {
-
+        if(!nombre){
             mostrarMensaje(
                 "Ingresa tu nombre completo.",
                 "error"
             );
-
             return;
-
         }
 
-
-        if (!telefono) {
-
+        if(!telefono){
             mostrarMensaje(
                 "Ingresa tu número de teléfono.",
                 "error"
             );
-
             return;
-
         }
-
 
         const boton =
             document.getElementById(
                 "btnReservar"
             );
 
-
-        boton.disabled =
-            true;
-
-
+        boton.disabled = true;
         boton.textContent =
             "REGISTRANDO RESERVA...";
 
+        try{
 
-        try {
+            // ==========================================
+            // CREAR / OBTENER CLIENTE
+            // ==========================================
 
+            let idCliente = null;
 
-            // ==============================
-            // CREAR CLIENTE
-            // ==============================
-
-            const respuestaCliente =
+            const respuestaClientes =
                 await fetch(
-                    "/api/clientes",
-                    {
-
-                        method:
-                            "POST",
-
-                        headers: {
-
-                            "Content-Type":
-                                "application/json"
-
-                        },
-
-                        body:
-                            JSON.stringify({
-
-                                nombre:
-                                    nombre,
-
-                                telefono:
-                                    telefono,
-
-                                correo:
-                                    correo || null
-
-                            })
-
-                    }
+                    "/api/clientes"
                 );
 
+            if(respuestaClientes.ok){
 
-            const cliente =
-                await respuestaCliente.json();
+                const clientes =
+                    await respuestaClientes.json();
 
+                if(Array.isArray(clientes)){
 
-            if (
-                !respuestaCliente.ok
-            ) {
+                    const existente =
+                        clientes.find(
+                            cliente =>
+                                String(
+                                    cliente.telefono
+                                ) ===
+                                String(
+                                    telefono
+                                )
+                        );
+
+                    if(existente){
+                        idCliente =
+                            existente.id_cliente;
+                    }
+
+                }
+
+            }
+
+            if(!idCliente){
+
+                const crearCliente =
+                    await fetch(
+                        "/api/clientes",
+                        {
+                            method:"POST",
+                            headers:{
+                                "Content-Type":
+                                    "application/json"
+                            },
+                            body:
+                                JSON.stringify({
+                                    nombre:
+                                        nombre,
+                                    telefono:
+                                        telefono,
+                                    correo:
+                                        correo || null
+                                })
+                        }
+                    );
+
+                const cliente =
+                    await crearCliente.json();
+
+                if(!crearCliente.ok){
+
+                    throw new Error(
+                        cliente.error ||
+                        "No se pudo registrar el cliente."
+                    );
+
+                }
+
+                idCliente =
+                    cliente.id_cliente;
+
+            }
+
+            if(!idCliente){
 
                 throw new Error(
-                    cliente.error ||
-                    "No se pudo registrar el cliente"
+                    "No se pudo registrar el cliente."
                 );
 
             }
 
-
-            // ==============================
+            // ==========================================
             // CREAR RESERVA
-            // ==============================
+            // ==========================================
 
             const respuestaReserva =
                 await fetch(
                     "/api/reservas",
                     {
+                        method:"POST",
 
-                        method:
-                            "POST",
-
-                        headers: {
-
+                        headers:{
                             "Content-Type":
                                 "application/json"
-
                         },
 
                         body:
                             JSON.stringify({
 
                                 id_cliente:
-                                    cliente.id_cliente,
+                                    idCliente,
 
                                 id_barbero:
-                                    barberoSeleccionado.id_barbero,
+                                    barberoSeleccionado
+                                        .id_barbero,
 
                                 id_servicio:
-                                    servicioSeleccionado.id_servicio,
+                                    servicioSeleccionado
+                                        .id_servicio,
 
                                 fecha:
                                     fechaSeleccionada,
@@ -2512,97 +3047,218 @@ document.getElementById(
 
                                 observaciones:
                                     observaciones ||
-                                    null
+                                    null,
+
+                                // ==================================
+                                // ESTE CAMPO ES OBLIGATORIO
+                                // ==================================
+                                adelanto_pagado:
+                                    true
 
                             })
-
                     }
                 );
 
+            let reserva = {};
 
-            const reserva =
-                await respuestaReserva.json();
+            try{
+                reserva =
+                    await respuestaReserva.json();
+            }
+            catch(error){
+                reserva = {};
+            }
 
-
-            if (
-                !respuestaReserva.ok
-            ) {
+            if(!respuestaReserva.ok){
 
                 throw new Error(
                     reserva.error ||
-                    "No se pudo crear la reserva"
+                    "No se pudo crear la reserva."
                 );
 
             }
 
+            const totalGuardado =
+                Number(
+                    reserva.total_servicio ??
+                    totalServicio
+                );
 
-            // ==============================
+            const adelantoGuardado =
+                Number(
+                    reserva.adelanto ??
+                    montoAdelanto
+                );
+
+            const saldoGuardado =
+                Number(
+                    reserva.saldo ??
+                    Math.max(
+                        0,
+                        totalGuardado -
+                        adelantoGuardado
+                    )
+                );
+
+            const codigo =
+                reserva.id_reserva ||
+                reserva.codigo_reserva ||
+                reserva.codigo ||
+                "SIN CÓDIGO";
+
+            // ==========================================
             // ÉXITO
-            // ==============================
+            // ==========================================
 
             mostrarMensaje(
-
                 `
-
-                    ✅ ¡Reserva realizada correctamente!
-
-                    <br><br>
-
-                    Reserva #${reserva.id_reserva}
-
-                    <br>
-
-                    ${servicioSeleccionado.nombre}
-
-                    <br>
-
-                    ${barberoSeleccionado.nombre}
-
-                    <br>
-
-                    ${formatearFecha(
-                        fechaSeleccionada
-                    )}
-                    -
-                    ${horaSeleccionada}
-
+                <strong>✅ ¡RESERVA CONFIRMADA!</strong>
+                <br><br>
+                Código:
+                <strong>${escapeHTML(codigo)}</strong>
+                <br>
+                ${escapeHTML(
+                    servicioSeleccionado.nombre
+                )}
+                ·
+                ${escapeHTML(
+                    barberoSeleccionado.nombre
+                )}
+                <br>
+                ${formatearFecha(
+                    fechaSeleccionada
+                )}
+                ·
+                ${escapeHTML(
+                    horaSeleccionada
+                )}
+                <br><br>
+                Total: <strong>Bs ${totalGuardado.toFixed(2)}</strong>
+                <br>
+                Adelanto: <strong>Bs ${adelantoGuardado.toFixed(2)}</strong>
+                ·
+                Saldo: <strong>Bs ${saldoGuardado.toFixed(2)}</strong>
                 `,
-
                 "exito"
-
             );
 
+            // ==========================================
+            // WHATSAPP
+            // ==========================================
+
+            const numero =
+                obtenerNumeroWhatsApp();
+
+            if(numero){
+
+                const mensajeWhatsApp =
+                    crearMensajeWhatsApp({
+
+                        servicio:
+                            servicioSeleccionado
+                                .nombre,
+
+                        barbero:
+                            barberoSeleccionado
+                                .nombre,
+
+                        fecha:
+                            formatearFecha(
+                                fechaSeleccionada
+                            ),
+
+                        hora:
+                            horaSeleccionada,
+
+                        nombre:
+                            nombre,
+
+                        telefono:
+                            telefono,
+
+                        codigo:
+                            codigo,
+
+                        observaciones:
+                            observaciones,
+
+                        total:
+                            totalGuardado,
+
+                        adelanto:
+                            adelantoGuardado,
+
+                        saldo:
+                            saldoGuardado
+
+                    });
+
+                const url =
+                    `https://wa.me/${numero}?text=${encodeURIComponent(
+                        mensajeWhatsApp
+                    )}`;
+
+                const enlace =
+                    document.createElement(
+                        "a"
+                    );
+
+                enlace.href =
+                    url;
+
+                enlace.target =
+                    "_blank";
+
+                enlace.rel =
+                    "noopener noreferrer";
+
+                enlace.className =
+                    "wa-enlace";
+
+                enlace.textContent =
+                    "📱 ABRIR WHATSAPP Y ENVIAR";
+
+                document
+                    .getElementById(
+                        "mensaje"
+                    )
+                    .appendChild(
+                        enlace
+                    );
+
+                try{
+                    window.open(
+                        url,
+                        "_blank"
+                    );
+                }
+                catch(error){
+                    console.warn(
+                        "El navegador bloqueó WhatsApp."
+                    );
+                }
+
+            }
 
             boton.textContent =
                 "RESERVA REGISTRADA ✓";
 
-
-            /*
-               Deshabilitamos el botón
-               para evitar doble reserva.
-            */
-
-            boton.disabled =
-                true;
-
+            boton.disabled = true;
 
         }
+        catch(error){
 
-        catch (error) {
-
-            console.error(error);
-
+            console.error(
+                "❌ Error reserva:",
+                error
+            );
 
             mostrarMensaje(
-                "❌ " +
-                error.message,
+                "❌ " + error.message,
                 "error"
             );
 
-
-            boton.disabled =
-                false;
-
+            boton.disabled = false;
 
             boton.textContent =
                 "CONFIRMAR RESERVA";
@@ -2611,6 +3267,7 @@ document.getElementById(
 
     }
 );
+
 
 
 // ========================================
@@ -2698,7 +3355,7 @@ function actualizarPasos() {
 
 
     if (
-        !servicioSeleccionado
+        !barberoSeleccionado
     ) {
 
         paso1.classList.add(
@@ -2708,7 +3365,7 @@ function actualizarPasos() {
     }
 
     else if (
-        !barberoSeleccionado
+        !servicioSeleccionado
     ) {
 
         paso2.classList.add(
@@ -2920,8 +3577,46 @@ function escapeHTML(
 
 
 // ========================================
+// PAGO Y PREVISUALIZACIÓN
+// ========================================
+
+document.getElementById(
+    "pagoRealizado"
+)?.addEventListener(
+    "change",
+    function(){
+
+        pagoRealizado =
+            this.checked;
+
+    }
+);
+
+
+[
+    "nombreCliente",
+    "telefonoCliente",
+    "correoCliente",
+    "observaciones"
+].forEach(
+    id => {
+
+        document.getElementById(id)
+            ?.addEventListener(
+                "input",
+                actualizarPreviewPago
+            );
+
+    }
+);
+
+
+
+// ========================================
 // INICIAR
 // ========================================
+
+cargarConfiguracion();
 
 cargarServicios();
 

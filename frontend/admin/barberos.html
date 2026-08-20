@@ -592,6 +592,28 @@ tr:hover{
 
 }
 
+
+/* =====================================
+   PRECIOS POR BARBERO
+===================================== */
+.btn-precios{background:#d4af37;color:#111;}
+.modal-precios{width:760px;max-width:100%;background:#181818;border:1px solid #444;border-radius:12px;padding:28px;}
+.precio-form{display:grid;grid-template-columns:1fr 180px auto;gap:10px;align-items:end;margin-bottom:22px;}
+.precio-form select,.precio-form input{width:100%;padding:12px;background:#222;color:white;border:1px solid #444;border-radius:7px;outline:none;font-size:15px;}
+.precio-form select:focus,.precio-form input:focus{border-color:#d4af37;}
+.precio-form label{display:block;color:#ddd;font-size:13px;font-weight:bold;margin-bottom:7px;}
+.btn-agregar-precio{padding:12px 16px;background:#d4af37;color:#111;border:none;border-radius:7px;cursor:pointer;font-weight:900;}
+.lista-precios{display:flex;flex-direction:column;gap:10px;}
+.precio-item{display:grid;grid-template-columns:1fr 120px auto;gap:10px;align-items:center;background:#222;border:1px solid #333;border-radius:8px;padding:12px;}
+.precio-info strong{display:block;color:white;margin-bottom:4px;}
+.precio-info small{color:#888;}
+.precio-valor{color:#d4af37;font-size:18px;font-weight:900;}
+.precio-acciones{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap;}
+.estado-precio-activo{color:#4caf50;font-size:11px;font-weight:bold;}
+.estado-precio-inactivo{color:#f44336;font-size:11px;font-weight:bold;}
+.sin-precios{text-align:center;color:#888;padding:25px;border:1px dashed #444;border-radius:8px;}
+@media(max-width:700px){.precio-form{grid-template-columns:1fr;}.precio-item{grid-template-columns:1fr;}.precio-acciones{justify-content:flex-start;}}
+
 </style>
 
 </head>
@@ -970,6 +992,50 @@ WhatsApp
 </div>
 
 
+
+<!-- =====================================
+     MODAL PRECIOS POR BARBERO
+===================================== -->
+<div id="modalPrecios" class="modal">
+<div class="modal-precios">
+
+<div class="modal-header">
+    <div>
+        <h2>💰 Precios del Barbero</h2>
+        <p id="nombreBarberoPrecios" style="color:#888;margin-top:6px;"></p>
+    </div>
+    <button class="btn-cerrar" onclick="cerrarModalPrecios()">×</button>
+</div>
+
+<div id="mensajePrecios" style="display:none;margin-bottom:15px;padding:12px;border-radius:7px;font-weight:bold;"></div>
+
+<div class="precio-form">
+    <div>
+        <label for="selectServicioPrecio">Servicio</label>
+        <select id="selectServicioPrecio">
+            <option value="">Cargando servicios...</option>
+        </select>
+    </div>
+
+    <div>
+        <label for="precioServicio">Precio (Bs)</label>
+        <input type="number" id="precioServicio" min="0" step="0.01" placeholder="30.00">
+    </div>
+
+    <button type="button" class="btn-agregar-precio" id="btnGuardarPrecio" onclick="guardarPrecioBarbero()">
+        ＋ AGREGAR
+    </button>
+</div>
+
+<h3 style="color:#d4af37;margin-bottom:12px;">Servicios y precios asignados</h3>
+
+<div id="listaPrecios" class="lista-precios">
+    <div class="sin-precios">Cargando...</div>
+</div>
+
+</div>
+</div>
+
 <!-- =====================================
      MODAL ELIMINAR
 ===================================== -->
@@ -1046,7 +1112,409 @@ let barberos = [];
 let idEditando = null;
 
 let idEliminar = null;
+let idBarberoPrecios = null;
+let serviciosDisponibles = [];
+let serviciosBarbero = [];
 
+
+
+// =====================================================
+// PRECIOS POR BARBERO
+// =====================================================
+
+async function abrirModalPrecios(id){
+
+    idBarberoPrecios = Number(id);
+
+    const barbero = barberos.find(
+        item => Number(item.id_barbero) === idBarberoPrecios
+    );
+
+    document.getElementById("nombreBarberoPrecios").textContent =
+        barbero ? `Barbero: ${barbero.nombre}` : `Barbero #${idBarberoPrecios}`;
+
+    document.getElementById("modalPrecios").classList.add("mostrar");
+    document.getElementById("precioServicio").value = "";
+    document.getElementById("btnGuardarPrecio").textContent = "＋ AGREGAR";
+    ocultarMensajePrecios();
+
+    await cargarServiciosBarbero();
+    await cargarServiciosDisponibles();
+}
+
+function cerrarModalPrecios(){
+    document.getElementById("modalPrecios").classList.remove("mostrar");
+    idBarberoPrecios = null;
+    serviciosBarbero = [];
+}
+
+async function cargarServiciosBarbero(){
+
+    const lista = document.getElementById("listaPrecios");
+    lista.innerHTML = `<div class="sin-precios">Cargando servicios asignados...</div>`;
+
+    try{
+        const respuesta = await fetch(`/api/barberos/${idBarberoPrecios}/servicios`);
+        const resultado = await respuesta.json();
+
+        if(!respuesta.ok){
+            throw new Error(resultado.error || "No se pudieron cargar los precios.");
+        }
+
+        serviciosBarbero = Array.isArray(resultado) ? resultado : [];
+        mostrarServiciosBarbero();
+
+    }catch(error){
+        console.error(error);
+        lista.innerHTML = `<div class="sin-precios">❌ ${escapeHTML(error.message)}</div>`;
+    }
+}
+
+async function cargarServiciosDisponibles(){
+
+    const select = document.getElementById("selectServicioPrecio");
+
+    try{
+        select.innerHTML = `<option value="">Cargando servicios...</option>`;
+
+        const respuesta = await fetch("/api/servicios");
+        const resultado = await respuesta.json();
+
+        if(!respuesta.ok){
+            throw new Error(resultado.error || "No se pudieron cargar los servicios.");
+        }
+
+        if(!Array.isArray(resultado)){
+            throw new Error("La respuesta de servicios no es válida.");
+        }
+
+        serviciosDisponibles = resultado.filter(
+            servicio =>
+                Number(servicio.estado) === 1 ||
+                servicio.estado === true ||
+                servicio.estado === undefined
+        );
+
+        renderizarSelectServicios();
+
+    }catch(error){
+        console.error(error);
+        select.innerHTML = `<option value="">❌ Error al cargar servicios</option>`;
+        mostrarMensajePrecios("❌ " + error.message, "error");
+    }
+}
+
+function renderizarSelectServicios(){
+
+    const select = document.getElementById("selectServicioPrecio");
+
+    const asignados = new Set(
+        serviciosBarbero.map(item => Number(item.id_servicio))
+    );
+
+    const disponibles = serviciosDisponibles.filter(
+        servicio => !asignados.has(Number(servicio.id_servicio))
+    );
+
+    if(disponibles.length === 0){
+        select.innerHTML =
+            `<option value="">Todos los servicios ya están asignados</option>`;
+        return;
+    }
+
+    select.innerHTML =
+        `<option value="">Seleccione un servicio...</option>` +
+        disponibles.map(
+            servicio =>
+                `<option value="${Number(servicio.id_servicio)}">${escapeHTML(servicio.nombre)}</option>`
+        ).join("");
+}
+
+function mostrarServiciosBarbero(){
+
+    const lista = document.getElementById("listaPrecios");
+    lista.innerHTML = "";
+
+    if(serviciosBarbero.length === 0){
+        lista.innerHTML = `
+            <div class="sin-precios">
+                Todavía no hay servicios asignados a este barbero.
+            </div>
+        `;
+        return;
+    }
+
+    serviciosBarbero.forEach(servicio => {
+
+        const activo =
+            Number(servicio.estado) === 1 ||
+            servicio.estado === true;
+
+        const item = document.createElement("div");
+        item.className = "precio-item";
+
+        item.innerHTML = `
+            <div class="precio-info">
+                <strong>${escapeHTML(servicio.nombre || "Servicio")}</strong>
+                <small>
+                    ${servicio.duracion ? Number(servicio.duracion) + " minutos" : "Duración no registrada"}
+                    ·
+                    <span class="${activo ? "estado-precio-activo" : "estado-precio-inactivo"}">
+                        ${activo ? "ACTIVO" : "INACTIVO"}
+                    </span>
+                </small>
+            </div>
+
+            <div class="precio-valor">
+                Bs ${Number(servicio.precio).toFixed(2)}
+            </div>
+
+            <div class="precio-acciones">
+                <button class="btn btn-editar"
+                    onclick="editarPrecioBarbero(${Number(servicio.id_servicio)},${Number(servicio.precio)})">
+                    ✏️ Editar
+                </button>
+
+                <button class="btn btn-estado"
+                    onclick="cambiarEstadoPrecio(${Number(servicio.id_servicio)},${activo ? 0 : 1})">
+                    ${activo ? "🔴 Desactivar" : "🟢 Activar"}
+                </button>
+
+                <button class="btn btn-eliminar"
+                    onclick="eliminarServicioBarbero(${Number(servicio.id_servicio)})">
+                    🗑️ Quitar
+                </button>
+            </div>
+        `;
+
+        lista.appendChild(item);
+    });
+}
+
+function editarPrecioBarbero(idServicio, precio){
+
+    // Para editar un servicio ya asignado, lo guardamos en una variable
+    window.idServicioEditandoPrecio = Number(idServicio);
+
+    const select = document.getElementById("selectServicioPrecio");
+
+    // En modo edición mostramos temporalmente el servicio seleccionado.
+    select.innerHTML = `
+        <option value="${Number(idServicio)}">
+            ${escapeHTML(
+                serviciosBarbero.find(
+                    item => Number(item.id_servicio) === Number(idServicio)
+                )?.nombre || "Servicio"
+            )}
+        </option>
+    `;
+
+    document.getElementById("precioServicio").value =
+        Number(precio).toFixed(2);
+
+    document.getElementById("btnGuardarPrecio").textContent =
+        "💾 GUARDAR CAMBIO";
+
+    mostrarMensajePrecios(
+        "Modifica el precio y pulsa GUARDAR CAMBIO.",
+        "info"
+    );
+}
+
+async function guardarPrecioBarbero(){
+
+    if(!idBarberoPrecios) return;
+
+    const idServicio = Number(
+        document.getElementById("selectServicioPrecio").value
+    );
+
+    const precio = Number(
+        document.getElementById("precioServicio").value
+    );
+
+    if(!idServicio){
+        mostrarMensajePrecios("Selecciona un servicio.", "error");
+        return;
+    }
+
+    if(!Number.isFinite(precio) || precio < 0){
+        mostrarMensajePrecios("Ingresa un precio válido.", "error");
+        return;
+    }
+
+    const yaExiste = serviciosBarbero.some(
+        item => Number(item.id_servicio) === idServicio
+    );
+
+    const boton = document.getElementById("btnGuardarPrecio");
+    boton.disabled = true;
+    boton.textContent = yaExiste ? "⏳ ACTUALIZANDO..." : "⏳ GUARDANDO...";
+
+    try{
+
+        const respuesta = await fetch(
+            yaExiste
+                ? `/api/barberos/${idBarberoPrecios}/servicios/${idServicio}`
+                : `/api/barberos/${idBarberoPrecios}/servicios`,
+            {
+                method: yaExiste ? "PUT" : "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(
+                    yaExiste
+                        ? { precio: precio, estado: 1 }
+                        : { id_servicio: idServicio, precio: precio }
+                )
+            }
+        );
+
+        const resultado = await respuesta.json();
+
+        if(!respuesta.ok){
+            throw new Error(
+                resultado.error || "No se pudo guardar el precio."
+            );
+        }
+
+        mostrarMensajePrecios(
+            yaExiste
+                ? "✅ Precio actualizado correctamente."
+                : "✅ Servicio asignado correctamente.",
+            "exito"
+        );
+
+        window.idServicioEditandoPrecio = null;
+        document.getElementById("precioServicio").value = "";
+        document.getElementById("btnGuardarPrecio").textContent = "＋ AGREGAR";
+
+        await cargarServiciosBarbero();
+        await cargarServiciosDisponibles();
+
+    }catch(error){
+
+        console.error(error);
+        mostrarMensajePrecios("❌ " + error.message, "error");
+
+    }finally{
+        boton.disabled = false;
+        if(boton.textContent.includes("⏳")){
+            boton.textContent = "＋ AGREGAR";
+        }
+    }
+}
+
+async function cambiarEstadoPrecio(idServicio, nuevoEstado){
+
+    if(!idBarberoPrecios) return;
+
+    try{
+
+        const respuesta = await fetch(
+            `/api/barberos/${idBarberoPrecios}/servicios/${idServicio}/estado`,
+            {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ estado: nuevoEstado })
+            }
+        );
+
+        const resultado = await respuesta.json();
+
+        if(!respuesta.ok){
+            throw new Error(
+                resultado.error || "No se pudo cambiar el estado."
+            );
+        }
+
+        mostrarMensajePrecios(
+            nuevoEstado === 1
+                ? "✅ Servicio activado."
+                : "⏸️ Servicio desactivado.",
+            "exito"
+        );
+
+        await cargarServiciosBarbero();
+
+    }catch(error){
+
+        console.error(error);
+        mostrarMensajePrecios("❌ " + error.message, "error");
+
+    }
+}
+
+async function eliminarServicioBarbero(idServicio){
+
+    if(!idBarberoPrecios) return;
+
+    const servicio = serviciosBarbero.find(
+        item => Number(item.id_servicio) === Number(idServicio)
+    );
+
+    const nombre = servicio ? servicio.nombre : "este servicio";
+
+    if(!confirm(`¿Quitar "${nombre}" de este barbero?`)) return;
+
+    try{
+
+        const respuesta = await fetch(
+            `/api/barberos/${idBarberoPrecios}/servicios/${idServicio}`,
+            { method: "DELETE" }
+        );
+
+        const resultado = await respuesta.json();
+
+        if(!respuesta.ok){
+            throw new Error(
+                resultado.error || "No se pudo quitar el servicio."
+            );
+        }
+
+        mostrarMensajePrecios(
+            "✅ Servicio quitado del barbero.",
+            "exito"
+        );
+
+        await cargarServiciosBarbero();
+        await cargarServiciosDisponibles();
+
+    }catch(error){
+
+        console.error(error);
+        mostrarMensajePrecios("❌ " + error.message, "error");
+    }
+}
+
+function mostrarMensajePrecios(texto,tipo){
+
+    const mensaje = document.getElementById("mensajePrecios");
+
+    mensaje.textContent = texto;
+    mensaje.style.display = "block";
+
+    if(tipo === "exito"){
+        mensaje.style.background = "#173e26";
+        mensaje.style.color = "#72e59b";
+    }else if(tipo === "error"){
+        mensaje.style.background = "#4a1e1e";
+        mensaje.style.color = "#ff8d8d";
+    }else{
+        mensaje.style.background = "#2d2a18";
+        mensaje.style.color = "#d4af37";
+    }
+}
+
+function ocultarMensajePrecios(){
+
+    const mensaje = document.getElementById("mensajePrecios");
+
+    mensaje.style.display = "none";
+    mensaje.textContent = "";
+}
 
 // =====================================================
 // NUEVO
@@ -1596,6 +2064,19 @@ function mostrarBarberos(){
 
                             ✏️ Editar
 
+                        </button>
+
+                        <button
+                            class="btn btn-precios"
+                            onclick="
+                                abrirModalPrecios(
+                                    ${Number(
+                                        barbero.id_barbero
+                                    )}
+                                )
+                            "
+                        >
+                            💰 Precios
                         </button>
 
                         <button
@@ -2338,6 +2819,19 @@ function escapeHTML(
 // =====================================================
 // CERRAR MODALES AFUERA
 // =====================================================
+
+document.getElementById(
+    "modalPrecios"
+).addEventListener(
+    "click",
+    function(evento){
+        if(evento.target === this){
+            cerrarModalPrecios();
+        }
+    }
+);
+
+
 
 document.getElementById(
     "modalFormulario"

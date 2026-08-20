@@ -38,7 +38,12 @@ router.get("/", (req, res) => {
             b.nombre AS barbero_nombre,
 
             s.nombre AS servicio_nombre,
-            s.precio AS servicio_precio,
+
+            COALESCE(
+                bs.precio,
+                s.precio
+            ) AS servicio_precio,
+
             s.duracion AS servicio_duracion
 
         FROM reservas r
@@ -52,12 +57,15 @@ router.get("/", (req, res) => {
         LEFT JOIN servicios s
             ON r.id_servicio = s.id_servicio
 
+        LEFT JOIN barbero_servicio bs
+            ON bs.id_barbero = r.id_barbero
+            AND bs.id_servicio = r.id_servicio
+
         ORDER BY
             r.fecha DESC,
             r.hora DESC
 
     `;
-
 
     conexion.query(
         sql,
@@ -78,7 +86,6 @@ router.get("/", (req, res) => {
                 });
 
             }
-
 
             res.json(
                 resultados
@@ -109,7 +116,12 @@ router.get("/:id", (req, res) => {
             b.nombre AS barbero_nombre,
 
             s.nombre AS servicio_nombre,
-            s.precio AS servicio_precio,
+
+            COALESCE(
+                bs.precio,
+                s.precio
+            ) AS servicio_precio,
+
             s.duracion AS servicio_duracion
 
         FROM reservas r
@@ -123,11 +135,14 @@ router.get("/:id", (req, res) => {
         LEFT JOIN servicios s
             ON r.id_servicio = s.id_servicio
 
+        LEFT JOIN barbero_servicio bs
+            ON bs.id_barbero = r.id_barbero
+            AND bs.id_servicio = r.id_servicio
+
         WHERE
             r.id_reserva = ?
 
     `;
-
 
     conexion.query(
         sql,
@@ -150,7 +165,6 @@ router.get("/:id", (req, res) => {
 
             }
 
-
             if (
                 resultados.length === 0
             ) {
@@ -163,7 +177,6 @@ router.get("/:id", (req, res) => {
                 });
 
             }
-
 
             res.json(
                 resultados[0]
@@ -197,10 +210,6 @@ router.post("/", (req, res) => {
         hora,
 
         observaciones,
-
-        // ==========================================
-        // DATOS DEL ADELANTO
-        // ==========================================
 
         adelanto_pagado
 
@@ -357,24 +366,36 @@ router.post("/", (req, res) => {
 
 
                 // ==================================================
-                // VERIFICAR SERVICIO
+                // VERIFICAR SERVICIO Y PRECIO DEL BARBERO
                 // ==================================================
 
                 const verificarServicio = `
 
                     SELECT
 
-                        id_servicio,
-                        precio,
-                        duracion
+                        s.id_servicio,
 
-                    FROM servicios
+                        s.precio AS precio_general,
+
+                        s.duracion,
+
+                        bs.precio AS precio_barbero,
+
+                        bs.estado AS estado_barbero_servicio
+
+                    FROM servicios s
+
+                    LEFT JOIN barbero_servicio bs
+
+                        ON bs.id_barbero = ?
+
+                        AND bs.id_servicio = s.id_servicio
 
                     WHERE
 
-                        id_servicio = ?
+                        s.id_servicio = ?
 
-                        AND estado = 1
+                        AND s.estado = 1
 
                 `;
 
@@ -383,7 +404,10 @@ router.post("/", (req, res) => {
 
                     verificarServicio,
 
-                    [id_servicio],
+                    [
+                        id_barbero,
+                        id_servicio
+                    ],
 
                     (error, servicios) => {
 
@@ -422,10 +446,67 @@ router.post("/", (req, res) => {
                             servicios[0];
 
 
+                        // ==================================================
+                        // VERIFICAR QUE EL SERVICIO ESTÉ ASIGNADO
+                        // AL BARBERO
+                        // ==================================================
+
+                        if (
+                            servicio.precio_barbero === null ||
+                            servicio.precio_barbero === undefined
+                        ) {
+
+                            return res.status(400).json({
+
+                                error:
+                                    "Este servicio no está asignado al barbero seleccionado"
+
+                            });
+
+                        }
+
+
+                        if (
+                            Number(
+                                servicio.estado_barbero_servicio
+                            ) !== 1
+                        ) {
+
+                            return res.status(400).json({
+
+                                error:
+                                    "Este servicio está desactivado para el barbero seleccionado"
+
+                            });
+
+                        }
+
+
+                        // ==================================================
+                        // PRECIO PERSONALIZADO
+                        // ==================================================
+
                         const precioTotal =
                             Number(
-                                servicio.precio
+                                servicio.precio_barbero
                             );
+
+
+                        if (
+                            !Number.isFinite(
+                                precioTotal
+                            ) ||
+                            precioTotal < 0
+                        ) {
+
+                            return res.status(400).json({
+
+                                error:
+                                    "El precio del servicio no es válido"
+
+                            });
+
+                        }
 
 
                         // ==================================================
@@ -1163,20 +1244,15 @@ router.patch(
         const id =
             req.params.id;
 
-
         const {
             estado
         } = req.body;
 
-
         const estadosPermitidos = [
 
             "pendiente",
-
             "confirmada",
-
             "completada",
-
             "cancelada"
 
         ];
