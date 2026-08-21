@@ -1,6 +1,5 @@
 const mysql = require("mysql2");
 
-
 // =====================================================
 // CONFIGURACIÓN MYSQL
 // =====================================================
@@ -25,9 +24,18 @@ const configuracion = {
         process.env.DB_PASSWORD ||
         "",
 
-    database: "barberia",
-        
-    // SSL para Aiven
+    // =================================================
+    // BASE DE DATOS
+    // Local: barberia
+    // Vercel/Aiven: defaultdb mediante DB_NAME
+    // =================================================
+    database:
+        process.env.DB_NAME ||
+        "barberia",
+
+    // =================================================
+    // SSL PARA AIVEN
+    // =================================================
     ssl:
         process.env.DB_HOST
             ? {
@@ -82,11 +90,9 @@ conexion.getConnection(
 
         }
 
-
         console.log(
             "✅ Conexión con MySQL establecida correctamente"
         );
-
 
         connection.release();
 
