@@ -25,10 +25,8 @@ const configuracion = {
         process.env.DB_PASSWORD ||
         "",
 
-    database:
-        process.env.DB_NAME ||
-        "barberia",
-
+    database: "barberia",
+        
     // SSL para Aiven
     ssl:
         process.env.DB_HOST
