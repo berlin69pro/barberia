@@ -3863,6 +3863,451 @@ footer strong{
     }
 }
 
+
+/* ============================================================
+   FIX DEFINITIVO — CALENDARIO MENSUAL Y HORARIOS POR BARBERO
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+}
+
+#reserva {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+#reserva .reserva-box {
+    width: min(1180px, calc(100% - 32px)) !important;
+    max-width: 1180px !important;
+    margin: 0 auto !important;
+}
+
+#reserva .reserva-cuerpo,
+#reserva .reserva-contenido {
+    min-width: 0 !important;
+    width: 100% !important;
+}
+
+#reserva .reserva-contenido {
+    overflow: hidden !important;
+}
+
+#reserva .reserva-dias {
+    display: block !important;
+    width: 100% !important;
+}
+
+/* ---------- CALENDARIO ---------- */
+
+.calendario-reserva {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: clamp(10px, 1.8vw, 18px) !important;
+    background: #151515 !important;
+    border: 1px solid #494949 !important;
+    border-radius: 14px !important;
+    overflow: hidden !important;
+}
+
+.calendario-cabecera {
+    display: grid !important;
+    grid-template-columns: 46px minmax(0, 1fr) 46px !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin-bottom: 12px !important;
+}
+
+.calendario-mes-titulo {
+    min-width: 0 !important;
+    text-align: center !important;
+    color: #fff !important;
+    font-family: 'Bebas Neue', sans-serif !important;
+    font-size: clamp(24px, 3.5vw, 38px) !important;
+    line-height: 1 !important;
+    letter-spacing: 1px !important;
+}
+
+.calendario-nav {
+    width: 46px !important;
+    height: 46px !important;
+    display: grid !important;
+    place-items: center !important;
+    padding: 0 !important;
+    border: 2px solid #777 !important;
+    border-radius: 9px !important;
+    background: #242424 !important;
+    color: #fff !important;
+    font-size: 30px !important;
+    line-height: 1 !important;
+    cursor: pointer !important;
+}
+
+.calendario-nav:hover {
+    background: #fff !important;
+    color: #111 !important;
+    border-color: #fff !important;
+}
+
+.calendario-semana {
+    display: grid !important;
+    grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+    gap: 7px !important;
+    width: 100% !important;
+    margin-bottom: 7px !important;
+}
+
+.calendario-semana span {
+    min-width: 0 !important;
+    text-align: center !important;
+    color: #aaa !important;
+    font-family: 'Oswald', sans-serif !important;
+    font-size: 11px !important;
+    font-weight: 900 !important;
+    padding: 7px 1px !important;
+}
+
+.calendario-mes-grid {
+    display: grid !important;
+    grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+    gap: 7px !important;
+    width: 100% !important;
+}
+
+.calendario-celda.vacia {
+    min-width: 0 !important;
+    min-height: 78px !important;
+}
+
+.calendario-dia {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 78px !important;
+    padding: 7px 3px !important;
+    border: 2px solid #3b3b3b !important;
+    border-radius: 9px !important;
+    background: #181818 !important;
+    color: #666 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 5px !important;
+    overflow: hidden !important;
+}
+
+.calendario-dia.trabaja {
+    background: #fff !important;
+    color: #111 !important;
+    border-color: #d7d7d7 !important;
+    cursor: pointer !important;
+}
+
+.calendario-dia.trabaja:hover:not(:disabled) {
+    border-color: #e53935 !important;
+    transform: translateY(-1px) !important;
+}
+
+.calendario-dia.no-trabaja,
+.calendario-dia.pasado {
+    background: #181818 !important;
+    color: #555 !important;
+    border-color: #303030 !important;
+    cursor: not-allowed !important;
+    opacity: .72 !important;
+}
+
+.calendario-numero {
+    display: block !important;
+    font-family: 'Bebas Neue', sans-serif !important;
+    font-size: clamp(24px, 3.2vw, 34px) !important;
+    line-height: 1 !important;
+    font-weight: 900 !important;
+}
+
+.calendario-estado {
+    display: block !important;
+    max-width: 100% !important;
+    text-align: center !important;
+    font-family: 'Oswald', sans-serif !important;
+    font-size: 7px !important;
+    line-height: 1.1 !important;
+    font-weight: 900 !important;
+}
+
+/* HOY */
+.calendario-dia.hoy.trabaja {
+    box-shadow: inset 0 0 0 2px #111 !important;
+}
+
+/* SELECCIONADO: BORDE ROJO MUY VISIBLE */
+.calendario-dia.seleccionado,
+.calendario-dia.seleccionado.trabaja {
+    background: #fff !important;
+    color: #111 !important;
+    border: 4px solid #e53935 !important;
+    box-shadow: 0 0 0 2px rgba(229,57,53,.25) !important;
+    transform: none !important;
+}
+
+.calendario-dia.seleccionado .calendario-estado {
+    color: #c62828 !important;
+}
+
+/* ---------- LEYENDA ---------- */
+
+.calendario-leyenda {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 9px 18px !important;
+    margin-top: 12px !important;
+    padding-top: 11px !important;
+    border-top: 1px solid #3b3b3b !important;
+}
+
+.calendario-leyenda span {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    color: #aaa !important;
+    font-family: 'Oswald', sans-serif !important;
+    font-size: 9px !important;
+    font-weight: 800 !important;
+}
+
+.leyenda-punto {
+    width: 10px !important;
+    height: 10px !important;
+    border-radius: 50% !important;
+    display: inline-block !important;
+}
+
+.leyenda-punto.trabaja {
+    background: #fff !important;
+    border: 2px solid #bbb !important;
+}
+
+.leyenda-punto.seleccionado {
+    background: #e53935 !important;
+}
+
+.leyenda-punto.no-trabaja {
+    background: #444 !important;
+}
+
+/* ---------- HORARIOS ---------- */
+
+#reservaHoras {
+    width: 100% !important;
+    min-width: 0 !important;
+}
+
+#reservaHoras .reserva-horas {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+}
+
+#reservaHoras .reserva-hora {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 64px !important;
+    border: 2px solid #777 !important;
+    border-radius: 9px !important;
+    background: #fff !important;
+    color: #111 !important;
+    font-weight: 900 !important;
+}
+
+#reservaHoras .reserva-hora.ocupado,
+#reservaHoras .reserva-hora.estado-ocupado {
+    background: #3b1515 !important;
+    color: #ff7474 !important;
+    border-color: #e53935 !important;
+    opacity: 1 !important;
+}
+
+#reservaHoras .reserva-hora.fuera,
+#reservaHoras .reserva-hora.pasado,
+#reservaHoras .reserva-hora.estado-fuera,
+#reservaHoras .reserva-hora.estado-pasado {
+    background: #191919 !important;
+    color: #666 !important;
+    border-color: #3b3b3b !important;
+}
+
+#reservaHoras .reserva-hora.seleccionado {
+    background: #fff !important;
+    color: #111 !important;
+    border: 4px solid #e53935 !important;
+    box-shadow: 0 0 0 2px rgba(229,57,53,.25) !important;
+}
+
+#reservaHoras .reserva-hora small {
+    font-size: 8px !important;
+    font-weight: 900 !important;
+}
+
+/* ---------- LOGO: SOLO IMAGEN ---------- */
+
+#logoNavbar {
+    width: auto !important;
+    min-width: 0 !important;
+    flex: 0 0 auto !important;
+    height: 74px !important;
+    padding: 4px 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    border: 0 !important;
+}
+
+#logoNavbar span {
+    display: none !important;
+}
+
+#logoNavbar img {
+    display: block !important;
+    width: 58px !important;
+    height: 58px !important;
+    max-width: 58px !important;
+    max-height: 58px !important;
+    object-fit: contain !important;
+    border-radius: 50% !important;
+    filter: none !important;
+}
+
+/* ---------- RESPONSIVE ---------- */
+
+@media (max-width: 900px) {
+
+    #reserva .reserva-box {
+        width: calc(100% - 20px) !important;
+    }
+
+    #reserva .reserva-contenido {
+        padding: 16px !important;
+    }
+
+    .calendario-reserva {
+        padding: 9px !important;
+    }
+
+    .calendario-cabecera {
+        grid-template-columns: 40px minmax(0, 1fr) 40px !important;
+    }
+
+    .calendario-nav {
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 26px !important;
+    }
+
+    .calendario-semana,
+    .calendario-mes-grid {
+        gap: 4px !important;
+    }
+
+    .calendario-dia {
+        min-height: 65px !important;
+        padding: 5px 2px !important;
+    }
+
+    #reservaHoras .reserva-horas {
+        grid-template-columns: repeat(3, minmax(0,1fr)) !important;
+        gap: 7px !important;
+    }
+
+    #logoNavbar {
+        height: 62px !important;
+    }
+
+    #logoNavbar img {
+        width: 48px !important;
+        height: 48px !important;
+        max-width: 48px !important;
+        max-height: 48px !important;
+    }
+}
+
+@media (max-width: 560px) {
+
+    .calendario-mes-titulo {
+        font-size: 24px !important;
+    }
+
+    .calendario-dia {
+        min-height: 57px !important;
+        padding: 4px 1px !important;
+        border-radius: 6px !important;
+    }
+
+    .calendario-numero {
+        font-size: 22px !important;
+    }
+
+    .calendario-estado {
+        font-size: 6px !important;
+    }
+
+    #reservaHoras .reserva-horas {
+        grid-template-columns: repeat(2, minmax(0,1fr)) !important;
+    }
+}
+
+@media (max-width: 380px) {
+
+    .calendario-semana span {
+        font-size: 8px !important;
+    }
+
+    .calendario-dia {
+        min-height: 50px !important;
+    }
+
+    .calendario-numero {
+        font-size: 19px !important;
+    }
+
+    .calendario-estado {
+        font-size: 5px !important;
+    }
+}
+
+
+/* ===== RESERVA DEFINITIVA: RESPONSIVE REAL ===== */
+#reserva, #reserva * { max-width: 100%; }
+#reserva .reserva-box { width: min(1180px, calc(100vw - 24px)) !important; margin-inline: auto !important; }
+#reserva .reserva-cuerpo { min-width: 0 !important; }
+.calendario-reserva { width: 100% !important; }
+.calendario-mes-grid { width: 100% !important; grid-template-columns: repeat(7, minmax(0, 1fr)) !important; }
+.calendario-dia { min-width: 0 !important; width: 100% !important; }
+.calendario-ayuda { margin: 10px 0 0; padding: 10px 12px; border: 1px solid #555; border-radius: 8px; text-align: center; color: #bbb; font-size: 12px; }
+@media (max-width: 700px) {
+  #reserva .reserva-box { width: calc(100vw - 12px) !important; }
+  .calendario-reserva { padding: 7px !important; }
+  .calendario-semana, .calendario-mes-grid { gap: 3px !important; }
+  .calendario-dia { min-height: 58px !important; border-width: 1px !important; border-radius: 7px !important; padding: 4px 1px !important; }
+  .calendario-numero { font-size: 22px !important; }
+  .calendario-estado { font-size: 6px !important; }
+  .calendario-dia.seleccionado { border-width: 3px !important; }
+}
+@media (max-width: 430px) {
+  .calendario-dia { min-height: 50px !important; }
+  .calendario-numero { font-size: 19px !important; }
+  .calendario-estado { display: none !important; }
+  .calendario-mes-titulo { font-size: 22px !important; }
+}
 </style>
 
 </head>
@@ -6064,46 +6509,52 @@ function minutosHora(hora) {
 
 
 function obtenerHorarioDelDia(fecha) {
-
     const dia = obtenerDiaSemana(fecha);
+    if (!seleccionReserva.barbero) return null;
 
-    // Primero buscamos un horario específico del barbero.
-    const especifico = horariosDisponibles.find(horario => {
+    const idBarbero = String(seleccionReserva.barbero.id_barbero);
 
-        const activo =
-            Number(horario.estado) === 1 ||
-            horario.estado === true;
+    const activos = horariosDisponibles.filter(horario =>
+        Number(horario.estado) === 1 || horario.estado === true
+    );
 
-        const mismoDia =
-            String(horario.dia_semana || "").trim().toLowerCase() ===
-            dia.toLowerCase();
+    // Si el barbero tiene aunque sea un horario propio,
+    // SOLO se usan sus horarios. Los horarios generales (NULL)
+    // ya no se aplican a ese barbero.
+    const tieneHorarioPropio = activos.some(horario =>
+        horario.id_barbero !== null &&
+        horario.id_barbero !== undefined &&
+        String(horario.id_barbero).trim() === idBarbero
+    );
 
-        const mismoBarbero =
-            horario.id_barbero &&
-            seleccionReserva.barbero &&
-            String(horario.id_barbero) === String(seleccionReserva.barbero.id_barbero);
+    if (tieneHorarioPropio) {
+        return activos.find(horario => {
+            const mismoBarbero =
+                horario.id_barbero !== null &&
+                horario.id_barbero !== undefined &&
+                String(horario.id_barbero).trim() === idBarbero;
 
-        return activo && mismoDia && mismoBarbero;
-    });
+            const mismoDia =
+                String(horario.dia_semana || "").trim().toLowerCase() ===
+                dia.toLowerCase();
 
-    if (especifico) return especifico;
+            return mismoBarbero && mismoDia;
+        }) || null;
+    }
 
-    // Si no existe horario por barbero, usamos el horario general.
-    return horariosDisponibles.find(horario => {
-
-        const activo =
-            Number(horario.estado) === 1 ||
-            horario.estado === true;
-
+    // Compatibilidad: si el barbero todavía no tiene
+    // horarios propios, se usan los horarios generales.
+    return activos.find(horario => {
         const mismoDia =
             String(horario.dia_semana || "").trim().toLowerCase() ===
             dia.toLowerCase();
 
         const general =
-            !horario.id_barbero ||
+            horario.id_barbero === null ||
+            horario.id_barbero === undefined ||
             String(horario.id_barbero).trim() === "";
 
-        return activo && mismoDia && general;
+        return general && mismoDia;
     }) || null;
 }
 
@@ -6158,60 +6609,356 @@ function renderDiasReserva() {
     const box = document.getElementById("reservaDias");
     if (!box) return;
 
-    let html = "";
+    // Mes que se está mostrando.
+    if (!window.mesCalendarioReserva) {
+        const base = seleccionReserva.fecha
+            ? new Date(`${seleccionReserva.fecha}T12:00:00`)
+            : new Date();
 
-    for (let i = 0; i < 7; i++) {
+        window.mesCalendarioReserva =
+            new Date(base.getFullYear(), base.getMonth(), 1);
+    }
 
-        const fecha = new Date();
-        fecha.setHours(12, 0, 0, 0);
-        fecha.setDate(fecha.getDate() + i);
+    const mes = window.mesCalendarioReserva;
+    const anio = mes.getFullYear();
+    const numeroMes = mes.getMonth();
+
+    const nombreMes = new Intl.DateTimeFormat("es-BO", {
+        month: "long",
+        year: "numeric"
+    }).format(mes);
+
+    const primerDia = new Date(anio, numeroMes, 1, 12);
+    const diasMes = new Date(anio, numeroMes + 1, 0).getDate();
+    const desplazamiento = (primerDia.getDay() + 6) % 7;
+
+    const idBarbero =
+        seleccionReserva.barbero
+            ? String(seleccionReserva.barbero.id_barbero)
+            : "";
+
+    const horariosActivos = horariosDisponibles.filter(h =>
+        Number(h.estado) === 1 || h.estado === true
+    );
+
+    // Si hay barbero seleccionado y tiene al menos un horario propio,
+    // SOLO se usan sus horarios. Los horarios generales (NULL) NO se mezclan.
+    const tieneHorarioPropio = !!idBarbero && horariosActivos.some(h =>
+        h.id_barbero !== null &&
+        h.id_barbero !== undefined &&
+        String(h.id_barbero).trim() === idBarbero
+    );
+
+    const normalizarDia = valor =>
+        String(valor || "")
+            .trim()
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
+
+    const trabajaEseDia = fecha => {
+
+        if (!idBarbero) return false;
+
+        const dia = normalizarDia(
+            ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"][fecha.getDay()]
+        );
+
+        return horariosActivos.some(h => {
+
+            const mismoDia =
+                normalizarDia(h.dia_semana) === dia;
+
+            if (!mismoDia) return false;
+
+            if (tieneHorarioPropio) {
+                return (
+                    h.id_barbero !== null &&
+                    h.id_barbero !== undefined &&
+                    String(h.id_barbero).trim() === idBarbero
+                );
+            }
+
+            return (
+                h.id_barbero === null ||
+                h.id_barbero === undefined ||
+                String(h.id_barbero).trim() === ""
+            );
+        });
+    };
+
+    const ahora = new Date();
+    const hoy = new Date(
+        ahora.getFullYear(),
+        ahora.getMonth(),
+        ahora.getDate(),
+        12
+    );
+
+    const mesActual =
+        new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+
+    let html = `
+        <div class="calendario-reserva">
+
+            <div class="calendario-cabecera">
+
+                <button type="button"
+                    class="calendario-nav"
+                    id="mesAnteriorReserva"
+                    aria-label="Mes anterior">
+                    ‹
+                </button>
+
+                <div class="calendario-mes-titulo">
+                    ${escapeHTML(
+                        nombreMes.charAt(0).toUpperCase() +
+                        nombreMes.slice(1)
+                    )}
+                </div>
+
+                <button type="button"
+                    class="calendario-nav"
+                    id="mesSiguienteReserva"
+                    aria-label="Mes siguiente">
+                    ›
+                </button>
+
+            </div>
+
+            <div class="calendario-semana">
+                <span>LUN</span>
+                <span>MAR</span>
+                <span>MIÉ</span>
+                <span>JUE</span>
+                <span>VIE</span>
+                <span>SÁB</span>
+                <span>DOM</span>
+            </div>
+
+            <div class="calendario-mes-grid">
+    `;
+
+    for (let i = 0; i < desplazamiento; i++) {
+        html += `<div class="calendario-celda vacia"></div>`;
+    }
+
+    for (let diaNumero = 1; diaNumero <= diasMes; diaNumero++) {
+
+        const fecha = new Date(
+            anio,
+            numeroMes,
+            diaNumero,
+            12
+        );
 
         const iso =
-            `${fecha.getFullYear()}-${String(fecha.getMonth()+1).padStart(2,"0")}-${String(fecha.getDate()).padStart(2,"0")}`;
+            `${anio}-${String(numeroMes + 1).padStart(2, "0")}-${String(diaNumero).padStart(2, "0")}`;
 
-        const nombre =
-            new Intl.DateTimeFormat("es-BO", {weekday:"short"})
-                .format(fecha)
-                .replace(".", "")
-                .toUpperCase();
+        const trabaja = trabajaEseDia(fecha);
+        const esPasado = fecha < hoy;
+        const esHoy = fecha.getTime() === hoy.getTime();
+        const seleccionado = seleccionReserva.fecha === iso;
+
+        const deshabilitado =
+            esPasado || !trabaja;
+
+        let clases = "calendario-dia";
+
+        if (trabaja) clases += " trabaja";
+        else clases += " no-trabaja";
+
+        if (esPasado) clases += " pasado";
+        if (esHoy) clases += " hoy";
+        if (seleccionado) clases += " seleccionado";
+
+        let etiqueta = !seleccionReserva.barbero
+            ? "ELIGE BARBERO"
+            : "NO TRABAJA";
+
+        if (esPasado) {
+            etiqueta = "PASADO";
+        } else if (trabaja) {
+            etiqueta = esHoy
+                ? "HOY · DISPONIBLE"
+                : "DISPONIBLE";
+        }
 
         html += `
-            <button type="button"
-                class="reserva-dia ${seleccionReserva.fecha === iso ? "seleccionado" : ""}"
-                data-reserva-fecha="${iso}">
-                <small>${escapeHTML(nombre)}</small>
-                <strong>${fecha.getDate()}</strong>
+            <button
+                type="button"
+                class="${clases}"
+                data-reserva-fecha="${iso}"
+                ${deshabilitado ? "disabled" : ""}
+                aria-label="${diaNumero} de ${escapeHTML(nombreMes)} — ${etiqueta}">
+
+                <span class="calendario-numero">
+                    ${diaNumero}
+                </span>
+
+                <span class="calendario-estado">
+                    ${etiqueta}
+                </span>
+
             </button>
         `;
     }
 
+    html += `
+            </div>
+
+            ${!seleccionReserva.barbero ? `
+                <div class="calendario-ayuda">💈 Selecciona un barbero para activar sus días de trabajo.</div>
+            ` : ""}
+
+            <div class="calendario-leyenda">
+
+                <span>
+                    <i class="leyenda-punto trabaja"></i>
+                    DÍA DE TRABAJO
+                </span>
+
+                <span>
+                    <i class="leyenda-punto seleccionado"></i>
+                    SELECCIONADO
+                </span>
+
+                <span>
+                    <i class="leyenda-punto no-trabaja"></i>
+                    NO TRABAJA
+                </span>
+
+            </div>
+
+        </div>
+    `;
+
     box.innerHTML = html;
 
-    box.querySelectorAll("[data-reserva-fecha]").forEach(btn => {
+    document
+        .getElementById("mesAnteriorReserva")
+        ?.addEventListener("click", () => {
 
-        btn.addEventListener("click", () => {
+            const anterior = new Date(
+                mes.getFullYear(),
+                mes.getMonth() - 1,
+                1
+            );
 
-            seleccionReserva.fecha = btn.dataset.reservaFecha;
-            seleccionReserva.hora = "";
-            pagoRealizado = false;
-            actualizarEstadoPagoUI();
+            if (anterior < mesActual) return;
 
+            window.mesCalendarioReserva = anterior;
             renderDiasReserva();
-            renderHorasReserva();
-            actualizarResumenReserva();
-            actualizarPreviewWhatsApp();
         });
 
-    });
+    document
+        .getElementById("mesSiguienteReserva")
+        ?.addEventListener("click", () => {
 
-    if (!seleccionReserva.fecha) {
+            window.mesCalendarioReserva = new Date(
+                mes.getFullYear(),
+                mes.getMonth() + 1,
+                1
+            );
 
-        const hoy = new Date();
+            renderDiasReserva();
+        });
 
-        seleccionReserva.fecha =
-            `${hoy.getFullYear()}-${String(hoy.getMonth()+1).padStart(2,"0")}-${String(hoy.getDate()).padStart(2,"0")}`;
+    box
+        .querySelectorAll("[data-reserva-fecha]")
+        .forEach(btn => {
 
-        renderDiasReserva();
+            btn.addEventListener("click", () => {
+
+                if (btn.disabled) return;
+
+                seleccionReserva.fecha =
+                    btn.dataset.reservaFecha;
+
+                seleccionReserva.hora = "";
+
+                pagoRealizado = false;
+                actualizarEstadoPagoUI();
+
+                renderDiasReserva();
+                renderHorasReserva();
+                actualizarResumenReserva();
+                actualizarPreviewWhatsApp();
+            });
+        });
+
+    // Si la fecha seleccionada no es válida para este barbero,
+    // seleccionar automáticamente el primer día laborable visible.
+    const fechaSeleccionadaValida = (() => {
+
+        if (!seleccionReserva.barbero) return false;
+        if (!seleccionReserva.fecha) return false;
+
+        const partes =
+            String(seleccionReserva.fecha).split("-");
+
+        if (partes.length !== 3) return false;
+
+        const f = new Date(
+            Number(partes[0]),
+            Number(partes[1]) - 1,
+            Number(partes[2]),
+            12
+        );
+
+        return (
+            f >= hoy &&
+            f.getFullYear() === anio &&
+            f.getMonth() === numeroMes &&
+            trabajaEseDia(f)
+        );
+    })();
+
+    if (!seleccionReserva.barbero) {
+        seleccionReserva.fecha = "";
+        seleccionReserva.hora = "";
+        renderHorasReserva();
+        return;
+    }
+
+    if (!fechaSeleccionadaValida) {
+
+        let primeraDisponible = null;
+
+        for (let d = 1; d <= diasMes; d++) {
+
+            const f = new Date(
+                anio,
+                numeroMes,
+                d,
+                12
+            );
+
+            if (f >= hoy && trabajaEseDia(f)) {
+                primeraDisponible = f;
+                break;
+            }
+        }
+
+        if (primeraDisponible) {
+
+            seleccionReserva.fecha =
+                `${primeraDisponible.getFullYear()}-${String(
+                    primeraDisponible.getMonth() + 1
+                ).padStart(2, "0")}-${String(
+                    primeraDisponible.getDate()
+                ).padStart(2, "0")}`;
+
+            // Volver a pintar para que el borde rojo
+            // quede en el día realmente seleccionado.
+            renderDiasReserva();
+
+        } else {
+
+            seleccionReserva.fecha = "";
+            seleccionReserva.hora = "";
+            renderHorasReserva();
+        }
     }
 }
 
