@@ -4308,6 +4308,37 @@ html, body {
   .calendario-estado { display: none !important; }
   .calendario-mes-titulo { font-size: 22px !important; }
 }
+
+/* ===== CORRECCIONES CLIENTE ===== */
+.servicio-card-interactivo{cursor:pointer}
+.servicio-card-interactivo .card-imagen{cursor:pointer}
+.barbero-descripcion-publica{color:#bdbdbd;font-size:13px;line-height:1.55;margin:10px 0 4px;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.reserva-barbero-foto{cursor:pointer;position:relative}
+.reserva-barbero-foto::after{content:"INFO";position:absolute;right:8px;bottom:8px;padding:4px 7px;border-radius:12px;background:rgba(0,0,0,.72);color:#fff;font-size:8px;font-weight:900;letter-spacing:1px;pointer-events:none}
+.barbero-perfil-descripcion{color:#c7c7c7;line-height:1.6;margin-top:10px;white-space:pre-line}
+.calendario-dia.no-trabaja{opacity:.55;background:#171717}.calendario-dia.pasado{opacity:.45}.calendario-dia.seleccionado{border:4px solid #d94a4a!important;box-shadow:0 0 0 2px rgba(217,74,74,.2),0 0 18px rgba(217,74,74,.22);background:#f4f4f1!important;color:#111!important}
+
+/* PERFIL DEL BARBERO AL TOCAR/CLIC EN SU FOTO */
+.modal-barbero-foto{position:fixed;inset:0;z-index:99999;display:none;place-items:center;padding:20px;background:rgba(0,0,0,.82);backdrop-filter:blur(7px)}
+.modal-barbero-foto.activo{display:grid}
+.modal-barbero-contenido{width:min(520px,94vw);overflow:hidden;border:1px solid rgba(218,165,32,.45);border-radius:22px;background:#111;box-shadow:0 25px 80px rgba(0,0,0,.65);animation:entradaBarbero .22s ease}
+.modal-barbero-imagen{height:280px;background:#191919;display:grid;place-items:center;overflow:hidden}
+.modal-barbero-imagen img{width:100%;height:100%;object-fit:cover}
+.modal-barbero-info{padding:24px}
+.modal-barbero-etiqueta{font-size:11px;letter-spacing:2px;color:#d7ad45;font-weight:800}
+.modal-barbero-info h3{margin:7px 0 3px;font-size:28px;color:#fff}
+.modal-barbero-especialidad{color:#d7ad45;font-weight:700}
+.modal-barbero-descripcion{margin:15px 0 0;color:#d1d1d1;line-height:1.7;font-size:15px;white-space:pre-line}
+.modal-barbero-redes{margin-top:18px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.modal-barbero-redes .barbero-redes{display:flex;gap:10px;align-items:center}
+.modal-barbero-redes .barbero-red{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;text-decoration:none;border:1px solid rgba(255,255,255,.18);transition:transform .2s ease,filter .2s ease}
+.modal-barbero-redes .barbero-red:hover{transform:translateY(-3px);filter:brightness(1.15)}
+.modal-barbero-red svg{width:20px;height:20px;fill:currentColor}
+.barbero-foto-clicable{cursor:pointer;position:relative}
+.barbero-foto-clicable::after{content:"VER PERFIL";position:absolute;left:50%;bottom:12px;transform:translateX(-50%);padding:6px 10px;border-radius:20px;background:rgba(0,0,0,.78);color:#fff;font-size:9px;font-weight:900;letter-spacing:1px;opacity:0;transition:opacity .2s ease;pointer-events:none}
+.barbero-foto-clicable:hover::after{opacity:1}
+.modal-barbero-cerrar{margin-top:20px;width:100%;padding:13px;border:0;border-radius:12px;background:#d7ad45;color:#111;font-weight:900;cursor:pointer}
+@keyframes entradaBarbero{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
 </style>
 
 </head>
@@ -5513,7 +5544,8 @@ async function cargarServicios() {
         activos.forEach(servicio => {
 
             const card = document.createElement("div");
-            card.className = "card";
+            card.className = "card servicio-card-interactivo";
+            card.dataset.featuredService = servicio.id_servicio;
 
             const foto =
                 servicio.foto ||
@@ -5570,7 +5602,7 @@ async function cargarServicios() {
                         </span>
                     </div>
 
-                    <a href="#reserva" class="btn-card">
+                    <a href="#reserva" class="btn-card btn-servicio-destacado" data-featured-service="${escapeHTML(servicio.id_servicio)}">
                         ELEGIR BARBERO →
                     </a>
 
@@ -5578,11 +5610,32 @@ async function cargarServicios() {
             `;
 
             lista.appendChild(card);
+
+            // Toda la tarjeta, incluida la foto, lleva al paso de elección
+            // del barbero conservando el servicio seleccionado.
+            card.addEventListener("click", (evento) => {
+                if (evento.target.closest("a")) return;
+                const elegido = serviciosReservaData.find(x =>
+                    String(x.id_servicio) === String(servicio.id_servicio)
+                );
+                if (!elegido) return;
+                seleccionReserva.servicio = elegido;
+                seleccionReserva.barbero = null;
+                seleccionReserva.fecha = "";
+                seleccionReserva.hora = "";
+                pagoRealizado = false;
+                actualizarEstadoPagoUI();
+                renderBookingBarbers();
+                renderBarberoPerfilReserva();
+                actualizarBarberoSeleccionadoMini();
+                mostrarPasoReserva(1);
+            });
         });
 
         // Los servicios generales se conservan como catálogo,
         // pero NO mostramos su precio porque cada barbero tiene el suyo.
         serviciosReservaData = activos;
+        configurarServiciosDestacados();
 
     }
     catch (error) {
@@ -5597,12 +5650,44 @@ async function cargarServicios() {
 }
 
 
+function configurarServiciosDestacados() {
+    document.querySelectorAll("[data-featured-service]").forEach(btn => {
+        if(btn.dataset.featuredConfigured === "1") return;
+        btn.dataset.featuredConfigured="1";
+        btn.addEventListener("click",()=>{
+            const id=btn.dataset.featuredService;
+            const servicio=serviciosReservaData.find(s=>String(s.id_servicio)===String(id));
+            if(!servicio)return;
+            seleccionReserva.servicio=servicio;
+            seleccionReserva.barbero=null; seleccionReserva.fecha=""; seleccionReserva.hora="";
+            pagoRealizado=false; actualizarEstadoPagoUI(); renderBookingBarbers(); renderBarberoPerfilReserva(); actualizarBarberoSeleccionadoMini();
+            mostrarPasoReserva(1); actualizarResumenReserva(); actualizarPreviewWhatsApp();
+        });
+    });
+}
+
+
 function cargarServiciosReserva(servicios) {
 
     serviciosReservaData =
         Array.isArray(servicios)
             ? servicios
             : [];
+
+    // Si ya venimos desde un servicio destacado, conservarlo solo si
+    // el barbero seleccionado realmente ofrece ese servicio. Además,
+    // reemplazar el objeto por el de barbero para usar su precio.
+    if (seleccionReserva.servicio) {
+        const servicioDelBarbero = serviciosReservaData.find(s =>
+            String(s.id_servicio) === String(seleccionReserva.servicio.id_servicio)
+        );
+        if (servicioDelBarbero) {
+            seleccionReserva.servicio = servicioDelBarbero;
+        } else {
+            seleccionReserva.servicio = null;
+            seleccionReserva.hora = "";
+        }
+    }
 
     const box =
         document.getElementById("bookingServices");
@@ -5790,134 +5875,103 @@ async function cargarServiciosDelBarberoReserva(
 
 
 function renderBookingBarbers() {
-
     const box = document.getElementById("bookingBarbers");
     if (!box) return;
 
-    box.innerHTML = barberosReservaData.length
-        ? barberosReservaData.map(barbero => {
-
-            const foto = barbero.foto || barbero.imagen || "";
-
-            return `
-                <button type="button"
-                    class="reserva-barbero ${seleccionReserva.barbero && String(seleccionReserva.barbero.id_barbero)===String(barbero.id_barbero) ? "seleccionado" : ""}"
-                    data-booking-barber="${escapeHTML(barbero.id_barbero)}">
-
-                    <div class="reserva-barbero-foto">
-                        ${foto
-                            ? `<img src="${escapeHTML(foto)}" alt="${escapeHTML(barbero.nombre)}">`
-                            : `<div style="height:100%;display:grid;place-items:center;font-size:28px;color:#777">✂</div>`
-                        }
-                    </div>
-
-                    <strong>${escapeHTML(barbero.nombre)}</strong>
-                    <small>${escapeHTML(barbero.especialidad || "Barbero profesional")}</small>
-                </button>
-            `;
-        }).join("")
-        : `<div class="vacio">No hay barberos disponibles.</div>`;
-
-    box.querySelectorAll("[data-booking-barber]").forEach(btn => {
-        btn.addEventListener("click", async () => {
-
-            seleccionReserva.barbero = barberosReservaData.find(
-                barbero => String(barbero.id_barbero) === String(btn.dataset.bookingBarber)
-            ) || null;
-
-            seleccionReserva.servicio = null;
-            seleccionReserva.fecha = "";
-            seleccionReserva.hora = "";
-
-            pagoRealizado = false;
-
-            actualizarEstadoPagoUI();
-
-            renderBookingBarbers();
-            renderBarberoPerfilReserva();
-
-            actualizarBarberoSeleccionadoMini();
-
-            // Carga los servicios y precios específicos de este barbero.
-            await cargarServiciosDelBarberoReserva(
-                seleccionReserva.barbero.id_barbero
-            );
-
-            renderDiasReserva();
-            renderHorasReserva();
-            actualizarResumenReserva();
-            actualizarPreviewWhatsApp();
-        });
-    });
-}
-
-
-function renderBarberoPerfilReserva() {
-
-function actualizarBarberoSeleccionadoMini() {
-
-    const box =
-        document.getElementById(
-            "barberoSeleccionadoMini"
-        );
-
-    if (!box) return;
-
-    if (!seleccionReserva.barbero) {
-
-        box.innerHTML = `
-            <span>BARBERO</span>
-            <strong>Selecciona un barbero</strong>
-        `;
-
+    if (!Array.isArray(barberosReservaData) || !barberosReservaData.length) {
+        box.innerHTML = `<div class="vacio">No hay barberos disponibles.</div>`;
         return;
     }
 
-    box.innerHTML = `
-        <span>BARBERO SELECCIONADO</span>
-        <strong>
-            ${escapeHTML(
-                seleccionReserva.barbero.nombre
-            )}
-        </strong>
-    `;
+    box.innerHTML = barberosReservaData.map(barbero => {
+        const id = String(barbero.id_barbero);
+        const foto = barbero.foto || barbero.imagen || "";
+        const desc = String(barbero.descripcion || "").trim();
+        const seleccionado = seleccionReserva.barbero && String(seleccionReserva.barbero.id_barbero) === id;
+        return `<button type="button" class="reserva-barbero ${seleccionado ? "seleccionado" : ""}" data-booking-barber="${escapeHTML(id)}">
+            <div class="reserva-barbero-foto" data-foto-barbero="${escapeHTML(id)}">
+                ${foto ? `<img src="${escapeHTML(foto)}" alt="${escapeHTML(barbero.nombre || "Barbero")}" loading="lazy">` : `<div class="barbero-foto-placeholder">✂</div>`}
+            </div>
+            <strong>${escapeHTML(barbero.nombre || "Barbero")}</strong>
+            <small>${escapeHTML(barbero.especialidad || "Barbero profesional")}</small>
+        </button>`;
+    }).join("");
+
+    // Delegación: funciona aunque las tarjetas se vuelvan a dibujar.
+    box.onclick = async (evento) => {
+        const foto = evento.target.closest("[data-foto-barbero]");
+        const boton = evento.target.closest("[data-booking-barber]");
+        if (!boton) return;
+
+        const id = String(boton.dataset.bookingBarber);
+        const barbero = barberosReservaData.find(b => String(b.id_barbero) === id);
+        if (!barbero) return;
+
+        // La foto abre la descripción y NO cambia la selección.
+        if (foto || evento.target.closest("img")) {
+            evento.preventDefault();
+            evento.stopPropagation();
+            mostrarDescripcionBarbero(barbero);
+            return;
+        }
+
+        const servicioAntes = seleccionReserva.servicio;
+        seleccionReserva.barbero = barbero;
+        seleccionReserva.servicio = servicioAntes;
+        seleccionReserva.fecha = "";
+        seleccionReserva.hora = "";
+        pagoRealizado = false;
+        actualizarEstadoPagoUI();
+        actualizarBarberoSeleccionadoMini();
+        renderBookingBarbers();
+        renderBarberoPerfilReserva();
+        actualizarResumenReserva();
+        actualizarPreviewWhatsApp();
+
+        // Cargar en paralelo los servicios y los horarios DEL BARBERO ELEGIDO.
+        await Promise.all([
+            cargarServiciosDelBarberoReserva(barbero.id_barbero),
+            cargarHorariosDelBarberoReserva(barbero.id_barbero)
+        ]);
+
+        // Al cambiar de barbero, mostrar siempre el mes actual para que sus días
+        // de trabajo sean visibles inmediatamente.
+        const ahora = new Date();
+        window.mesCalendarioReserva = new Date(ahora.getFullYear(), ahora.getMonth(), 1, 12);
+        renderDiasReserva();
+        renderHorasReserva();
+        actualizarResumenReserva();
+        actualizarPreviewWhatsApp();
+
+        // Si el servicio elegido desde inicio no pertenece a este barbero,
+        // cargarServiciosDelBarberoReserva lo habrá limpiado.
+        mostrarPasoReserva(2);
+    };
 }
 
-
+function renderBarberoPerfilReserva() {
     const box = document.getElementById("barberProfileReserva");
     const barbero = seleccionReserva.barbero;
-
     if (!box) return;
-
     if (!barbero) {
         box.style.display = "none";
         box.innerHTML = "";
         return;
     }
-
     const foto = barbero.foto || barbero.imagen || "";
-
+    const descripcion = String(barbero.descripcion || "").trim();
     box.style.display = "grid";
-
     box.innerHTML = `
         <div class="barbero-perfil-foto">
-            ${foto
-                ? `<img src="${escapeHTML(foto)}" alt="${escapeHTML(barbero.nombre)}">`
-                : `<div style="height:100%;display:grid;place-items:center;font-size:50px;color:#777">✂</div>`
-            }
+            ${foto ? `<img src="${escapeHTML(foto)}" alt="${escapeHTML(barbero.nombre || "Barbero")}">` : `<div style="height:100%;display:grid;place-items:center;font-size:50px;color:#777">✂</div>`}
         </div>
-
         <div class="barbero-perfil-info">
-            <h3>${escapeHTML(barbero.nombre)}</h3>
+            <span class="barbero-perfil-etiqueta">TU BARBERO</span>
+            <h3>${escapeHTML(barbero.nombre || "Barbero")}</h3>
             <div class="especialidad">${escapeHTML(barbero.especialidad || "Barbero profesional")}</div>
-            <p>
-                Este será tu barbero para la cita. Selecciona el día y luego
-                elige uno de los horarios disponibles.
-            </p>
-        </div>
-    `;
+            <p class="barbero-perfil-descripcion">${escapeHTML(descripcion || "Barbero profesional de CLUB PONTE PERRO. Selecciona tu día y horario disponible.")}</p>
+        </div>`;
 }
-
 
 function obtenerRedBarbero(barbero, claves) {
 
@@ -6098,6 +6152,29 @@ function obtenerRedBarBarberoSeguro(barbero, campos) {
 }
 
 
+function mostrarDescripcionBarbero(barbero){
+    let modal=document.getElementById("modalBarberoFoto");
+    if(!modal){
+        modal=document.createElement("div");
+        modal.id="modalBarberoFoto";
+        modal.className="modal-barbero-foto";
+        modal.innerHTML=`<div class="modal-barbero-contenido"><div class="modal-barbero-imagen" id="modalBarberoImagen"></div><div class="modal-barbero-info"><span class="modal-barbero-etiqueta">CONOCE A TU BARBERO</span><h3 id="modalBarberoNombre"></h3><div class="modal-barbero-especialidad" id="modalBarberoEspecialidad"></div><p class="modal-barbero-descripcion" id="modalBarberoDescripcion"></p><div class="modal-barbero-redes" id="modalBarberoRedes"></div><button type="button" class="modal-barbero-cerrar" id="cerrarModalBarbero">CERRAR</button></div></div>`;
+        document.body.appendChild(modal);
+        modal.addEventListener("click",e=>{if(e.target===modal)modal.classList.remove("activo")});
+        modal.querySelector("#cerrarModalBarbero").onclick=()=>modal.classList.remove("activo");
+    }
+    const foto=barbero?.foto||barbero?.imagen||"";
+    document.getElementById("modalBarberoImagen").innerHTML=foto?`<img src="${escapeHTML(foto)}" alt="${escapeHTML(barbero.nombre||"Barbero")}">`:`<span style="font-size:80px;color:#777">✂</span>`;
+    document.getElementById("modalBarberoNombre").textContent=barbero?.nombre||"Barbero";
+    document.getElementById("modalBarberoEspecialidad").textContent=barbero?.especialidad||"Barbero profesional";
+    document.getElementById("modalBarberoDescripcion").textContent=String(barbero?.descripcion||"").trim()||"Este barbero forma parte de CLUB PONTE PERRO. Selecciona sus servicios y horarios para realizar tu reserva.";
+    const redesModal = document.getElementById("modalBarberoRedes");
+    if (redesModal) {
+        redesModal.innerHTML = crearRedesBarbero(barbero);
+    }
+    modal.classList.add("activo");
+}
+
 async function cargarBarberos() {
 
     const lista = document.getElementById("barberosLista");
@@ -6141,26 +6218,26 @@ async function cargarBarberos() {
 
             const foto = barbero.foto || barbero.imagen || "";
 
-            const redesBarbero = crearRedesBarbero(barbero);
-
             card.innerHTML = foto
                 ? `
-                    <img src="${escapeHTML(foto)}"
-                         alt="${escapeHTML(barbero.nombre)}"
-                         loading="lazy"
-                         onerror="this.style.display='none';">
+                    <div class="barbero-foto-clicable" title="Haz clic para ver la descripción y redes sociales">
+                        <img src="${escapeHTML(foto)}"
+                             alt="${escapeHTML(barbero.nombre)}"
+                             loading="lazy"
+                             onerror="this.style.display='none';">
+                    </div>
                     <h3>${escapeHTML(barbero.nombre)}</h3>
                     <p>${escapeHTML(barbero.especialidad || "Barbero profesional")}</p>
-                    ${redesBarbero}
                 `
                 : `
-                    <div class="sin-foto">✂</div>
+                    <div class="sin-foto barbero-foto-clicable" title="Haz clic para ver la descripción y redes sociales">✂</div>
                     <h3>${escapeHTML(barbero.nombre)}</h3>
                     <p>${escapeHTML(barbero.especialidad || "Barbero profesional")}</p>
-                    ${redesBarbero}
                 `;
 
             lista.appendChild(card);
+            const fotoCard=card.querySelector(".barbero-foto-clicable");
+            if(fotoCard) fotoCard.addEventListener("click",(e)=>{ e.preventDefault(); e.stopPropagation(); mostrarDescripcionBarbero(barbero); });
         });
 
         renderBookingBarbers();
@@ -6436,42 +6513,77 @@ async function cargarPromociones() {
 
 
 async function cargarDatosHorarios() {
-
     try {
-
-        const [respuestaHorarios, respuestaReservas] = await Promise.all([
-            fetch("/api/horarios"),
-            fetch("/api/reservas")
-        ]);
-
-        if (respuestaHorarios.ok) {
-            horariosDisponibles = await respuestaHorarios.json();
-        } else {
-            horariosDisponibles = [];
-        }
-
+        const respuestaReservas = await fetch("/api/reservas");
         if (respuestaReservas.ok) {
-            reservasActuales = await respuestaReservas.json();
+            const datos = await respuestaReservas.json();
+            reservasActuales = Array.isArray(datos) ? datos : [];
         } else {
             reservasActuales = [];
         }
-
+        // Los horarios se cargan específicamente cuando se selecciona un barbero.
         renderDiasReserva();
         renderHorasReserva();
-
-    }
-    catch (error) {
-
-        console.error("❌ Error horarios:", error);
-
-        horariosDisponibles = [];
+    } catch (error) {
+        console.error("❌ Error reservas:", error);
         reservasActuales = [];
-
         renderDiasReserva();
         renderHorasReserva();
     }
 }
 
+
+function normalizarDiaHorario(valor) {
+    return String(valor || "")
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+}
+
+function actualizarBarberoSeleccionadoMini() {
+    const box = document.getElementById("barberoSeleccionadoMini");
+    if (!box) return;
+    if (!seleccionReserva.barbero) {
+        box.innerHTML = `<span>BARBERO</span><strong>Selecciona un barbero</strong>`;
+        return;
+    }
+    const b = seleccionReserva.barbero;
+    box.innerHTML = `<span>BARBERO SELECCIONADO</span><strong>${escapeHTML(b.nombre || "Barbero")}</strong>`;
+}
+
+async function cargarHorariosDelBarberoReserva(idBarbero) {
+    horariosDisponibles = [];
+    reservasActuales = Array.isArray(reservasActuales) ? reservasActuales : [];
+    renderDiasReserva();
+    renderHorasReserva();
+
+    if (!idBarbero) return;
+
+    try {
+        const respuesta = await fetch(`/api/horarios?id_barbero=${encodeURIComponent(Number(idBarbero))}`);
+        const datos = await respuesta.json();
+        if (!respuesta.ok || !Array.isArray(datos)) {
+            throw new Error(datos?.error || "No se pudieron cargar los horarios del barbero.");
+        }
+
+        // El backend puede devolver también horarios generales (id_barbero NULL).
+        // Para la reserva SOLO usamos los horarios propios del barbero elegido.
+        horariosDisponibles = datos.filter(h => {
+            const activo = Number(h.estado) === 1 || h.estado === true;
+            const propio = h.id_barbero !== null && h.id_barbero !== undefined && String(h.id_barbero).trim() !== "" && String(h.id_barbero) === String(idBarbero);
+            return activo && propio;
+        });
+
+        renderDiasReserva();
+        renderHorasReserva();
+    } catch (error) {
+        console.error("Error cargando horarios del barbero:", error);
+        horariosDisponibles = [];
+        renderDiasReserva();
+        renderHorasReserva();
+    }
+}
 
 function obtenerDiaSemana(fecha) {
 
@@ -6509,55 +6621,17 @@ function minutosHora(hora) {
 
 
 function obtenerHorarioDelDia(fecha) {
-    const dia = obtenerDiaSemana(fecha);
-    if (!seleccionReserva.barbero) return null;
+    if (!seleccionReserva.barbero || !fecha) return null;
+    const dia = normalizarDiaHorario(obtenerDiaSemana(fecha));
+    const idBarbero = String(seleccionReserva.barbero.id_barbero).trim();
+    const horarios = Array.isArray(horariosDisponibles) ? horariosDisponibles : [];
 
-    const idBarbero = String(seleccionReserva.barbero.id_barbero);
-
-    const activos = horariosDisponibles.filter(horario =>
-        Number(horario.estado) === 1 || horario.estado === true
-    );
-
-    // Si el barbero tiene aunque sea un horario propio,
-    // SOLO se usan sus horarios. Los horarios generales (NULL)
-    // ya no se aplican a ese barbero.
-    const tieneHorarioPropio = activos.some(horario =>
-        horario.id_barbero !== null &&
-        horario.id_barbero !== undefined &&
-        String(horario.id_barbero).trim() === idBarbero
-    );
-
-    if (tieneHorarioPropio) {
-        return activos.find(horario => {
-            const mismoBarbero =
-                horario.id_barbero !== null &&
-                horario.id_barbero !== undefined &&
-                String(horario.id_barbero).trim() === idBarbero;
-
-            const mismoDia =
-                String(horario.dia_semana || "").trim().toLowerCase() ===
-                dia.toLowerCase();
-
-            return mismoBarbero && mismoDia;
-        }) || null;
-    }
-
-    // Compatibilidad: si el barbero todavía no tiene
-    // horarios propios, se usan los horarios generales.
-    return activos.find(horario => {
-        const mismoDia =
-            String(horario.dia_semana || "").trim().toLowerCase() ===
-            dia.toLowerCase();
-
-        const general =
-            horario.id_barbero === null ||
-            horario.id_barbero === undefined ||
-            String(horario.id_barbero).trim() === "";
-
-        return general && mismoDia;
+    return horarios.find(h => {
+        const activo = Number(h.estado) === 1 || h.estado === true;
+        const propio = h.id_barbero !== null && h.id_barbero !== undefined && String(h.id_barbero).trim() === idBarbero;
+        return activo && propio && normalizarDiaHorario(h.dia_semana) === dia;
     }) || null;
 }
-
 
 function reservaBloqueaHorario(reserva, fecha, idBarbero, horaInicio, duracionNueva) {
 
@@ -6605,363 +6679,87 @@ function reservaBloqueaHorario(reserva, fecha, idBarbero, horaInicio, duracionNu
 
 
 function renderDiasReserva() {
-
     const box = document.getElementById("reservaDias");
     if (!box) return;
 
-    // Mes que se está mostrando.
-    if (!window.mesCalendarioReserva) {
-        const base = seleccionReserva.fecha
-            ? new Date(`${seleccionReserva.fecha}T12:00:00`)
-            : new Date();
+    const ahora = new Date();
+    const hoy = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate(), 12);
 
-        window.mesCalendarioReserva =
-            new Date(base.getFullYear(), base.getMonth(), 1);
+    if (!(window.mesCalendarioReserva instanceof Date) || isNaN(window.mesCalendarioReserva.getTime())) {
+        window.mesCalendarioReserva = new Date(hoy.getFullYear(), hoy.getMonth(), 1, 12);
     }
 
-    const mes = window.mesCalendarioReserva;
+    const mes = new Date(window.mesCalendarioReserva.getFullYear(), window.mesCalendarioReserva.getMonth(), 1, 12);
     const anio = mes.getFullYear();
     const numeroMes = mes.getMonth();
-
-    const nombreMes = new Intl.DateTimeFormat("es-BO", {
-        month: "long",
-        year: "numeric"
-    }).format(mes);
-
-    const primerDia = new Date(anio, numeroMes, 1, 12);
     const diasMes = new Date(anio, numeroMes + 1, 0).getDate();
+    const primerDia = new Date(anio, numeroMes, 1, 12);
     const desplazamiento = (primerDia.getDay() + 6) % 7;
+    const nombreMes = new Intl.DateTimeFormat("es-BO", {month:"long", year:"numeric"}).format(mes);
+    const mesActual = new Date(hoy.getFullYear(), hoy.getMonth(), 1, 12);
 
-    const idBarbero =
-        seleccionReserva.barbero
-            ? String(seleccionReserva.barbero.id_barbero)
-            : "";
-
-    const horariosActivos = horariosDisponibles.filter(h =>
-        Number(h.estado) === 1 || h.estado === true
-    );
-
-    // Si hay barbero seleccionado y tiene al menos un horario propio,
-    // SOLO se usan sus horarios. Los horarios generales (NULL) NO se mezclan.
-    const tieneHorarioPropio = !!idBarbero && horariosActivos.some(h =>
-        h.id_barbero !== null &&
-        h.id_barbero !== undefined &&
-        String(h.id_barbero).trim() === idBarbero
-    );
-
-    const normalizarDia = valor =>
-        String(valor || "")
-            .trim()
-            .toLowerCase()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "");
-
-    const trabajaEseDia = fecha => {
-
-        if (!idBarbero) return false;
-
-        const dia = normalizarDia(
-            ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"][fecha.getDay()]
-        );
-
-        return horariosActivos.some(h => {
-
-            const mismoDia =
-                normalizarDia(h.dia_semana) === dia;
-
-            if (!mismoDia) return false;
-
-            if (tieneHorarioPropio) {
-                return (
-                    h.id_barbero !== null &&
-                    h.id_barbero !== undefined &&
-                    String(h.id_barbero).trim() === idBarbero
-                );
-            }
-
-            return (
-                h.id_barbero === null ||
-                h.id_barbero === undefined ||
-                String(h.id_barbero).trim() === ""
-            );
-        });
-    };
-
-    const ahora = new Date();
-    const hoy = new Date(
-        ahora.getFullYear(),
-        ahora.getMonth(),
-        ahora.getDate(),
-        12
-    );
-
-    const mesActual =
-        new Date(hoy.getFullYear(), hoy.getMonth(), 1);
-
-    let html = `
-        <div class="calendario-reserva">
-
-            <div class="calendario-cabecera">
-
-                <button type="button"
-                    class="calendario-nav"
-                    id="mesAnteriorReserva"
-                    aria-label="Mes anterior">
-                    ‹
-                </button>
-
-                <div class="calendario-mes-titulo">
-                    ${escapeHTML(
-                        nombreMes.charAt(0).toUpperCase() +
-                        nombreMes.slice(1)
-                    )}
-                </div>
-
-                <button type="button"
-                    class="calendario-nav"
-                    id="mesSiguienteReserva"
-                    aria-label="Mes siguiente">
-                    ›
-                </button>
-
-            </div>
-
-            <div class="calendario-semana">
-                <span>LUN</span>
-                <span>MAR</span>
-                <span>MIÉ</span>
-                <span>JUE</span>
-                <span>VIE</span>
-                <span>SÁB</span>
-                <span>DOM</span>
-            </div>
-
-            <div class="calendario-mes-grid">
-    `;
-
-    for (let i = 0; i < desplazamiento; i++) {
-        html += `<div class="calendario-celda vacia"></div>`;
-    }
-
-    for (let diaNumero = 1; diaNumero <= diasMes; diaNumero++) {
-
-        const fecha = new Date(
-            anio,
-            numeroMes,
-            diaNumero,
-            12
-        );
-
-        const iso =
-            `${anio}-${String(numeroMes + 1).padStart(2, "0")}-${String(diaNumero).padStart(2, "0")}`;
-
-        const trabaja = trabajaEseDia(fecha);
-        const esPasado = fecha < hoy;
-        const esHoy = fecha.getTime() === hoy.getTime();
-        const seleccionado = seleccionReserva.fecha === iso;
-
-        const deshabilitado =
-            esPasado || !trabaja;
-
-        let clases = "calendario-dia";
-
-        if (trabaja) clases += " trabaja";
-        else clases += " no-trabaja";
-
-        if (esPasado) clases += " pasado";
-        if (esHoy) clases += " hoy";
-        if (seleccionado) clases += " seleccionado";
-
-        let etiqueta = !seleccionReserva.barbero
-            ? "ELIGE BARBERO"
-            : "NO TRABAJA";
-
-        if (esPasado) {
-            etiqueta = "PASADO";
-        } else if (trabaja) {
-            etiqueta = esHoy
-                ? "HOY · DISPONIBLE"
-                : "DISPONIBLE";
-        }
-
-        html += `
-            <button
-                type="button"
-                class="${clases}"
-                data-reserva-fecha="${iso}"
-                ${deshabilitado ? "disabled" : ""}
-                aria-label="${diaNumero} de ${escapeHTML(nombreMes)} — ${etiqueta}">
-
-                <span class="calendario-numero">
-                    ${diaNumero}
-                </span>
-
-                <span class="calendario-estado">
-                    ${etiqueta}
-                </span>
-
-            </button>
-        `;
-    }
-
-    html += `
-            </div>
-
-            ${!seleccionReserva.barbero ? `
-                <div class="calendario-ayuda">💈 Selecciona un barbero para activar sus días de trabajo.</div>
-            ` : ""}
-
-            <div class="calendario-leyenda">
-
-                <span>
-                    <i class="leyenda-punto trabaja"></i>
-                    DÍA DE TRABAJO
-                </span>
-
-                <span>
-                    <i class="leyenda-punto seleccionado"></i>
-                    SELECCIONADO
-                </span>
-
-                <span>
-                    <i class="leyenda-punto no-trabaja"></i>
-                    NO TRABAJA
-                </span>
-
-            </div>
-
+    let html = `<div class="calendario-reserva">
+        <div class="calendario-cabecera">
+            <button type="button" class="calendario-nav" id="mesAnteriorReserva" aria-label="Mes anterior">‹</button>
+            <div class="calendario-mes-titulo">${escapeHTML(nombreMes.charAt(0).toUpperCase()+nombreMes.slice(1))}</div>
+            <button type="button" class="calendario-nav" id="mesSiguienteReserva" aria-label="Mes siguiente">›</button>
         </div>
-    `;
+        <div class="calendario-semana"><span>LUN</span><span>MAR</span><span>MIÉ</span><span>JUE</span><span>VIE</span><span>SÁB</span><span>DOM</span></div>
+        <div class="calendario-mes-grid">`;
 
-    box.innerHTML = html;
+    for(let i=0;i<desplazamiento;i++) html += `<div class="calendario-celda vacia"></div>`;
 
-    document
-        .getElementById("mesAnteriorReserva")
-        ?.addEventListener("click", () => {
-
-            const anterior = new Date(
-                mes.getFullYear(),
-                mes.getMonth() - 1,
-                1
-            );
-
-            if (anterior < mesActual) return;
-
-            window.mesCalendarioReserva = anterior;
-            renderDiasReserva();
-        });
-
-    document
-        .getElementById("mesSiguienteReserva")
-        ?.addEventListener("click", () => {
-
-            window.mesCalendarioReserva = new Date(
-                mes.getFullYear(),
-                mes.getMonth() + 1,
-                1
-            );
-
-            renderDiasReserva();
-        });
-
-    box
-        .querySelectorAll("[data-reserva-fecha]")
-        .forEach(btn => {
-
-            btn.addEventListener("click", () => {
-
-                if (btn.disabled) return;
-
-                seleccionReserva.fecha =
-                    btn.dataset.reservaFecha;
-
-                seleccionReserva.hora = "";
-
-                pagoRealizado = false;
-                actualizarEstadoPagoUI();
-
-                renderDiasReserva();
-                renderHorasReserva();
-                actualizarResumenReserva();
-                actualizarPreviewWhatsApp();
-            });
-        });
-
-    // Si la fecha seleccionada no es válida para este barbero,
-    // seleccionar automáticamente el primer día laborable visible.
-    const fechaSeleccionadaValida = (() => {
-
-        if (!seleccionReserva.barbero) return false;
-        if (!seleccionReserva.fecha) return false;
-
-        const partes =
-            String(seleccionReserva.fecha).split("-");
-
-        if (partes.length !== 3) return false;
-
-        const f = new Date(
-            Number(partes[0]),
-            Number(partes[1]) - 1,
-            Number(partes[2]),
-            12
-        );
-
-        return (
-            f >= hoy &&
-            f.getFullYear() === anio &&
-            f.getMonth() === numeroMes &&
-            trabajaEseDia(f)
-        );
-    })();
-
-    if (!seleccionReserva.barbero) {
-        seleccionReserva.fecha = "";
-        seleccionReserva.hora = "";
-        renderHorasReserva();
-        return;
+    for(let d=1; d<=diasMes; d++) {
+        const fecha = new Date(anio, numeroMes, d, 12);
+        const iso = `${anio}-${String(numeroMes+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+        const trabaja = !!seleccionReserva.barbero && !!obtenerHorarioDelDia(iso);
+        const pasado = fecha < hoy;
+        const seleccionado = String(seleccionReserva.fecha||"") === iso;
+        const disabled = !seleccionReserva.barbero || pasado || !trabaja;
+        const etiqueta = !seleccionReserva.barbero ? "ELIGE BARBERO" : pasado ? "PASADO" : trabaja ? (fecha.getTime()===hoy.getTime()?"HOY · DISPONIBLE":"DISPONIBLE") : "NO TRABAJA";
+        html += `<button type="button" class="calendario-dia ${trabaja?"trabaja":"no-trabaja"} ${pasado?"pasado":""} ${fecha.getTime()===hoy.getTime()?"hoy":""} ${seleccionado?"seleccionado":""}" data-reserva-fecha="${iso}" ${disabled?"disabled":""}>
+            <span class="calendario-numero">${d}</span><span class="calendario-estado">${etiqueta}</span>
+        </button>`;
     }
 
-    if (!fechaSeleccionadaValida) {
+    html += `</div>
+        ${!seleccionReserva.barbero?`<div class="calendario-ayuda">💈 Selecciona un barbero para activar sus días de trabajo.</div>`:""}
+        <div class="calendario-leyenda"><span><i class="leyenda-punto trabaja"></i>DÍA DE TRABAJO</span><span><i class="leyenda-punto seleccionado"></i>SELECCIONADO</span><span><i class="leyenda-punto no-trabaja"></i>NO TRABAJA</span></div>
+    </div>`;
+    box.innerHTML=html;
 
-        let primeraDisponible = null;
-
-        for (let d = 1; d <= diasMes; d++) {
-
-            const f = new Date(
-                anio,
-                numeroMes,
-                d,
-                12
-            );
-
-            if (f >= hoy && trabajaEseDia(f)) {
-                primeraDisponible = f;
-                break;
-            }
-        }
-
-        if (primeraDisponible) {
-
-            seleccionReserva.fecha =
-                `${primeraDisponible.getFullYear()}-${String(
-                    primeraDisponible.getMonth() + 1
-                ).padStart(2, "0")}-${String(
-                    primeraDisponible.getDate()
-                ).padStart(2, "0")}`;
-
-            // Volver a pintar para que el borde rojo
-            // quede en el día realmente seleccionado.
+    const btnAnt=document.getElementById("mesAnteriorReserva");
+    const btnSig=document.getElementById("mesSiguienteReserva");
+    if(btnAnt){
+        btnAnt.disabled = mes.getTime() <= mesActual.getTime();
+        btnAnt.onclick=()=>{
+            if(btnAnt.disabled) return;
+            window.mesCalendarioReserva = new Date(anio, numeroMes-1, 1, 12);
             renderDiasReserva();
-
-        } else {
-
-            seleccionReserva.fecha = "";
-            seleccionReserva.hora = "";
             renderHorasReserva();
-        }
+        };
     }
+    if(btnSig){
+        btnSig.onclick=()=>{
+            window.mesCalendarioReserva = new Date(anio, numeroMes+1, 1, 12);
+            renderDiasReserva();
+            renderHorasReserva();
+        };
+    }
+    box.querySelectorAll("[data-reserva-fecha]").forEach(btn=>{
+        btn.onclick=()=>{
+            if(btn.disabled) return;
+            seleccionReserva.fecha=btn.dataset.reservaFecha;
+            seleccionReserva.hora="";
+            pagoRealizado=false;
+            actualizarEstadoPagoUI();
+            renderDiasReserva();
+            renderHorasReserva();
+            actualizarResumenReserva();
+            actualizarPreviewWhatsApp();
+        };
+    });
 }
-
 
 function esHoy(fecha) {
 
@@ -7195,6 +6993,11 @@ function mostrarPasoReserva(paso) {
 
     actualizarResumenReserva();
 
+    if (paso === 2) {
+        renderDiasReserva();
+        renderHorasReserva();
+    }
+
     if (paso === 3) {
         actualizarPreviewWhatsApp();
     }
@@ -7333,20 +7136,18 @@ function crearMensajeWhatsApp(datos) {
 
 
 document.getElementById("reservaNext1")?.addEventListener("click", async () => {
-
     if (!seleccionReserva.barbero) {
-
-        alert(
-            "Selecciona primero un barbero."
-        );
-
+        alert("Selecciona primero un barbero.");
         return;
     }
 
-    await cargarServiciosDelBarberoReserva(
-        seleccionReserva.barbero.id_barbero
-    );
+    await Promise.all([
+        cargarServiciosDelBarberoReserva(seleccionReserva.barbero.id_barbero),
+        cargarHorariosDelBarberoReserva(seleccionReserva.barbero.id_barbero)
+    ]);
 
+    renderDiasReserva();
+    renderHorasReserva();
     mostrarPasoReserva(2);
 });
 
@@ -7972,6 +7773,11 @@ if (footerYearInicial) {
 // ======================================================
 // INICIAR
 // ======================================================
+
+const hoyInicialCalendario = new Date();
+window.mesCalendarioReserva = new Date(hoyInicialCalendario.getFullYear(), hoyInicialCalendario.getMonth(), 1, 12);
+renderDiasReserva();
+renderHorasReserva();
 
 Promise.allSettled([
     cargarConfiguracion(),
