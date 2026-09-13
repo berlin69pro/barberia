@@ -158,19 +158,35 @@ router.get(
     (req, res) => {
 
         const sql = `
+
             SELECT
-                id_promocion,
-                titulo,
-                descripcion,
-                precio_anterior,
-                precio_promocion,
-                fecha_inicio,
-                fecha_fin,
-                imagen,
-                estado,
-                fecha_creacion
-            FROM promociones
-            ORDER BY fecha_creacion DESC
+
+                p.id_promocion,
+                p.id_servicio,
+
+                p.titulo,
+                p.descripcion,
+
+                p.precio_anterior,
+                p.precio_promocion,
+
+                p.fecha_inicio,
+                p.fecha_fin,
+
+                p.imagen,
+                p.estado,
+                p.fecha_creacion,
+
+                s.nombre AS servicio_nombre
+
+            FROM promociones p
+
+            LEFT JOIN servicios s
+                ON p.id_servicio = s.id_servicio
+
+            ORDER BY
+                p.fecha_creacion DESC
+
         `;
 
 
@@ -221,19 +237,35 @@ router.get(
     (req, res) => {
 
         const sql = `
+
             SELECT
-                id_promocion,
-                titulo,
-                descripcion,
-                precio_anterior,
-                precio_promocion,
-                fecha_inicio,
-                fecha_fin,
-                imagen,
-                estado,
-                fecha_creacion
-            FROM promociones
-            WHERE id_promocion = ?
+
+                p.id_promocion,
+                p.id_servicio,
+
+                p.titulo,
+                p.descripcion,
+
+                p.precio_anterior,
+                p.precio_promocion,
+
+                p.fecha_inicio,
+                p.fecha_fin,
+
+                p.imagen,
+                p.estado,
+                p.fecha_creacion,
+
+                s.nombre AS servicio_nombre
+
+            FROM promociones p
+
+            LEFT JOIN servicios s
+                ON p.id_servicio = s.id_servicio
+
+            WHERE
+                p.id_promocion = ?
+
         `;
 
 
@@ -246,6 +278,11 @@ router.get(
             ) => {
 
                 if (error) {
+
+                    console.error(
+                        "❌ Error al obtener promoción:",
+                        error
+                    );
 
                     return res
                         .status(500)
@@ -298,10 +335,19 @@ router.post(
         res
     ) => {
 
-        let resultadoCloudinary = null;
-
-
         try {
+
+            // ========================================
+            // DATOS
+            // ========================================
+
+            const idServicio =
+                req.body.id_servicio
+                    ? Number(
+                        req.body.id_servicio
+                    )
+                    : NaN;
+
 
             const titulo =
                 req.body.titulo
@@ -344,7 +390,30 @@ router.post(
 
 
             // ========================================
-            // VALIDACIONES
+            // VALIDAR SERVICIO
+            // ========================================
+
+            if (
+                !Number.isInteger(
+                    idServicio
+                ) ||
+                idServicio <= 0
+            ) {
+
+                return res
+                    .status(400)
+                    .json({
+
+                        error:
+                            "Debes seleccionar un servicio"
+
+                    });
+
+            }
+
+
+            // ========================================
+            // VALIDAR TÍTULO
             // ========================================
 
             if (!titulo) {
@@ -361,10 +430,18 @@ router.post(
             }
 
 
+            // ========================================
+            // VALIDAR PRECIO
+            // ========================================
+
             if (
-                Number.isNaN(
+
+                !Number.isFinite(
                     precioPromocion
-                )
+                ) ||
+
+                precioPromocion <= 0
+
             ) {
 
                 return res
@@ -372,12 +449,16 @@ router.post(
                     .json({
 
                         error:
-                            "El precio de promoción es obligatorio"
+                            "El precio de promoción debe ser mayor a 0"
 
                     });
 
             }
 
+
+            // ========================================
+            // VALIDAR FECHAS
+            // ========================================
 
             if (!fechaInicio) {
 
@@ -407,24 +488,6 @@ router.post(
             }
 
 
-            if (!req.file) {
-
-                return res
-                    .status(400)
-                    .json({
-
-                        error:
-                            "Debes seleccionar una imagen"
-
-                    });
-
-            }
-
-
-            // ========================================
-            // VALIDAR FECHAS
-            // ========================================
-
             if (
                 fechaFin <
                 fechaInicio
@@ -443,91 +506,354 @@ router.post(
 
 
             // ========================================
-            // SUBIR A CLOUDINARY
+            // VALIDAR IMAGEN
             // ========================================
 
-            resultadoCloudinary =
-                await subirACloudinary(
-                    req.file
-                );
+            if (!req.file) {
 
+                return res
+                    .status(400)
+                    .json({
 
-            const rutaImagen =
-                resultadoCloudinary.secure_url;
+                        error:
+                            "Debes seleccionar una imagen"
+
+                    });
+
+            }
 
 
             // ========================================
-            // INSERTAR EN AIVEN
+            // VERIFICAR SERVICIO
             // ========================================
 
-            const sql = `
-                INSERT INTO promociones
-                (
-                    titulo,
-                    descripcion,
-                    precio_anterior,
-                    precio_promocion,
-                    fecha_inicio,
-                    fecha_fin,
-                    imagen,
+            const verificarServicio = `
+
+                SELECT
+
+                    id_servicio,
+                    nombre,
+                    precio,
                     estado
-                )
-                VALUES (?, ?, ?, ?, ?, ?, ?, TRUE)
+
+                FROM servicios
+
+                WHERE
+                    id_servicio = ?
+
+                LIMIT 1
+
             `;
 
 
             conexion.query(
-                sql,
-                [
-                    titulo,
-                    descripcion,
-                    precioAnterior,
-                    precioPromocion,
-                    fechaInicio,
-                    fechaFin,
-                    rutaImagen
-                ],
-                (
+
+                verificarServicio,
+
+                [idServicio],
+
+                async (
                     error,
-                    resultado
+                    servicios
                 ) => {
 
                     if (error) {
 
                         console.error(
-                            "❌ Error al crear promoción:",
+                            "❌ Error al verificar servicio:",
                             error
                         );
-
 
                         return res
                             .status(500)
                             .json({
 
                                 error:
-                                    "No se pudo guardar la promoción"
+                                    "No se pudo verificar el servicio"
 
                             });
 
                     }
 
 
-                    res
-                        .status(201)
-                        .json({
+                    if (
+                        servicios.length === 0
+                    ) {
 
-                            mensaje:
-                                "Promoción creada correctamente",
+                        return res
+                            .status(400)
+                            .json({
 
-                            id_promocion:
-                                resultado.insertId,
+                                error:
+                                    "El servicio seleccionado no existe"
 
-                            imagen:
-                                rutaImagen
+                            });
 
-                        });
+                    }
+
+
+                    const servicio =
+                        servicios[0];
+
+
+                    if (
+                        Number(
+                            servicio.estado
+                        ) !== 1
+                    ) {
+
+                        return res
+                            .status(400)
+                            .json({
+
+                                error:
+                                    "El servicio seleccionado está desactivado"
+
+                            });
+
+                    }
+
+
+                    // ========================================
+                    // EVITAR PROMOCIONES ACTIVAS DUPLICADAS
+                    // ========================================
+
+                    const verificarPromocion = `
+
+                        SELECT
+
+                            id_promocion
+
+                        FROM promociones
+
+                        WHERE
+
+                            id_servicio = ?
+
+                            AND estado = 1
+
+                            AND fecha_inicio <= ?
+
+                            AND fecha_fin >= ?
+
+                        LIMIT 1
+
+                    `;
+
+
+                    conexion.query(
+
+                        verificarPromocion,
+
+                        [
+                            idServicio,
+                            fechaFin,
+                            fechaInicio
+                        ],
+
+                        async (
+                            error,
+                            promocionesExistentes
+                        ) => {
+
+                            if (error) {
+
+                                console.error(
+                                    "❌ Error al verificar promociones:",
+                                    error
+                                );
+
+                                return res
+                                    .status(500)
+                                    .json({
+
+                                        error:
+                                            "No se pudo verificar las promociones existentes"
+
+                                    });
+
+                            }
+
+
+                            if (
+                                promocionesExistentes.length > 0
+                            ) {
+
+                                return res
+                                    .status(400)
+                                    .json({
+
+                                        error:
+                                            "Ya existe una promoción activa para este servicio durante esas fechas"
+
+                                    });
+
+                            }
+
+
+                            // ========================================
+                            // SUBIR IMAGEN
+                            // ========================================
+
+                            let resultadoCloudinary;
+
+
+                            try {
+
+                                resultadoCloudinary =
+                                    await subirACloudinary(
+                                        req.file
+                                    );
+
+                            }
+                            catch (error) {
+
+                                console.error(
+                                    "❌ Error al subir imagen:",
+                                    error
+                                );
+
+                                return res
+                                    .status(500)
+                                    .json({
+
+                                        error:
+                                            "No se pudo subir la imagen"
+
+                                    });
+
+                            }
+
+
+                            const rutaImagen =
+                                resultadoCloudinary.secure_url;
+
+
+                            // ========================================
+                            // GUARDAR PROMOCIÓN
+                            // ========================================
+
+                            const sql = `
+
+                                INSERT INTO promociones
+
+                                (
+                                    id_servicio,
+
+                                    titulo,
+                                    descripcion,
+
+                                    precio_anterior,
+                                    precio_promocion,
+
+                                    fecha_inicio,
+                                    fecha_fin,
+
+                                    imagen,
+                                    estado
+                                )
+
+                                VALUES
+
+                                (
+                                    ?,
+
+                                    ?,
+                                    ?,
+
+                                    ?,
+                                    ?,
+
+                                    ?,
+                                    ?,
+
+                                    ?,
+                                    TRUE
+                                )
+
+                            `;
+
+
+                            conexion.query(
+
+                                sql,
+
+                                [
+
+                                    idServicio,
+
+                                    titulo,
+                                    descripcion,
+
+                                    precioAnterior,
+                                    precioPromocion,
+
+                                    fechaInicio,
+                                    fechaFin,
+
+                                    rutaImagen
+
+                                ],
+
+                                (
+                                    error,
+                                    resultado
+                                ) => {
+
+                                    if (error) {
+
+                                        console.error(
+                                            "❌ Error al crear promoción:",
+                                            error
+                                        );
+
+
+                                        return res
+                                            .status(500)
+                                            .json({
+
+                                                error:
+                                                    "No se pudo guardar la promoción"
+
+                                            });
+
+                                    }
+
+
+                                    res
+                                        .status(201)
+                                        .json({
+
+                                            mensaje:
+                                                "Promoción creada correctamente",
+
+                                            id_promocion:
+                                                resultado.insertId,
+
+                                            id_servicio:
+                                                idServicio,
+
+                                            servicio:
+                                                servicio.nombre,
+
+                                            precio_promocion:
+                                                precioPromocion,
+
+                                            imagen:
+                                                rutaImagen
+
+                                        });
+
+                                }
+
+                            );
+
+                        }
+
+                    );
 
                 }
+
             );
 
         }
@@ -565,32 +891,50 @@ router.patch(
     (req, res) => {
 
         const estado =
+
             req.body.estado === true ||
+
             req.body.estado === 1 ||
+
             req.body.estado === "1"
+
                 ? 1
                 : 0;
 
 
         const sql = `
+
             UPDATE promociones
-            SET estado = ?
-            WHERE id_promocion = ?
+
+            SET
+                estado = ?
+
+            WHERE
+                id_promocion = ?
+
         `;
 
 
         conexion.query(
+
             sql,
+
             [
                 estado,
                 req.params.id
             ],
+
             (
                 error,
                 resultado
             ) => {
 
                 if (error) {
+
+                    console.error(
+                        "❌ Error al cambiar estado:",
+                        error
+                    );
 
                     return res
                         .status(500)
@@ -628,6 +972,7 @@ router.patch(
                 });
 
             }
+
         );
 
     }
@@ -643,21 +988,35 @@ router.delete(
     (req, res) => {
 
         const buscarSql = `
-            SELECT imagen
+
+            SELECT
+                imagen
+
             FROM promociones
-            WHERE id_promocion = ?
+
+            WHERE
+                id_promocion = ?
+
         `;
 
 
         conexion.query(
+
             buscarSql,
+
             [req.params.id],
+
             (
                 error,
                 resultados
             ) => {
 
                 if (error) {
+
+                    console.error(
+                        "❌ Error al buscar promoción:",
+                        error
+                    );
 
                     return res
                         .status(500)
@@ -688,17 +1047,31 @@ router.delete(
 
 
                 const eliminarSql = `
+
                     DELETE FROM promociones
-                    WHERE id_promocion = ?
+
+                    WHERE
+                        id_promocion = ?
+
                 `;
 
 
                 conexion.query(
+
                     eliminarSql,
+
                     [req.params.id],
-                    (error) => {
+
+                    (
+                        error
+                    ) => {
 
                         if (error) {
+
+                            console.error(
+                                "❌ Error al eliminar promoción:",
+                                error
+                            );
 
                             return res
                                 .status(500)
@@ -720,9 +1093,11 @@ router.delete(
                         });
 
                     }
+
                 );
 
             }
+
         );
 
     }

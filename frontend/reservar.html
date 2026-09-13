@@ -908,6 +908,10 @@
     margin-top:10px;
 }
 
+.pago-box.oculto{
+    display:none;
+}
+
 .pago-titulo{
     color:#d4af37;
     font-size:20px;
@@ -1337,13 +1341,13 @@
 
         <section class="seccion">
 
-            <div class="pago-box">
+            <div class="pago-box" id="pagoBox">
 
-                <div class="pago-titulo">
+                <div class="pago-titulo" id="pagoTitulo">
                     💳 ADELANTO OBLIGATORIO
                 </div>
 
-                <div class="pago-subtitulo">
+                <div class="pago-subtitulo" id="pagoSubtitulo">
                     Escanea el QR del dueño y realiza el adelanto antes de confirmar tu reserva.
                     El saldo restante se paga en la barbería.
                 </div>
@@ -1552,6 +1556,8 @@ let pagoRealizado = false;
 
 let montoAdelantoPublico = 0;
 
+let adelantoObligatorioPublico = false;
+
 
 // ========================================
 // ELEMENTOS
@@ -1639,6 +1645,7 @@ async function cargarConfiguracion(){
         window.configuracionPublica =
             configuracionPublica;
 
+        actualizarInterfazPago();
         cargarQrPagoPublico();
 
     }
@@ -1667,6 +1674,63 @@ async function cargarConfiguracion(){
 }
 
 
+function esAdelantoObligatorio(){
+
+    return (
+        configuracionPublica?.adelanto_obligatorio === 1 ||
+        configuracionPublica?.adelanto_obligatorio === "1" ||
+        configuracionPublica?.adelanto_obligatorio === true ||
+        configuracionPublica?.adelanto_obligatorio === "true"
+    );
+
+}
+
+
+function actualizarInterfazPago(){
+
+    const box = document.getElementById("pagoBox");
+    const titulo = document.getElementById("pagoTitulo");
+    const subtitulo = document.getElementById("pagoSubtitulo");
+
+    adelantoObligatorioPublico = esAdelantoObligatorio();
+
+    if(!box) return;
+
+    if(adelantoObligatorioPublico){
+
+        box.classList.remove("oculto");
+
+        const checkbox = document.getElementById("pagoRealizado");
+        if(checkbox){
+            checkbox.disabled = false;
+        }
+
+        if(titulo){
+            titulo.textContent = "💳 ADELANTO OBLIGATORIO";
+        }
+
+        if(subtitulo){
+            subtitulo.textContent =
+                "Escanea el QR del dueño y realiza el adelanto antes de confirmar tu reserva. El saldo restante se paga en la barbería.";
+        }
+
+    }else{
+
+        box.classList.add("oculto");
+
+        pagoRealizado = false;
+
+        const checkbox = document.getElementById("pagoRealizado");
+        if(checkbox){
+            checkbox.checked = false;
+            checkbox.disabled = true;
+        }
+
+    }
+
+}
+
+
 function cargarQrPagoPublico(){
 
     const wrap =
@@ -1680,8 +1744,22 @@ function cargarQrPagoPublico(){
 
     if(!wrap) return;
 
+    actualizarInterfazPago();
+
     const configuracion =
         configuracionPublica || {};
+
+    adelantoObligatorioPublico =
+        esAdelantoObligatorio();
+
+    // Si el dueño desactivó el adelanto, no usamos QR ni monto.
+    if (!adelantoObligatorioPublico) {
+        qrPagoPublico = "";
+        montoAdelantoPublico = 0;
+        actualizarInterfazPago();
+        actualizarPreviewPago();
+        return;
+    }
 
     qrPagoPublico =
         configuracion.qr_pago ||
@@ -1795,10 +1873,12 @@ function actualizarPreviewPago(){
         Number(servicioSeleccionado.precio || 0);
 
     const adelanto =
-        Math.min(
-            Number(montoAdelantoPublico || 0),
-            total
-        );
+        adelantoObligatorioPublico
+            ? Math.min(
+                Number(montoAdelantoPublico || 0),
+                total
+            )
+            : 0;
 
     preview.innerHTML = `
         Reserva para ${escapeHTML(nombre)}
@@ -2820,19 +2900,7 @@ document.getElementById(
         }
 
         // ==========================================
-        // QR OBLIGATORIO
-        // ==========================================
-
-        if(!qrPagoPublico){
-            mostrarMensaje(
-                "El dueño todavía no configuró el QR de pago. No se puede confirmar la reserva.",
-                "error"
-            );
-            return;
-        }
-
-        // ==========================================
-        // ADELANTO CONFIGURADO
+        // CALCULAR ADELANTO SEGÚN CONFIGURACIÓN
         // ==========================================
 
         const totalServicio =
@@ -2840,41 +2908,57 @@ document.getElementById(
                 servicioSeleccionado.precio || 0
             );
 
-        const montoAdelanto =
-            Math.min(
-                Number(
-                    montoAdelantoPublico || 0
-                ),
-                totalServicio
-            );
+        const adelantoObligatorio =
+            esAdelantoObligatorio();
 
-        if(
-            !Number.isFinite(montoAdelanto) ||
-            montoAdelanto <= 0
-        ){
-            mostrarMensaje(
-                "El monto del adelanto no está configurado correctamente.",
-                "error"
-            );
-            return;
-        }
+        adelantoObligatorioPublico =
+            adelantoObligatorio;
+
+        let montoAdelanto = 0;
 
         // ==========================================
-        // CONFIRMAR PAGO
+        // SOLO SI EL DUEÑO ACTIVÓ EL ADELANTO
         // ==========================================
 
-        if(!pagoRealizado){
+        if(adelantoObligatorio){
 
-            mostrarMensaje(
-                "Debes marcar “Ya realicé el adelanto” para confirmar la reserva.",
-                "error"
-            );
+            if(!qrPagoPublico){
+                mostrarMensaje(
+                    "El dueño todavía no configuró el QR de pago. No se puede confirmar la reserva.",
+                    "error"
+                );
+                return;
+            }
 
-            document.getElementById(
-                "pagoRealizado"
-            )?.focus();
+            montoAdelanto =
+                Math.min(
+                    Number(montoAdelantoPublico || 0),
+                    totalServicio
+                );
 
-            return;
+            if(
+                !Number.isFinite(montoAdelanto) ||
+                montoAdelanto <= 0
+            ){
+                mostrarMensaje(
+                    "El monto del adelanto no está configurado correctamente.",
+                    "error"
+                );
+                return;
+            }
+
+            if(!pagoRealizado){
+
+                mostrarMensaje(
+                    "Debes marcar “Ya realicé el adelanto” para confirmar la reserva.",
+                    "error"
+                );
+
+                document.getElementById("pagoRealizado")?.focus();
+
+                return;
+            }
+
         }
 
         const nombre =
@@ -3049,11 +3133,10 @@ document.getElementById(
                                     observaciones ||
                                     null,
 
-                                // ==================================
-                                // ESTE CAMPO ES OBLIGATORIO
-                                // ==================================
+                                // Si el adelanto está activado, se registra como pagado.
+                                // Si está desactivado, la reserva se crea sin adelanto.
                                 adelanto_pagado:
-                                    true
+                                    adelantoObligatorio
 
                             })
                     }
@@ -3135,9 +3218,10 @@ document.getElementById(
                 <br><br>
                 Total: <strong>Bs ${totalGuardado.toFixed(2)}</strong>
                 <br>
-                Adelanto: <strong>Bs ${adelantoGuardado.toFixed(2)}</strong>
-                ·
-                Saldo: <strong>Bs ${saldoGuardado.toFixed(2)}</strong>
+                ${adelantoObligatorio
+                    ? `Adelanto: <strong>Bs ${adelantoGuardado.toFixed(2)}</strong> · Saldo: <strong>Bs ${saldoGuardado.toFixed(2)}</strong>`
+                    : `Pago en barbería: <strong>Bs ${totalGuardado.toFixed(2)}</strong>`
+                }
                 `,
                 "exito"
             );

@@ -238,6 +238,10 @@ router.get(
                 }
 
 
+                // ========================================
+                // SI NO EXISTE CONFIGURACIÓN
+                // ========================================
+
                 if (
                     resultados.length === 0
                 ) {
@@ -283,8 +287,9 @@ router.get(
                         qr_pago:
                             "",
 
+                        // DESACTIVADO POR DEFECTO
                         adelanto_obligatorio:
-                            1,
+                            0,
 
                         monto_adelanto:
                             20.00
@@ -364,6 +369,8 @@ router.put(
 
                 horario_general,
 
+                adelanto_obligatorio,
+
                 monto_adelanto,
 
                 eliminar_qr
@@ -398,10 +405,32 @@ router.put(
             // ========================================
             // ADELANTO OBLIGATORIO
             // ========================================
+            //
+            // El administrador envía:
+            // "1" = activado
+            // "0" = desactivado
+            //
+            // También aceptamos booleanos y
+            // valores numéricos por seguridad.
+            // ========================================
 
             const adelanto =
-                1;
 
+                adelanto_obligatorio === "1" ||
+
+                adelanto_obligatorio === 1 ||
+
+                adelanto_obligatorio === true ||
+
+                adelanto_obligatorio === "true"
+
+                    ? 1
+                    : 0;
+
+
+            // ========================================
+            // MONTO DEL ADELANTO
+            // ========================================
 
             const monto =
                 Number(
@@ -520,6 +549,10 @@ router.put(
 
                     try {
 
+                        // ========================================
+                        // CONSERVAR LOGO ACTUAL
+                        // ========================================
+
                         let logo =
 
                             resultados.length > 0
@@ -528,6 +561,10 @@ router.put(
 
                                 : null;
 
+
+                        // ========================================
+                        // CONSERVAR QR ACTUAL
+                        // ========================================
 
                         let qrPago =
 

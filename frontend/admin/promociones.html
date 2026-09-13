@@ -75,6 +75,7 @@ main {
     margin-top: 8px;
 }
 
+
 /* =====================================
    FORMULARIO
 ===================================== */
@@ -114,7 +115,8 @@ main {
 }
 
 .campo input,
-.campo textarea {
+.campo textarea,
+.campo select {
     width: 100%;
     padding: 13px;
     background: #222;
@@ -124,8 +126,13 @@ main {
     font-family: Arial;
 }
 
+.campo select {
+    cursor: pointer;
+}
+
 .campo input:focus,
-.campo textarea:focus {
+.campo textarea:focus,
+.campo select:focus {
     outline: none;
     border-color: #d4af37;
 }
@@ -138,6 +145,13 @@ main {
 .campo input[type="file"] {
     cursor: pointer;
 }
+
+.ayuda {
+    color: #888;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
 
 /* =====================================
    PREVIEW
@@ -162,6 +176,7 @@ main {
     height: 100%;
     object-fit: cover;
 }
+
 
 /* =====================================
    BOTONES
@@ -200,6 +215,7 @@ main {
     color: white;
 }
 
+
 /* =====================================
    MENSAJES
 ===================================== */
@@ -226,6 +242,7 @@ main {
     color: #ff8d8d;
 }
 
+
 /* =====================================
    CABECERA
 ===================================== */
@@ -245,6 +262,7 @@ main {
     color: #d4af37;
     font-weight: bold;
 }
+
 
 /* =====================================
    PROMOCIONES
@@ -301,6 +319,18 @@ main {
 .contenido h3 {
     margin-bottom: 8px;
     font-size: 20px;
+}
+
+.servicio-promocion {
+    display: inline-block;
+    background: #302b18;
+    color: #d4af37;
+    border: 1px solid #5b4d20;
+    padding: 6px 9px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 12px;
 }
 
 .descripcion {
@@ -388,6 +418,7 @@ main {
     padding: 40px;
 }
 
+
 /* =====================================
    MODAL
 ===================================== */
@@ -447,6 +478,7 @@ main {
     background: #8b2020;
     color: white;
 }
+
 
 @media (max-width: 700px) {
 
@@ -514,7 +546,7 @@ main {
     </h1>
 
     <p>
-        Administra las promociones de CLUB PONTE PERRO.
+        Crea una oferta para un servicio con un solo precio para todos los barberos.
     </p>
 
 </div>
@@ -531,24 +563,77 @@ main {
     </h2>
 
 
+    <div
+        style="
+            background:#222;
+            border:1px solid #3b321d;
+            color:#d8bd61;
+            padding:12px 14px;
+            border-radius:7px;
+            margin-bottom:20px;
+            font-size:13px;
+            line-height:1.5;
+        "
+    >
+
+        💡 <strong>¿Cómo funciona?</strong>
+
+        Selecciona el servicio y coloca un solo precio promocional.
+
+        Ese precio será el mismo para todos los barberos que realicen ese servicio.
+
+        Los precios normales de los barberos no cambian.
+
+    </div>
+
+
     <div class="campos">
 
+
+        <!-- SERVICIO -->
 
         <div class="campo">
 
             <label>
-                Título *
+                Servicio *
+            </label>
+
+            <select
+                id="idServicio"
+            >
+
+                <option value="">
+                    Cargando servicios...
+                </option>
+
+            </select>
+
+            <div class="ayuda">
+                Elige el servicio que tendrá la promoción.
+            </div>
+
+        </div>
+
+
+        <!-- TITULO -->
+
+        <div class="campo">
+
+            <label>
+                Nombre de la promoción *
             </label>
 
             <input
                 type="text"
                 id="titulo"
                 maxlength="150"
-                placeholder="Ej. Corte + Barba"
+                placeholder="Ej. Corte en oferta"
             >
 
         </div>
 
+
+        <!-- IMAGEN -->
 
         <div class="campo">
 
@@ -565,19 +650,7 @@ main {
         </div>
 
 
-        <div class="campo campo-completo">
-
-            <label>
-                Descripción
-            </label>
-
-            <textarea
-                id="descripcion"
-                placeholder="Describe la promoción..."
-            ></textarea>
-
-        </div>
-
+        <!-- PRECIO ANTERIOR -->
 
         <div class="campo">
 
@@ -593,25 +666,53 @@ main {
                 placeholder="Ej. 50"
             >
 
+            <div class="ayuda">
+                Puedes poner el precio normal que se mostrará tachado.
+            </div>
+
         </div>
 
+
+        <!-- PRECIO PROMOCIONAL -->
 
         <div class="campo">
 
             <label>
-                Precio promocional *
+                Precio de oferta para todos *
             </label>
 
             <input
                 type="number"
                 id="precioPromocion"
-                min="0"
+                min="0.01"
                 step="0.01"
                 placeholder="Ej. 40"
             >
 
+            <div class="ayuda">
+                Este será el precio que pagarán todos los barberos por este servicio.
+            </div>
+
         </div>
 
+
+        <!-- DESCRIPCION -->
+
+        <div class="campo campo-completo">
+
+            <label>
+                Descripción
+            </label>
+
+            <textarea
+                id="descripcion"
+                placeholder="Describe la promoción..."
+            ></textarea>
+
+        </div>
+
+
+        <!-- FECHA INICIO -->
 
         <div class="campo">
 
@@ -626,6 +727,8 @@ main {
 
         </div>
 
+
+        <!-- FECHA FIN -->
 
         <div class="campo">
 
@@ -791,6 +894,8 @@ if (!usuarioGuardado) {
 
 let listaPromociones = [];
 
+let listaServicios = [];
+
 let promocionEliminarId = null;
 
 
@@ -903,7 +1008,177 @@ document.getElementById(
 
 
 // ========================================
-// CARGAR
+// CARGAR SERVICIOS
+// ========================================
+
+async function cargarServicios() {
+
+    const select =
+        document.getElementById(
+            "idServicio"
+        );
+
+
+    try {
+
+        const respuesta =
+            await fetch(
+                "/api/servicios"
+            );
+
+
+        if (!respuesta.ok) {
+
+            throw new Error(
+                "No se pudieron cargar los servicios."
+            );
+
+        }
+
+
+        const datos =
+            await respuesta.json();
+
+
+        /*
+         * Algunos backends devuelven directamente
+         * un array y otros pueden devolver:
+         *
+         * { servicios: [...] }
+         *
+         * Por eso aceptamos ambos formatos.
+         */
+
+        if (Array.isArray(datos)) {
+
+            listaServicios =
+                datos;
+
+        }
+
+        else if (
+            datos &&
+            Array.isArray(
+                datos.servicios
+            )
+        ) {
+
+            listaServicios =
+                datos.servicios;
+
+        }
+
+        else {
+
+            listaServicios = [];
+
+        }
+
+
+        select.innerHTML = `
+
+            <option value="">
+                Selecciona un servicio
+            </option>
+
+        `;
+
+
+        listaServicios.forEach(
+            servicio => {
+
+                const id =
+                    servicio.id_servicio;
+
+
+                const nombre =
+                    servicio.nombre;
+
+
+                const estado =
+                    Number(
+                        servicio.estado
+                    );
+
+
+                /*
+                 * Solo mostramos servicios activos.
+                 */
+
+                if (
+                    estado === 0
+                ) {
+
+                    return;
+
+                }
+
+
+                const opcion =
+                    document.createElement(
+                        "option"
+                    );
+
+
+                opcion.value =
+                    id;
+
+
+                opcion.textContent =
+                    nombre;
+
+
+                select.appendChild(
+                    opcion
+                );
+
+            }
+        );
+
+
+        if (
+            select.options.length === 1
+        ) {
+
+            select.innerHTML = `
+
+                <option value="">
+                    No hay servicios disponibles
+                </option>
+
+            `;
+
+        }
+
+    }
+    catch (error) {
+
+        console.error(
+            "Error al cargar servicios:",
+            error
+        );
+
+
+        select.innerHTML = `
+
+            <option value="">
+                No se pudieron cargar los servicios
+            </option>
+
+        `;
+
+        mostrarMensaje(
+            "❌ No se pudieron cargar los servicios.",
+            "error"
+        );
+
+    }
+
+}
+
+
+// ========================================
+// CARGAR PROMOCIONES
 // ========================================
 
 async function cargarPromociones() {
@@ -954,7 +1229,38 @@ async function cargarPromociones() {
 
 
 // ========================================
-// MOSTRAR
+// OBTENER NOMBRE DEL SERVICIO
+// ========================================
+
+function obtenerNombreServicio(
+    idServicio
+) {
+
+    const servicio =
+        listaServicios.find(
+            item =>
+                Number(
+                    item.id_servicio
+                ) === Number(
+                    idServicio
+                )
+        );
+
+
+    if (servicio) {
+
+        return servicio.nombre;
+
+    }
+
+
+    return "Servicio no encontrado";
+
+}
+
+
+// ========================================
+// MOSTRAR PROMOCIONES
 // ========================================
 
 function mostrarPromociones() {
@@ -1033,6 +1339,12 @@ function mostrarPromociones() {
                 ).toFixed(2)}`;
 
 
+            const nombreServicio =
+                obtenerNombreServicio(
+                    promocion.id_servicio
+                );
+
+
             tarjeta.innerHTML = `
 
                 <div class="imagen">
@@ -1076,6 +1388,18 @@ function mostrarPromociones() {
                             promocion.titulo
                         )}
                     </h3>
+
+
+                    <div class="servicio-promocion">
+
+                        ✂️
+                        ${escapeHTML(
+                            nombreServicio
+                        )}
+
+                        · MISMO PRECIO PARA TODOS
+
+                    </div>
 
 
                     <div class="descripcion">
@@ -1214,12 +1538,18 @@ function mostrarPromociones() {
 
 
 // ========================================
-// GUARDAR
+// GUARDAR PROMOCIÓN
 // ========================================
 
 async function guardarPromocion() {
 
     ocultarMensaje();
+
+
+    const idServicio =
+        document.getElementById(
+            "idServicio"
+        ).value;
 
 
     const titulo =
@@ -1264,10 +1594,14 @@ async function guardarPromocion() {
         ).files[0];
 
 
-    if (!titulo) {
+    // ========================================
+    // VALIDACIONES
+    // ========================================
+
+    if (!idServicio) {
 
         mostrarMensaje(
-            "El título es obligatorio.",
+            "Debes seleccionar el servicio de la promoción.",
             "error"
         );
 
@@ -1276,10 +1610,27 @@ async function guardarPromocion() {
     }
 
 
-    if (!precioPromocion) {
+    if (!titulo) {
 
         mostrarMensaje(
-            "El precio promocional es obligatorio.",
+            "El nombre de la promoción es obligatorio.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !precioPromocion ||
+        Number(
+            precioPromocion
+        ) <= 0
+    ) {
+
+        mostrarMensaje(
+            "El precio promocional debe ser mayor a 0.",
             "error"
         );
 
@@ -1336,8 +1687,18 @@ async function guardarPromocion() {
     }
 
 
+    // ========================================
+    // FORM DATA
+    // ========================================
+
     const datos =
         new FormData();
+
+
+    datos.append(
+        "id_servicio",
+        idServicio
+    );
 
 
     datos.append(
@@ -1345,30 +1706,36 @@ async function guardarPromocion() {
         titulo
     );
 
+
     datos.append(
         "descripcion",
         descripcion
     );
+
 
     datos.append(
         "precio_anterior",
         precioAnterior
     );
 
+
     datos.append(
         "precio_promocion",
         precioPromocion
     );
+
 
     datos.append(
         "fecha_inicio",
         fechaInicio
     );
 
+
     datos.append(
         "fecha_fin",
         fechaFin
     );
+
 
     datos.append(
         "imagen",
@@ -1421,6 +1788,7 @@ async function guardarPromocion() {
 
 
         limpiarFormulario();
+
 
         await cargarPromociones();
 
@@ -1660,38 +2028,51 @@ async function confirmarEliminar() {
 function limpiarFormulario() {
 
     document.getElementById(
+        "idServicio"
+    ).value = "";
+
+
+    document.getElementById(
         "titulo"
     ).value = "";
+
 
     document.getElementById(
         "descripcion"
     ).value = "";
 
+
     document.getElementById(
         "precioAnterior"
     ).value = "";
+
 
     document.getElementById(
         "precioPromocion"
     ).value = "";
 
+
     document.getElementById(
         "fechaInicio"
     ).value = "";
+
 
     document.getElementById(
         "fechaFin"
     ).value = "";
 
+
     document.getElementById(
         "imagen"
     ).value = "";
+
 
     document.getElementById(
         "preview"
     ).classList.remove(
         "mostrar"
     );
+
 
     document.getElementById(
         "previewImagen"
@@ -1822,7 +2203,16 @@ document.getElementById(
 // INICIAR
 // ========================================
 
-cargarPromociones();
+async function iniciar() {
+
+    await cargarServicios();
+
+    await cargarPromociones();
+
+}
+
+
+iniciar();
 
 </script>
 

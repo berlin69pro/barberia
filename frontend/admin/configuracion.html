@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 
@@ -227,6 +228,10 @@
             object-fit: contain;
         }
 
+        /* =====================================
+           QR
+        ===================================== */
+
         .qr-panel {
             display: grid;
             grid-template-columns: 280px 1fr;
@@ -264,7 +269,9 @@
             line-height: 1.7;
         }
 
-        .qr-info strong { color: #fff; }
+        .qr-info strong {
+            color: #fff;
+        }
 
         .btn-eliminar-qr {
             margin-top: 12px;
@@ -362,57 +369,15 @@
             border-left-color: #ff5555;
         }
 
+        /* =====================================
+           ADELANTO
+        ===================================== */
+
         .adelanto-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
             align-items: stretch;
-        }
-
-        .switch-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .switch-row input {
-            position: absolute;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .switch {
-            width: 48px;
-            height: 26px;
-            border-radius: 20px;
-            background: #444;
-            border: 1px solid #555;
-            position: relative;
-            transition: .2s ease;
-        }
-
-        .switch::after {
-            content: "";
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: #aaa;
-            top: 2px;
-            left: 3px;
-            transition: .2s ease;
-        }
-
-        .switch-row input:checked + .switch {
-            background: #d4af37;
-            border-color: #d4af37;
-        }
-
-        .switch-row input:checked + .switch::after {
-            left: 23px;
-            background: #111;
         }
 
         .adelanto-resumen {
@@ -839,7 +804,9 @@
 
         <section class="bloque bloque-completo">
 
-            <h2>💳 QR de pago del dueño</h2>
+            <h2>
+                💳 QR de pago del dueño
+            </h2>
 
             <p class="bloque-descripcion">
                 Sube el QR que utilizarán los clientes para realizar el pago de su reserva.
@@ -848,9 +815,15 @@
             <div class="qr-panel">
 
                 <div>
-                    <label>QR actual</label>
 
-                    <div id="qrPreview" class="qr-preview">
+                    <label>
+                        QR actual
+                    </label>
+
+                    <div
+                        id="qrPreview"
+                        class="qr-preview"
+                    >
                         Sin QR configurado
                     </div>
 
@@ -862,9 +835,12 @@
                     >
                         🗑️ ELIMINAR QR
                     </button>
+
                 </div>
 
+
                 <div>
+
                     <div class="selector-logo">
 
                         <input
@@ -874,6 +850,7 @@
                             accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
                         >
 
+
                         <label
                             for="archivoQR"
                             class="btn-archivo"
@@ -881,21 +858,35 @@
                             📁 SELECCIONAR QR
                         </label>
 
-                        <span id="nombreArchivoQR" class="nombre-archivo">
+
+                        <span
+                            id="nombreArchivoQR"
+                            class="nombre-archivo"
+                        >
                             Ningún archivo seleccionado
                         </span>
 
                     </div>
 
+
                     <span class="ayuda">
                         JPG, JPEG, PNG o WEBP. Máximo 5 MB.
                     </span>
 
+
                     <div class="qr-info">
-                        <strong>¿Cómo funcionará?</strong><br>
+
+                        <strong>
+                            ¿Cómo funcionará?
+                        </strong>
+
+                        <br>
+
                         Este es el QR del dueño. El cliente lo verá al final de su reserva
                         antes de confirmar el pago. Será el mismo QR para todas las reservas.
+
                     </div>
+
                 </div>
 
             </div>
@@ -903,41 +894,117 @@
         </section>
 
 
-        <!-- ADELANTO OBLIGATORIO -->
+
+        <!-- =====================================
+             ADELANTO
+        ====================================== -->
+
         <section class="bloque bloque-completo">
-            <h2>💳 Adelanto obligatorio</h2>
+
+            <h2>
+                💳 Adelanto obligatorio
+            </h2>
+
             <p class="bloque-descripcion">
-                El cliente deberá pagar este monto fijo mediante el QR antes de confirmar su reserva.
+                Decide si el cliente debe realizar un adelanto mediante el QR antes de confirmar su reserva.
             </p>
+
+
             <div class="adelanto-grid">
+
+
                 <div>
+
                     <div class="campo">
-                        <label>Adelanto obligatorio</label>
-                        <label class="switch-row">
-                            <input type="checkbox" id="adelanto_obligatorio" checked>
-                            <span class="switch"></span>
-                            <span>ACTIVADO</span>
+
+                        <label>
+                            Adelanto obligatorio
                         </label>
+
+                        <label class="switch-row" style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+
+                            <input
+                                type="checkbox"
+                                id="adelanto_obligatorio"
+                                style="width:auto;"
+                            >
+
+                            <span
+                                id="textoAdelanto"
+                                style="color:#d4af37;font-weight:bold;"
+                            >
+                                DESACTIVADO
+                            </span>
+
+                        </label>
+
                         <span class="ayuda">
-                            Si está activado, ninguna reserva podrá confirmarse sin registrar el adelanto.
+                            ACTIVADO: el cliente debe pagar el adelanto para confirmar. DESACTIVADO: puede reservar sin adelanto.
                         </span>
+
                     </div>
+
+
                     <div class="campo">
-                        <label for="monto_adelanto">Monto fijo del adelanto (Bs)</label>
-                        <input type="number" id="monto_adelanto" min="0.01" max="99999.99" step="0.01" value="20.00" required>
-                        <span class="ayuda">Este monto será igual para todas las reservas.</span>
+
+                        <label for="monto_adelanto">
+                            Monto fijo del adelanto (Bs)
+                        </label>
+
+                        <input
+                            type="number"
+                            id="monto_adelanto"
+                            min="0.01"
+                            max="99999.99"
+                            step="0.01"
+                            value="20.00"
+                            required
+                        >
+
+                        <span class="ayuda">
+                            Este monto será igual para todas las reservas.
+                        </span>
+
                     </div>
+
                 </div>
+
+
                 <div class="adelanto-resumen">
-                    <div class="adelanto-icono">💳</div>
-                    <div>
-                        <strong>Adelanto configurado</strong>
-                        <div id="resumenAdelanto" class="monto-resumen">Bs 20.00</div>
-                        <span>Pago previo obligatorio para confirmar la reserva.</span>
+
+                    <div class="adelanto-icono">
+                        💳
                     </div>
+
+
+                    <div>
+
+                        <strong>
+                            Adelanto configurado
+                        </strong>
+
+
+                        <div
+                            id="resumenAdelanto"
+                            class="monto-resumen"
+                        >
+                            Bs 20.00
+                        </div>
+
+
+                        <span>
+                            Pago previo obligatorio para confirmar la reserva.
+                        </span>
+
+                    </div>
+
                 </div>
+
             </div>
+
         </section>
+
+
 
         <!-- =====================================
              BOTONES
@@ -990,47 +1057,86 @@ const formulario =
         "formConfiguracion"
     );
 
+
 const archivoLogo =
     document.getElementById(
         "archivoLogo"
     );
+
 
 const nombreArchivo =
     document.getElementById(
         "nombreArchivo"
     );
 
+
 const logoPreview =
     document.getElementById(
         "logoPreview"
     );
+
 
 const botonGuardar =
     document.getElementById(
         "btnGuardar"
     );
 
+
 const mensaje =
     document.getElementById(
         "mensaje"
     );
 
+
 let logoActual = "";
+
 let qrActual = "";
 
-const archivoQR = document.getElementById("archivoQR");
-const nombreArchivoQR = document.getElementById("nombreArchivoQR");
-const qrPreview = document.getElementById("qrPreview");
-const btnEliminarQR = document.getElementById("btnEliminarQR");
 
-const adelantoObligatorio =
-    document.getElementById("adelanto_obligatorio");
+const archivoQR =
+    document.getElementById(
+        "archivoQR"
+    );
+
+
+const nombreArchivoQR =
+    document.getElementById(
+        "nombreArchivoQR"
+    );
+
+
+const qrPreview =
+    document.getElementById(
+        "qrPreview"
+    );
+
+
+const btnEliminarQR =
+    document.getElementById(
+        "btnEliminarQR"
+    );
+
 
 const montoAdelanto =
-    document.getElementById("monto_adelanto");
+    document.getElementById(
+        "monto_adelanto"
+    );
+
 
 const resumenAdelanto =
-    document.getElementById("resumenAdelanto");
+    document.getElementById(
+        "resumenAdelanto"
+    );
+
+const adelantoObligatorio =
+    document.getElementById(
+        "adelanto_obligatorio"
+    );
+
+const textoAdelanto =
+    document.getElementById(
+        "textoAdelanto"
+    );
 
 
 
@@ -1040,6 +1146,7 @@ const resumenAdelanto =
 
 let mensajeTimer;
 
+
 function mostrarMensaje(
     texto,
     error = false
@@ -1048,18 +1155,22 @@ function mostrarMensaje(
     mensaje.textContent =
         texto;
 
+
     mensaje.classList.toggle(
         "error",
         error
     );
 
+
     mensaje.classList.add(
         "mostrar"
     );
 
+
     clearTimeout(
         mensajeTimer
     );
+
 
     mensajeTimer =
         setTimeout(
@@ -1123,11 +1234,14 @@ archivoLogo.addEventListener(
                 true
             );
 
+
             this.value =
                 "";
 
+
             nombreArchivo.textContent =
                 "Ningún archivo seleccionado";
+
 
             return;
 
@@ -1144,11 +1258,14 @@ archivoLogo.addEventListener(
                 true
             );
 
+
             this.value =
                 "";
 
+
             nombreArchivo.textContent =
                 "Ningún archivo seleccionado";
+
 
             return;
 
@@ -1187,76 +1304,207 @@ archivoLogo.addEventListener(
 // SELECCIONAR QR
 // ======================================================
 
-archivoQR.addEventListener("change", function() {
+archivoQR.addEventListener(
+    "change",
+    function() {
 
-    const archivo = this.files[0];
+        const archivo =
+            this.files[0];
 
-    if (!archivo) {
-        nombreArchivoQR.textContent = "Ningún archivo seleccionado";
-        return;
+
+        if (!archivo) {
+
+            nombreArchivoQR.textContent =
+                "Ningún archivo seleccionado";
+
+            return;
+
+        }
+
+
+        const tiposPermitidos = [
+
+            "image/jpeg",
+            "image/png",
+            "image/webp"
+
+        ];
+
+
+        if (
+            !tiposPermitidos.includes(
+                archivo.type
+            )
+        ) {
+
+            mostrarMensaje(
+                "❌ El QR debe ser JPG, JPEG, PNG o WEBP.",
+                true
+            );
+
+
+            this.value =
+                "";
+
+
+            nombreArchivoQR.textContent =
+                "Ningún archivo seleccionado";
+
+
+            return;
+
+        }
+
+
+        if (
+            archivo.size >
+            5 * 1024 * 1024
+        ) {
+
+            mostrarMensaje(
+                "❌ El QR no puede superar 5 MB.",
+                true
+            );
+
+
+            this.value =
+                "";
+
+
+            nombreArchivoQR.textContent =
+                "Ningún archivo seleccionado";
+
+
+            return;
+
+        }
+
+
+        nombreArchivoQR.textContent =
+            archivo.name;
+
+
+        const lector =
+            new FileReader();
+
+
+        lector.onload =
+            function(evento) {
+
+                qrPreview.innerHTML = `
+
+                    <img
+                        src="${evento.target.result}"
+                        alt="Vista previa del QR"
+                    >
+
+                `;
+
+
+                btnEliminarQR.style.display =
+                    "inline-block";
+
+            };
+
+
+        lector.readAsDataURL(
+            archivo
+        );
+
     }
+);
 
-    const tiposPermitidos = [
-        "image/jpeg",
-        "image/png",
-        "image/webp"
-    ];
 
-    if (!tiposPermitidos.includes(archivo.type)) {
-        mostrarMensaje("❌ El QR debe ser JPG, JPEG, PNG o WEBP.", true);
-        this.value = "";
-        nombreArchivoQR.textContent = "Ningún archivo seleccionado";
-        return;
+
+// ======================================================
+// ELIMINAR QR
+// ======================================================
+
+btnEliminarQR.addEventListener(
+    "click",
+    function() {
+
+        qrActual =
+            "";
+
+
+        archivoQR.value =
+            "";
+
+
+        nombreArchivoQR.textContent =
+            "Ningún archivo seleccionado";
+
+
+        qrPreview.innerHTML =
+            "QR eliminado (guarda los cambios)";
+
+
+        btnEliminarQR.style.display =
+            "none";
+
     }
+);
 
-    if (archivo.size > 5 * 1024 * 1024) {
-        mostrarMensaje("❌ El QR no puede superar 5 MB.", true);
-        this.value = "";
-        nombreArchivoQR.textContent = "Ningún archivo seleccionado";
-        return;
-    }
-
-    nombreArchivoQR.textContent = archivo.name;
-
-    const lector = new FileReader();
-
-    lector.onload = function(evento) {
-        qrPreview.innerHTML = `
-            <img src="${evento.target.result}" alt="Vista previa del QR">
-        `;
-        btnEliminarQR.style.display = "inline-block";
-    };
-
-    lector.readAsDataURL(archivo);
-});
-
-btnEliminarQR.addEventListener("click", function() {
-    qrActual = "";
-    archivoQR.value = "";
-    nombreArchivoQR.textContent = "Ningún archivo seleccionado";
-    qrPreview.innerHTML = "QR eliminado (guarda los cambios)";
-    btnEliminarQR.style.display = "none";
-});
 
 
 // ======================================================
 // ADELANTO
 // ======================================================
 
+function actualizarEstadoAdelanto() {
+
+    if (!adelantoObligatorio || !textoAdelanto) {
+        return;
+    }
+
+    textoAdelanto.textContent =
+        adelantoObligatorio.checked
+            ? "ACTIVADO"
+            : "DESACTIVADO";
+
+    textoAdelanto.style.color =
+        adelantoObligatorio.checked
+            ? "#d4af37"
+            : "#888";
+}
+
+
 function actualizarResumenAdelanto() {
 
-    if (!montoAdelanto || !resumenAdelanto) return;
+    if (
+        !montoAdelanto ||
+        !resumenAdelanto
+    ) {
 
-    const monto = Number(montoAdelanto.value || 0);
+        return;
+
+    }
+
+
+    const monto =
+        Number(
+            montoAdelanto.value || 0
+        );
+
 
     resumenAdelanto.textContent =
-        "Bs " + monto.toFixed(2);
+        "Bs " +
+        monto.toFixed(2);
+
 }
+
 
 montoAdelanto?.addEventListener(
     "input",
     actualizarResumenAdelanto
 );
+
+adelantoObligatorio?.addEventListener(
+    "change",
+    actualizarEstadoAdelanto
+);
+
 
 
 // ======================================================
@@ -1294,6 +1542,7 @@ async function cargarConfiguracion() {
                 "Respuesta recibida:",
                 texto
             );
+
 
             throw new Error(
                 "El servidor no devolvió JSON. Revisa la ruta /api/configuracion."
@@ -1385,14 +1634,25 @@ async function cargarConfiguracion() {
 
 
         if (adelantoObligatorio) {
+
             adelantoObligatorio.checked =
                 Number(configuracion.adelanto_obligatorio) === 1;
+
         }
 
+
+        actualizarEstadoAdelanto();
+
+
         if (montoAdelanto) {
+
             montoAdelanto.value =
-                Number(configuracion.monto_adelanto || 20).toFixed(2);
+                Number(
+                    configuracion.monto_adelanto || 20
+                ).toFixed(2);
+
         }
+
 
         actualizarResumenAdelanto();
 
@@ -1400,6 +1660,7 @@ async function cargarConfiguracion() {
         logoActual =
             configuracion.logo ||
             "";
+
 
         qrActual =
             configuracion.qr_pago ||
@@ -1411,11 +1672,14 @@ async function cargarConfiguracion() {
         archivoLogo.value =
             "";
 
+
         nombreArchivo.textContent =
             "Ningún archivo seleccionado";
 
 
         mostrarLogoActual();
+
+
         mostrarQRActual();
 
     }
@@ -1451,6 +1715,7 @@ function mostrarLogoActual() {
         logoPreview.innerHTML =
             "Sin logo";
 
+
         return;
 
     }
@@ -1479,25 +1744,48 @@ function mostrarLogoActual() {
 
 function mostrarQRActual() {
 
-    archivoQR.value = "";
-    nombreArchivoQR.textContent = "Ningún archivo seleccionado";
+    archivoQR.value =
+        "";
+
+
+    nombreArchivoQR.textContent =
+        "Ningún archivo seleccionado";
+
 
     if (!qrActual) {
-        qrPreview.innerHTML = "Sin QR configurado";
-        btnEliminarQR.style.display = "none";
+
+        qrPreview.innerHTML =
+            "Sin QR configurado";
+
+
+        btnEliminarQR.style.display =
+            "none";
+
+
         return;
+
     }
 
+
     qrPreview.innerHTML = `
+
         <img
             src="${qrActual}"
             alt="QR de pago"
-            onerror="this.parentElement.innerHTML='No se pudo cargar el QR';"
+            onerror="
+                this.parentElement.innerHTML =
+                'No se pudo cargar el QR';
+            "
         >
+
     `;
 
-    btnEliminarQR.style.display = "inline-block";
+
+    btnEliminarQR.style.display =
+        "inline-block";
+
 }
+
 
 
 // ======================================================
@@ -1523,6 +1811,7 @@ formulario.addEventListener(
                 "⚠️ El nombre es obligatorio.",
                 true
             );
+
 
             return;
 
@@ -1613,19 +1902,36 @@ formulario.addEventListener(
 
         datos.append(
             "adelanto_obligatorio",
-            adelantoObligatorio.checked ? "1" : "0"
+            adelantoObligatorio && adelantoObligatorio.checked
+                ? "1"
+                : "0"
         );
 
-        const monto = Number(montoAdelanto.value);
 
-        if (!Number.isFinite(monto) || monto <= 0) {
+        const monto =
+            Number(
+                montoAdelanto.value
+            );
+
+
+        if (
+            !Number.isFinite(monto) ||
+            monto <= 0
+        ) {
+
             mostrarMensaje(
                 "⚠️ El monto del adelanto debe ser mayor a Bs 0.",
                 true
             );
+
+
             montoAdelanto.focus();
+
+
             return;
+
         }
+
 
         datos.append(
             "monto_adelanto",
@@ -1644,6 +1950,7 @@ formulario.addEventListener(
 
         }
 
+
         if (
             archivoQR.files.length > 0
         ) {
@@ -1654,6 +1961,7 @@ formulario.addEventListener(
             );
 
         }
+
 
         if (
             !qrActual &&
@@ -1713,6 +2021,7 @@ formulario.addEventListener(
                 resultado.logo ||
                 logoActual;
 
+
             qrActual =
                 resultado.qr_pago ||
                 resultado.qr ||
@@ -1749,6 +2058,7 @@ formulario.addEventListener(
             botonGuardar.disabled =
                 false;
 
+
             botonGuardar.textContent =
                 "💾 GUARDAR CAMBIOS";
 
@@ -1772,3 +2082,4 @@ cargarConfiguracion();
 </body>
 
 </html>
+```

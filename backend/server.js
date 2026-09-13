@@ -15,6 +15,7 @@ const promocionesRoutes = require("./promociones");
 const configuracionRoutes = require("./configuracion");
 const estadisticasRoutes = require("./estadisticas");
 const pagosRoutes = require("./pagos");
+const cajaRoutes = require("./caja");
 
 const app = express();
 
@@ -45,10 +46,6 @@ app.use(
 // ========================================
 // ARCHIVOS PÚBLICOS
 // ========================================
-// Permite acceder a:
-// /images/fondo-barberia.png
-// desde la carpeta:
-// /public/images/fondo-barberia.png
 
 app.use(
     express.static(
@@ -156,6 +153,16 @@ app.use(
 
 
 // ========================================
+// CAJA
+// ========================================
+
+app.use(
+    "/api/caja",
+    cajaRoutes
+);
+
+
+// ========================================
 // GALERÍA
 // ========================================
 
@@ -199,16 +206,19 @@ app.use(
 // RUTA PRINCIPAL
 // ========================================
 
-app.get("/", (req, res) => {
+app.get(
+    "/",
+    (req, res) => {
 
-    res.sendFile(
-        path.join(
-            __dirname,
-            "../frontend/index.html"
-        )
-    );
+        res.sendFile(
+            path.join(
+                __dirname,
+                "../frontend/index.html"
+            )
+        );
 
-});
+    }
+);
 
 
 // ========================================
@@ -275,7 +285,9 @@ app.use(
 // SERVIDOR
 // ========================================
 
-if (require.main === module) {
+if (
+    require.main === module
+) {
 
     app.listen(
         PORT,

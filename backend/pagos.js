@@ -95,10 +95,6 @@ router.get("/", (req, res) => {
 
 router.get("/resumen", (req, res) => {
 
-    // ==================================================
-    // PAGOS REALMENTE REGISTRADOS
-    // ==================================================
-
     const sqlPagos = `
 
         SELECT
@@ -130,115 +126,44 @@ router.get("/resumen", (req, res) => {
                     END
                 ),
                 0
-            ) AS total_saldos
+            ) AS total_saldos,
+
+            COALESCE(
+                SUM(
+                    CASE
+                        WHEN tipo_pago = 'completo'
+                        THEN monto
+                        ELSE 0
+                    END
+                ),
+                0
+            ) AS total_completos
 
         FROM pagos
 
     `;
 
 
-    // ==================================================
-    // SERVICIOS COMPLETAMENTE PAGADOS
-    //
-    // IMPORTANTE:
-    // Una reserva puede pagarse mediante:
-    //
-    // adelanto + saldo
-    //
-    // Por eso NO buscamos solamente
-    // tipo_pago = 'completo'.
-    // ==================================================
-
-    const sqlCompletos = `
-
-        SELECT
-
-            COALESCE(
-                SUM(
-                    r.total_servicio
-                ),
-                0
-            ) AS total_completos
-
-        FROM reservas r
-
-        WHERE
-
-            r.estado <> 'cancelada'
-
-            AND COALESCE(
-                r.saldo,
-                0
-            ) <= 0
-
-    `;
-
-
-    // ==================================================
-    // SALDOS PENDIENTES
-    // ==================================================
-
     const sqlPendientes = `
 
         SELECT
 
+            COUNT(*) AS cantidad_pendientes,
+
             COALESCE(
-                SUM(
-                    CASE
-
-                        WHEN
-                            r.total_servicio -
-                            COALESCE(
-                                (
-                                    SELECT
-                                        SUM(p2.monto)
-
-                                    FROM pagos p2
-
-                                    WHERE
-                                        p2.id_reserva =
-                                        r.id_reserva
-
-                                ),
-                                0
-                            ) > 0
-
-                        THEN
-
-                            r.total_servicio -
-                            COALESCE(
-                                (
-                                    SELECT
-                                        SUM(p3.monto)
-
-                                    FROM pagos p3
-
-                                    WHERE
-                                        p3.id_reserva =
-                                        r.id_reserva
-
-                                ),
-                                0
-                            )
-
-                        ELSE 0
-
-                    END
-                ),
+                SUM(saldo),
                 0
             ) AS saldo_pendiente
 
-        FROM reservas r
+        FROM reservas
 
         WHERE
-            r.estado <> 'cancelada'
+            saldo > 0
+
+            AND estado <> 'cancelada'
 
     `;
 
-
-    // ==================================================
-    // EJECUTAR PAGOS
-    // ==================================================
 
     conexion.query(
         sqlPagos,
@@ -259,113 +184,70 @@ router.get("/resumen", (req, res) => {
             }
 
 
-            // ==================================================
-            // EJECUTAR COMPLETOS
-            // ==================================================
-
             conexion.query(
-                sqlCompletos,
-                (error, completos) => {
+                sqlPendientes,
+                (error2, pendientes) => {
 
-                    if (error) {
+                    if (error2) {
 
                         console.error(
-                            "❌ Error en pagos completos:",
-                            error
+                            "❌ Error en pagos pendientes:",
+                            error2
                         );
 
                         return res.status(500).json({
                             error:
-                                "No se pudieron obtener los pagos completos"
+                                "No se pudo obtener los pendientes"
                         });
 
                     }
 
 
-                    // ==================================================
-                    // EJECUTAR PENDIENTES
-                    // ==================================================
+                    const datosPagos =
+                        pagos[0] || {};
 
-                    conexion.query(
-                        sqlPendientes,
-                        (error, pendientes) => {
-
-                            if (error) {
-
-                                console.error(
-                                    "❌ Error en saldos pendientes:",
-                                    error
-                                );
-
-                                return res.status(500).json({
-                                    error:
-                                        "No se pudieron obtener los saldos pendientes"
-                                });
-
-                            }
+                    const datosPendientes =
+                        pendientes[0] || {};
 
 
-                            const p =
-                                pagos[0] || {};
+                    res.json({
 
-                            const c =
-                                completos[0] || {};
+                        cantidad_pagos:
+                            Number(
+                                datosPagos.cantidad_pagos || 0
+                            ),
 
-                            const s =
-                                pendientes[0] || {};
+                        total_pagado:
+                            Number(
+                                datosPagos.total_pagado || 0
+                            ),
 
+                        total_adelantos:
+                            Number(
+                                datosPagos.total_adelantos || 0
+                            ),
 
-                            res.json({
+                        total_saldos:
+                            Number(
+                                datosPagos.total_saldos || 0
+                            ),
 
-                                cantidadPagos:
-                                    Number(
-                                        p.cantidad_pagos || 0
-                                    ),
+                        total_completos:
+                            Number(
+                                datosPagos.total_completos || 0
+                            ),
 
+                        cantidad_pendientes:
+                            Number(
+                                datosPendientes.cantidad_pendientes || 0
+                            ),
 
-                                totalPagado:
-                                    Number(
-                                        Number(
-                                            p.total_pagado || 0
-                                        ).toFixed(2)
-                                    ),
+                        saldo_pendiente:
+                            Number(
+                                datosPendientes.saldo_pendiente || 0
+                            )
 
-
-                                totalAdelantos:
-                                    Number(
-                                        Number(
-                                            p.total_adelantos || 0
-                                        ).toFixed(2)
-                                    ),
-
-
-                                totalSaldos:
-                                    Number(
-                                        Number(
-                                            p.total_saldos || 0
-                                        ).toFixed(2)
-                                    ),
-
-
-                                totalCompletos:
-                                    Number(
-                                        Number(
-                                            c.total_completos || 0
-                                        ).toFixed(2)
-                                    ),
-
-
-                                saldoPendiente:
-                                    Number(
-                                        Number(
-                                            s.saldo_pendiente || 0
-                                        ).toFixed(2)
-                                    )
-
-                            });
-
-                        }
-                    );
+                    });
 
                 }
             );
@@ -377,7 +259,7 @@ router.get("/resumen", (req, res) => {
 
 
 // ======================================================
-// SALDOS PENDIENTES
+// PAGOS PENDIENTES
 // ======================================================
 
 router.get("/pendientes", (req, res) => {
@@ -390,28 +272,12 @@ router.get("/pendientes", (req, res) => {
 
             r.fecha,
             r.hora,
-            r.estado,
 
             r.total_servicio,
             r.adelanto,
-
-            COALESCE(
-                SUM(p.monto),
-                0
-            ) AS total_pagado,
-
-            GREATEST(
-
-                r.total_servicio -
-
-                COALESCE(
-                    SUM(p.monto),
-                    0
-                ),
-
-                0
-
-            ) AS saldo_pendiente,
+            r.saldo,
+            r.adelanto_pagado,
+            r.estado,
 
             c.id_cliente,
             c.nombre AS cliente_nombre,
@@ -421,57 +287,27 @@ router.get("/pendientes", (req, res) => {
             b.nombre AS barbero_nombre,
 
             s.id_servicio,
-            s.nombre AS servicio_nombre,
-            s.precio AS servicio_precio
+            s.nombre AS servicio_nombre
 
         FROM reservas r
 
-        LEFT JOIN pagos p
-            ON p.id_reserva =
-               r.id_reserva
-
         LEFT JOIN clientes c
-            ON c.id_cliente =
-               r.id_cliente
+            ON r.id_cliente = c.id_cliente
 
         LEFT JOIN barberos b
-            ON b.id_barbero =
-               r.id_barbero
+            ON r.id_barbero = b.id_barbero
 
         LEFT JOIN servicios s
-            ON s.id_servicio =
-               r.id_servicio
+            ON r.id_servicio = s.id_servicio
 
         WHERE
-            r.estado <> 'cancelada'
+            r.saldo > 0
 
-        GROUP BY
-
-            r.id_reserva,
-            r.fecha,
-            r.hora,
-            r.estado,
-            r.total_servicio,
-            r.adelanto,
-
-            c.id_cliente,
-            c.nombre,
-            c.telefono,
-
-            b.id_barbero,
-            b.nombre,
-
-            s.id_servicio,
-            s.nombre,
-            s.precio
-
-        HAVING
-            saldo_pendiente > 0
+            AND r.estado <> 'cancelada'
 
         ORDER BY
-            r.fecha DESC,
-            r.hora DESC,
-            r.id_reserva DESC
+            r.fecha ASC,
+            r.hora ASC
 
     `;
 
@@ -483,21 +319,19 @@ router.get("/pendientes", (req, res) => {
             if (error) {
 
                 console.error(
-                    "❌ Error al obtener saldos pendientes:",
+                    "❌ Error al obtener pagos pendientes:",
                     error
                 );
 
                 return res.status(500).json({
                     error:
-                        "No se pudieron obtener los saldos pendientes"
+                        "No se pudieron obtener los pagos pendientes"
                 });
 
             }
 
 
-            res.json(
-                resultados
-            );
+            res.json(resultados);
 
         }
     );
@@ -511,56 +345,51 @@ router.get("/pendientes", (req, res) => {
 
 router.get("/reserva/:id", (req, res) => {
 
+    const idReserva =
+        Number(req.params.id);
+
+
+    if (
+        !Number.isInteger(idReserva) ||
+        idReserva <= 0
+    ) {
+
+        return res.status(400).json({
+            error:
+                "ID de reserva no válido"
+        });
+
+    }
+
+
     const sql = `
 
         SELECT
 
-            p.id_pago,
-            p.id_reserva,
-            p.tipo_pago,
-            p.monto,
-            p.metodo_pago,
-            p.referencia,
-            p.observaciones,
-            p.fecha_pago,
+            id_pago,
+            id_reserva,
+            tipo_pago,
+            monto,
+            metodo_pago,
+            referencia,
+            observaciones,
+            fecha_pago
 
-            c.nombre AS cliente_nombre,
-
-            b.nombre AS barbero_nombre,
-
-            s.nombre AS servicio_nombre
-
-        FROM pagos p
-
-        INNER JOIN reservas r
-            ON p.id_reserva =
-               r.id_reserva
-
-        LEFT JOIN clientes c
-            ON r.id_cliente =
-               c.id_cliente
-
-        LEFT JOIN barberos b
-            ON r.id_barbero =
-               b.id_barbero
-
-        LEFT JOIN servicios s
-            ON r.id_servicio =
-               s.id_servicio
+        FROM pagos
 
         WHERE
-            p.id_reserva = ?
+            id_reserva = ?
 
         ORDER BY
-            p.fecha_pago ASC,
-            p.id_pago ASC
+            fecha_pago ASC,
+            id_pago ASC
 
     `;
 
 
     conexion.query(
         sql,
-        [req.params.id],
+        [idReserva],
         (error, resultados) => {
 
             if (error) {
@@ -578,9 +407,7 @@ router.get("/reserva/:id", (req, res) => {
             }
 
 
-            res.json(
-                resultados
-            );
+            res.json(resultados);
 
         }
     );
@@ -595,18 +422,28 @@ router.get("/reserva/:id", (req, res) => {
 router.post("/", (req, res) => {
 
     const {
+
         id_reserva,
         tipo_pago,
         monto,
         metodo_pago,
         referencia,
         observaciones
+
     } = req.body;
 
 
     const reservaId =
         Number(id_reserva);
 
+
+    const montoPago =
+        Number(monto);
+
+
+    // ==================================================
+    // VALIDAR RESERVA
+    // ==================================================
 
     if (
         !Number.isInteger(reservaId) ||
@@ -615,23 +452,22 @@ router.post("/", (req, res) => {
 
         return res.status(400).json({
             error:
-                "La reserva es obligatoria"
+                "Debes indicar una reserva válida"
         });
 
     }
 
 
-    const tiposPermitidos = [
-        "adelanto",
-        "saldo",
-        "completo"
-    ];
-
+    // ==================================================
+    // VALIDAR TIPO DE PAGO
+    // ==================================================
 
     if (
-        !tiposPermitidos.includes(
-            tipo_pago
-        )
+        ![
+            "adelanto",
+            "saldo",
+            "completo"
+        ].includes(tipo_pago)
     ) {
 
         return res.status(400).json({
@@ -642,18 +478,17 @@ router.post("/", (req, res) => {
     }
 
 
-    const metodosPermitidos = [
-        "qr",
-        "efectivo",
-        "transferencia",
-        "otro"
-    ];
-
+    // ==================================================
+    // VALIDAR MÉTODO
+    // ==================================================
 
     if (
-        !metodosPermitidos.includes(
-            metodo_pago
-        )
+        ![
+            "qr",
+            "efectivo",
+            "transferencia",
+            "otro"
+        ].includes(metodo_pago)
     ) {
 
         return res.status(400).json({
@@ -664,9 +499,9 @@ router.post("/", (req, res) => {
     }
 
 
-    const montoPago =
-        Number(monto);
-
+    // ==================================================
+    // VALIDAR MONTO
+    // ==================================================
 
     if (
         !Number.isFinite(montoPago) ||
@@ -742,6 +577,10 @@ router.post("/", (req, res) => {
                 reservas[0];
 
 
+            // ==================================================
+            // RESERVA CANCELADA
+            // ==================================================
+
             if (
                 reserva.estado ===
                 "cancelada"
@@ -762,94 +601,68 @@ router.post("/", (req, res) => {
 
 
             // ==================================================
-            // PAGOS EXISTENTES
+            // CONSULTAR CONFIGURACIÓN
             // ==================================================
 
-            const sqlPagado = `
+            const sqlConfiguracion = `
 
                 SELECT
 
-                    COALESCE(
-                        SUM(monto),
-                        0
-                    ) AS total_pagado,
+                    adelanto_obligatorio,
+                    monto_adelanto
 
-                    COALESCE(
-                        SUM(
-                            CASE
-                                WHEN tipo_pago =
-                                    'adelanto'
-                                THEN monto
-                                ELSE 0
-                            END
-                        ),
-                        0
-                    ) AS total_adelantos
+                FROM configuracion
 
-                FROM pagos
+                ORDER BY
+                    id_configuracion ASC
 
-                WHERE
-                    id_reserva = ?
+                LIMIT 1
 
             `;
 
 
             conexion.query(
-                sqlPagado,
-                [reservaId],
-                (error, resultados) => {
+                sqlConfiguracion,
+                (error, configuraciones) => {
 
                     if (error) {
 
                         console.error(
-                            "❌ Error al consultar pagos:",
+                            "❌ Error al consultar configuración:",
                             error
                         );
 
                         return res.status(500).json({
                             error:
-                                "No se pudieron verificar los pagos"
+                                "No se pudo verificar la configuración de pagos"
                         });
 
                     }
 
 
-                    const totalPagado =
+                    const configuracion =
+                        configuraciones[0] || {};
+
+
+                    const adelantoObligatorio =
                         Number(
-                            resultados[0]
-                                ?.total_pagado || 0
-                        );
-
-
-                    const totalAdelantos =
-                        Number(
-                            resultados[0]
-                                ?.total_adelantos || 0
-                        );
-
-
-                    const pendiente =
-                        Number(
-                            (
-                                totalServicio -
-                                totalPagado
-                            ).toFixed(2)
-                        );
+                            configuracion.adelanto_obligatorio
+                        ) === 1;
 
 
                     // ==================================================
-                    // NO SOBREPASAR EL TOTAL
+                    // ADELANTO DESACTIVADO
                     // ==================================================
 
                     if (
-                        montoPago >
-                        pendiente + 0.001
+                        tipo_pago === "adelanto" &&
+                        !adelantoObligatorio
                     ) {
 
                         return res.status(400).json({
 
                             error:
-                                `El monto supera el saldo pendiente. Pendiente: Bs ${pendiente.toFixed(2)}`
+                                "El adelanto está desactivado. Puedes cobrar directamente el saldo o el pago completo."
 
                         });
 
@@ -857,156 +670,213 @@ router.post("/", (req, res) => {
 
 
                     // ==================================================
-                    // ADELANTO
+                    // PAGOS EXISTENTES
                     // ==================================================
 
-                    if (
-                        tipo_pago ===
-                        "adelanto"
-                    ) {
+                    const sqlPagado = `
 
-                        if (
-                            totalAdelantos > 0
-                        ) {
+                        SELECT
 
-                            return res.status(409).json({
+                            COALESCE(
+                                SUM(monto),
+                                0
+                            ) AS total_pagado,
 
-                                error:
-                                    "Esta reserva ya tiene registrado un adelanto"
+                            COALESCE(
+                                SUM(
+                                    CASE
+                                        WHEN tipo_pago = 'adelanto'
+                                        THEN monto
+                                        ELSE 0
+                                    END
+                                ),
+                                0
+                            ) AS total_adelantos
 
-                            });
+                        FROM pagos
 
-                        }
-
-
-                        if (
-                            montoPago >=
-                            totalServicio
-                        ) {
-
-                            return res.status(400).json({
-
-                                error:
-                                    "Para un pago completo utiliza el tipo 'completo'."
-
-                            });
-
-                        }
-
-                    }
-
-
-                    // ==================================================
-                    // SALDO
-                    // ==================================================
-
-                    if (
-                        tipo_pago ===
-                        "saldo"
-                    ) {
-
-                        if (
-                            totalAdelantos <= 0
-                        ) {
-
-                            return res.status(400).json({
-
-                                error:
-                                    "Primero debe existir un adelanto registrado."
-
-                            });
-
-                        }
-
-                    }
-
-
-                    // ==================================================
-                    // COMPLETO
-                    // ==================================================
-
-                    if (
-                        tipo_pago ===
-                        "completo"
-                    ) {
-
-                        if (
-                            pendiente <= 0
-                        ) {
-
-                            return res.status(400).json({
-
-                                error:
-                                    "Esta reserva ya está completamente pagada."
-
-                            });
-
-                        }
-
-                    }
-
-
-                    // ==================================================
-                    // INSERTAR PAGO
-                    // ==================================================
-
-                    const sqlInsertar = `
-
-                        INSERT INTO pagos
-
-                        (
-                            id_reserva,
-                            tipo_pago,
-                            monto,
-                            metodo_pago,
-                            referencia,
-                            observaciones
-                        )
-
-                        VALUES
-                        (?, ?, ?, ?, ?, ?)
+                        WHERE
+                            id_reserva = ?
 
                     `;
 
 
                     conexion.query(
-                        sqlInsertar,
-                        [
-
-                            reservaId,
-
-                            tipo_pago,
-
-                            montoPago,
-
-                            metodo_pago,
-
-                            referencia
-                                ? String(
-                                    referencia
-                                ).trim()
-                                : null,
-
-                            observaciones
-                                ? String(
-                                    observaciones
-                                ).trim()
-                                : null
-
-                        ],
-                        (error, resultado) => {
+                        sqlPagado,
+                        [reservaId],
+                        (error, resultados) => {
 
                             if (error) {
 
                                 console.error(
-                                    "❌ Error al insertar pago:",
+                                    "❌ Error al consultar pagos:",
                                     error
                                 );
 
                                 return res.status(500).json({
                                     error:
-                                        "No se pudo registrar el pago"
+                                        "No se pudieron verificar los pagos"
                                 });
+
+                            }
+
+
+                            const totalPagado =
+                                Number(
+                                    resultados[0]
+                                        ?.total_pagado || 0
+                                );
+
+
+                            const totalAdelantos =
+                                Number(
+                                    resultados[0]
+                                        ?.total_adelantos || 0
+                                );
+
+
+                            const pendiente =
+                                Number(
+                                    (
+                                        totalServicio -
+                                        totalPagado
+                                    ).toFixed(2)
+                                );
+
+
+                            // ==================================================
+                            // YA ESTÁ PAGADO
+                            // ==================================================
+
+                            if (
+                                pendiente <= 0
+                            ) {
+
+                                return res.status(400).json({
+
+                                    error:
+                                        "Esta reserva ya está completamente pagada."
+
+                                });
+
+                            }
+
+
+                            // ==================================================
+                            // NO SOBREPASAR EL TOTAL
+                            // ==================================================
+
+                            if (
+                                montoPago >
+                                pendiente + 0.001
+                            ) {
+
+                                return res.status(400).json({
+
+                                    error:
+                                        `El monto supera el saldo pendiente. Pendiente: Bs ${pendiente.toFixed(2)}`
+
+                                });
+
+                            }
+
+
+                            // ==================================================
+                            // ADELANTO
+                            // ==================================================
+
+                            if (
+                                tipo_pago ===
+                                "adelanto"
+                            ) {
+
+                                if (
+                                    totalAdelantos > 0
+                                ) {
+
+                                    return res.status(409).json({
+
+                                        error:
+                                            "Esta reserva ya tiene registrado un adelanto."
+
+                                    });
+
+                                }
+
+
+                                if (
+                                    montoPago >=
+                                    totalServicio
+                                ) {
+
+                                    return res.status(400).json({
+
+                                        error:
+                                            "El adelanto debe ser menor al precio total. Para cobrar todo utiliza 'completo'."
+
+                                    });
+
+                                }
+
+                            }
+
+
+                            // ==================================================
+                            // SALDO
+                            // ==================================================
+
+                            if (
+                                tipo_pago ===
+                                "saldo"
+                            ) {
+
+                                // Si el adelanto está activado,
+                                // primero debe existir un adelanto.
+
+                                if (
+                                    adelantoObligatorio &&
+                                    totalAdelantos <= 0
+                                ) {
+
+                                    return res.status(400).json({
+
+                                        error:
+                                            "Primero debe existir un adelanto registrado."
+
+                                    });
+
+                                }
+
+                            }
+
+
+                            // ==================================================
+                            // PAGO COMPLETO
+                            // ==================================================
+
+                            if (
+                                tipo_pago ===
+                                "completo"
+                            ) {
+
+                                // El pago completo debe cubrir
+                                // todo lo que falta.
+
+                                if (
+                                    Math.abs(
+                                        montoPago -
+                                        pendiente
+                                    ) > 0.01
+                                ) {
+
+                                    return res.status(400).json({
+
+                                        error:
+                                            `Para "pago completo" debes registrar exactamente Bs ${pendiente.toFixed(2)}.`
+
+                                    });
+
+                                }
 
                             }
 
@@ -1051,6 +921,10 @@ router.post("/", (req, res) => {
                                 );
 
 
+                            // ==================================================
+                            // REGISTRANDO ADELANTO
+                            // ==================================================
+
                             if (
                                 tipo_pago ===
                                 "adelanto"
@@ -1072,83 +946,187 @@ router.post("/", (req, res) => {
 
 
                             // ==================================================
-                            // ACTUALIZAR RESERVA
+                            // SI EL ADELANTO ESTÁ DESACTIVADO
+                            // LA RESERVA DEBE QUEDAR CON ADELANTO 0
                             // ==================================================
 
-                            const sqlActualizar = `
+                            if (
+                                !adelantoObligatorio
+                            ) {
 
-                                UPDATE reservas
+                                nuevoAdelanto =
+                                    0;
 
-                                SET
+                                nuevoAdelantoPagado =
+                                    0;
 
-                                    adelanto = ?,
+                            }
 
-                                    saldo = ?,
 
-                                    adelanto_pagado = ?
+                            // ==================================================
+                            // INSERTAR PAGO
+                            // ==================================================
 
-                                WHERE
-                                    id_reserva = ?
+                            const sqlInsertar = `
+
+                                INSERT INTO pagos
+
+                                (
+
+                                    id_reserva,
+                                    tipo_pago,
+                                    monto,
+                                    metodo_pago,
+                                    referencia,
+                                    observaciones
+
+                                )
+
+                                VALUES
+
+                                (
+
+                                    ?,
+                                    ?,
+                                    ?,
+                                    ?,
+                                    ?,
+                                    ?
+
+                                )
 
                             `;
 
 
                             conexion.query(
-                                sqlActualizar,
+                                sqlInsertar,
                                 [
 
-                                    nuevoAdelanto,
+                                    reservaId,
 
-                                    nuevoSaldo,
+                                    tipo_pago,
 
-                                    nuevoAdelantoPagado,
+                                    montoPago,
 
-                                    reservaId
+                                    metodo_pago,
+
+                                    referencia
+                                        ? String(
+                                            referencia
+                                        ).trim()
+                                        : null,
+
+                                    observaciones
+                                        ? String(
+                                            observaciones
+                                        ).trim()
+                                        : null
 
                                 ],
-                                (error) => {
+                                (error, resultado) => {
 
                                     if (error) {
 
                                         console.error(
-                                            "❌ Error actualizando reserva:",
+                                            "❌ Error al insertar pago:",
                                             error
                                         );
 
                                         return res.status(500).json({
-
                                             error:
-                                                "El pago se registró, pero no se pudo actualizar la reserva."
-
+                                                "No se pudo registrar el pago"
                                         });
 
                                     }
 
 
-                                    res.status(201).json({
+                                    // ==================================================
+                                    // ACTUALIZAR RESERVA
+                                    // ==================================================
 
-                                        mensaje:
-                                            "Pago registrado correctamente",
+                                    const sqlActualizar = `
 
-                                        id_pago:
-                                            resultado.insertId,
+                                        UPDATE reservas
 
-                                        id_reserva:
-                                            reservaId,
+                                        SET
 
-                                        tipo_pago:
-                                            tipo_pago,
+                                            adelanto = ?,
 
-                                        monto:
-                                            montoPago,
+                                            saldo = ?,
 
-                                        total_pagado:
-                                            nuevoTotalPagado,
+                                            adelanto_pagado = ?
 
-                                        saldo:
-                                            nuevoSaldo
+                                        WHERE
+                                            id_reserva = ?
 
-                                    });
+                                    `;
+
+
+                                    conexion.query(
+                                        sqlActualizar,
+                                        [
+
+                                            nuevoAdelanto,
+
+                                            nuevoSaldo,
+
+                                            nuevoAdelantoPagado,
+
+                                            reservaId
+
+                                        ],
+                                        (error) => {
+
+                                            if (error) {
+
+                                                console.error(
+                                                    "❌ Error actualizando reserva:",
+                                                    error
+                                                );
+
+                                                return res.status(500).json({
+
+                                                    error:
+                                                        "El pago se registró, pero no se pudo actualizar la reserva."
+
+                                                });
+
+                                            }
+
+
+                                            res.status(201).json({
+
+                                                mensaje:
+                                                    "Pago registrado correctamente",
+
+                                                id_pago:
+                                                    resultado.insertId,
+
+                                                id_reserva:
+                                                    reservaId,
+
+                                                tipo_pago:
+                                                    tipo_pago,
+
+                                                monto:
+                                                    montoPago,
+
+                                                total_pagado:
+                                                    nuevoTotalPagado,
+
+                                                adelanto:
+                                                    nuevoAdelanto,
+
+                                                saldo:
+                                                    nuevoSaldo,
+
+                                                adelanto_pagado:
+                                                    nuevoAdelantoPagado
+
+                                            });
+
+                                        }
+                                    );
 
                                 }
                             );
@@ -1188,6 +1166,10 @@ router.delete("/:id", (req, res) => {
     }
 
 
+    // ==================================================
+    // BUSCAR PAGO
+    // ==================================================
+
     const sqlBuscar = `
 
         SELECT
@@ -1212,6 +1194,11 @@ router.delete("/:id", (req, res) => {
 
             if (error) {
 
+                console.error(
+                    "❌ Error al buscar pago:",
+                    error
+                );
+
                 return res.status(500).json({
                     error:
                         "No se pudo obtener el pago"
@@ -1235,6 +1222,10 @@ router.delete("/:id", (req, res) => {
             const idReserva =
                 pagos[0].id_reserva;
 
+
+            // ==================================================
+            // ELIMINAR
+            // ==================================================
 
             const sqlEliminar = `
 
@@ -1267,7 +1258,7 @@ router.delete("/:id", (req, res) => {
 
 
                     // ==================================================
-                    // RECALCULAR RESERVA
+                    // RECALCULAR
                     // ==================================================
 
                     const sqlRecalcular = `
@@ -1284,8 +1275,7 @@ router.delete("/:id", (req, res) => {
                             COALESCE(
                                 SUM(
                                     CASE
-                                        WHEN p.tipo_pago =
-                                            'adelanto'
+                                        WHEN p.tipo_pago = 'adelanto'
                                         THEN p.monto
                                         ELSE 0
                                     END
@@ -1303,6 +1293,7 @@ router.delete("/:id", (req, res) => {
                             r.id_reserva = ?
 
                         GROUP BY
+
                             r.id_reserva,
                             r.total_servicio
 
@@ -1316,53 +1307,61 @@ router.delete("/:id", (req, res) => {
 
                             if (error) {
 
+                                console.error(
+                                    "❌ Error al recalcular:",
+                                    error
+                                );
+
                                 return res.status(500).json({
+
                                     error:
                                         "Pago eliminado, pero no se pudo recalcular la reserva"
+
                                 });
 
                             }
 
 
                             const datos =
-                                resultados[0];
+                                resultados[0] || {};
 
 
                             const totalServicio =
                                 Number(
-                                    datos?.total_servicio || 0
+                                    datos.total_servicio || 0
                                 );
 
 
                             const totalPagado =
                                 Number(
-                                    datos?.total_pagado || 0
+                                    datos.total_pagado || 0
                                 );
 
 
                             const totalAdelantos =
                                 Number(
-                                    datos?.total_adelantos || 0
+                                    datos.total_adelantos || 0
                                 );
 
 
                             const saldo =
                                 Math.max(
+
                                     0,
+
                                     Number(
                                         (
                                             totalServicio -
                                             totalPagado
                                         ).toFixed(2)
                                     )
+
                                 );
 
 
-                            const adelantoPagado =
-                                totalAdelantos > 0
-                                    ? 1
-                                    : 0;
-
+                            // ==================================================
+                            // ACTUALIZAR RESERVA
+                            // ==================================================
 
                             const sqlActualizar = `
 
@@ -1390,7 +1389,9 @@ router.delete("/:id", (req, res) => {
 
                                     saldo,
 
-                                    adelantoPagado,
+                                    totalAdelantos > 0
+                                        ? 1
+                                        : 0,
 
                                     idReserva
 
@@ -1399,9 +1400,16 @@ router.delete("/:id", (req, res) => {
 
                                     if (error) {
 
+                                        console.error(
+                                            "❌ Error al actualizar reserva:",
+                                            error
+                                        );
+
                                         return res.status(500).json({
+
                                             error:
                                                 "Pago eliminado, pero no se pudo actualizar la reserva"
+
                                         });
 
                                     }
@@ -1410,7 +1418,19 @@ router.delete("/:id", (req, res) => {
                                     res.json({
 
                                         mensaje:
-                                            "Pago eliminado correctamente"
+                                            "Pago eliminado correctamente",
+
+                                        id_reserva:
+                                            idReserva,
+
+                                        total_pagado:
+                                            totalPagado,
+
+                                        adelanto:
+                                            totalAdelantos,
+
+                                        saldo:
+                                            saldo
 
                                     });
 
@@ -1428,5 +1448,9 @@ router.delete("/:id", (req, res) => {
 
 });
 
+
+// ======================================================
+// EXPORTAR
+// ======================================================
 
 module.exports = router;

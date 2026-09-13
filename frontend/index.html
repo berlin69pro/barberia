@@ -5048,6 +5048,7 @@ const seleccionReserva = {
 let qrPagoPublico = "";
 let pagoRealizado = false;
 let montoAdelantoPublico = 0;
+let adelantoObligatorioPublico = false;
 
 
 
@@ -5097,7 +5098,19 @@ function mostrarVacio(
 // QR DE PAGO
 // ======================================================
 
+function esAdelantoObligatorio(configuracion = {}) {
+    return (
+        configuracion.adelanto_obligatorio === 1 ||
+        configuracion.adelanto_obligatorio === "1" ||
+        configuracion.adelanto_obligatorio === true ||
+        configuracion.adelanto_obligatorio === "true"
+    );
+}
+
 function cargarQrPagoPublico(configuracion) {
+
+    const pagoBox =
+        document.getElementById("pagoBox");
 
     const wrap =
         document.getElementById("pagoQrWrap");
@@ -5108,7 +5121,11 @@ function cargarQrPagoPublico(configuracion) {
     const detalle =
         document.getElementById("pagoDetalle");
 
-    if (!wrap) return;
+    const checkbox =
+        document.getElementById("pagoRealizado");
+
+    adelantoObligatorioPublico =
+        esAdelantoObligatorio(configuracion);
 
     qrPagoPublico =
         configuracion?.qr_pago ||
@@ -5122,6 +5139,43 @@ function cargarQrPagoPublico(configuracion) {
             configuracion?.adelanto_monto ||
             0
         ) || 0;
+
+    // ==================================================
+    // ADELANTO DESACTIVADO
+    // ==================================================
+
+    if (!adelantoObligatorioPublico) {
+
+        pagoRealizado = false;
+        montoAdelantoPublico = 0;
+
+        if (pagoBox) {
+            pagoBox.style.display = "none";
+        }
+
+        if (checkbox) {
+            checkbox.checked = false;
+            checkbox.disabled = true;
+        }
+
+        if (wrap) {
+            wrap.innerHTML = "";
+        }
+
+        return;
+    }
+
+    // ==================================================
+    // ADELANTO ACTIVADO
+    // ==================================================
+
+    if (pagoBox) {
+        pagoBox.style.display = "";
+    }
+
+    if (checkbox) {
+        checkbox.disabled = false;
+    }
 
     const total =
         Number(
@@ -5140,41 +5194,40 @@ function cargarQrPagoPublico(configuracion) {
         );
 
     if (monto) {
-
         monto.textContent =
             adelanto > 0
                 ? `Bs ${adelanto.toFixed(2)} DE ADELANTO`
                 : "ADELANTO NO CONFIGURADO";
-
     }
 
     if (detalle) {
-
         detalle.innerHTML =
             `Total: <strong>Bs ${total.toFixed(2)}</strong> · ` +
             `Adelanto: <strong>Bs ${adelanto.toFixed(2)}</strong> · ` +
             `Saldo: <strong>Bs ${saldo.toFixed(2)}</strong>`;
-
     }
 
-    if (qrPagoPublico) {
+    if (wrap) {
 
-        wrap.innerHTML = `
-            <img
-                src="${escapeHTML(qrPagoPublico)}"
-                alt="QR de pago del dueño"
-                onerror="this.parentElement.innerHTML='<div class=\\'pago-qr-error\\'>No se pudo cargar el QR de pago.</div>'"
-            >
-        `;
+        if (qrPagoPublico) {
 
-    } else {
+            wrap.innerHTML = `
+                <img
+                    src="${escapeHTML(qrPagoPublico)}"
+                    alt="QR de pago del dueño"
+                    onerror="this.parentElement.innerHTML='<div class=\\'pago-qr-error\\'>No se pudo cargar el QR de pago.</div>'"
+                >
+            `;
 
-        wrap.innerHTML = `
-            <div class="pago-qr-error">
-                El dueño todavía no configuró su QR de pago.
-            </div>
-        `;
+        } else {
 
+            wrap.innerHTML = `
+                <div class="pago-qr-error">
+                    El dueño todavía no configuró su QR de pago.
+                </div>
+            `;
+
+        }
     }
 
     actualizarEstadoPagoUI();
@@ -7288,21 +7341,19 @@ document.getElementById("formReserva")?.addEventListener(
                 );
             }
 
-            if (!pagoRealizado) {
-                throw new Error(
-                    "Debes realizar el adelanto y marcar “Ya realicé el adelanto” para confirmar la reserva."
-                );
-            }
-
-
             const configuracion =
                 window.configuracionPublica || {};
 
+            const adelantoObligatorio =
+                esAdelantoObligatorio(configuracion);
+
             const montoAdelanto =
-                Number(
-                    configuracion.monto_adelanto ||
-                    0
-                );
+                adelantoObligatorio
+                    ? Number(
+                        configuracion.monto_adelanto ||
+                        0
+                    )
+                    : 0;
 
             const totalServicio =
                 Number(
@@ -7310,30 +7361,36 @@ document.getElementById("formReserva")?.addEventListener(
                     0
                 );
 
-            if (
-                !Number.isFinite(montoAdelanto) ||
-                montoAdelanto <= 0
-            ) {
-                throw new Error(
-                    "El monto del adelanto no está configurado correctamente."
-                );
-            }
+            // El pago solamente se valida cuando
+            // "Adelanto obligatorio" está ACTIVADO.
+            if (adelantoObligatorio) {
 
-            if (
-                !configuracion.qr_pago
-            ) {
-                throw new Error(
-                    "El dueño todavía no configuró su QR de pago."
-                );
-            }
+                if (!pagoRealizado) {
+                    throw new Error(
+                        "Debes realizar el adelanto y marcar “Ya realicé el adelanto” para confirmar la reserva."
+                    );
+                }
 
-            if (
-                montoAdelanto >
-                totalServicio
-            ) {
-                throw new Error(
-                    "El adelanto no puede ser mayor al precio del servicio."
-                );
+                if (
+                    !Number.isFinite(montoAdelanto) ||
+                    montoAdelanto <= 0
+                ) {
+                    throw new Error(
+                        "El monto del adelanto no está configurado correctamente."
+                    );
+                }
+
+                if (!configuracion.qr_pago) {
+                    throw new Error(
+                        "El dueño todavía no configuró su QR de pago."
+                    );
+                }
+
+                if (montoAdelanto > totalServicio) {
+                    throw new Error(
+                        "El adelanto no puede ser mayor al precio del servicio."
+                    );
+                }
             }
 
 
@@ -7482,11 +7539,10 @@ document.getElementById("formReserva")?.addEventListener(
                                     observaciones ||
                                     null,
 
-                                // ==================================
-                                // ESTE CAMPO ES OBLIGATORIO
-                                // ==================================
+                                // El adelanto solamente se registra
+                                // como pagado cuando es obligatorio.
                                 adelanto_pagado:
-                                    true
+                                    adelantoObligatorio
                             })
                     }
                 );
@@ -7526,7 +7582,7 @@ document.getElementById("formReserva")?.addEventListener(
             const adelantoGuardado =
                 Number(
                     resultado.adelanto ??
-                    montoAdelanto
+                    (adelantoObligatorio ? montoAdelanto : 0)
                 );
 
             const saldoGuardado =
@@ -7560,8 +7616,9 @@ document.getElementById("formReserva")?.addEventListener(
                  Código:
                  <strong>${escapeHTML(codigo)}</strong><br>
                  <span style="color:#aaa">
-                    Adelanto: Bs ${adelantoGuardado.toFixed(2)}
-                    · Saldo: Bs ${saldoGuardado.toFixed(2)}
+                    ${adelantoObligatorio
+                        ? `Adelanto: Bs ${adelantoGuardado.toFixed(2)} · Saldo: Bs ${saldoGuardado.toFixed(2)}`
+                        : `Pago en barbería: Bs ${totalGuardado.toFixed(2)}`}
                  </span>`;
 
 

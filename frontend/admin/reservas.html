@@ -263,11 +263,13 @@ tr:hover td{background:#151515}
 
 .btn{
     border:0;
-    padding:8px 9px;
+    padding:8px 10px;
     border-radius:4px;
     cursor:pointer;
-    font-size:12px;
+    font-size:10px;
+    font-weight:bold;
     color:white;
+    white-space:nowrap;
 }
 
 .btn-ver{background:#333}
@@ -459,7 +461,7 @@ tr:hover td{background:#151515}
 
         <div class="tarjeta">
             <div id="totalPendientes" class="tarjeta-numero">0</div>
-            <div class="tarjeta-texto">Pendientes</div>
+            <div class="tarjeta-texto">Por atender</div>
         </div>
 
         <div class="tarjeta">
@@ -469,7 +471,7 @@ tr:hover td{background:#151515}
 
         <div class="tarjeta">
             <div id="totalCompletadas" class="tarjeta-numero">0</div>
-            <div class="tarjeta-texto">Completadas</div>
+            <div class="tarjeta-texto">Atendidas</div>
         </div>
 
     </div>
@@ -511,7 +513,7 @@ tr:hover td{background:#151515}
         </div>
 
         <div>
-            <span>TOTAL SERVICIOS</span>
+            <span>TOTAL A COBRAR</span>
             <strong id="serviciosMostrados">Bs 0.00</strong>
         </div>
 
@@ -521,7 +523,7 @@ tr:hover td{background:#151515}
         </div>
 
         <div>
-            <span>SALDO PENDIENTE</span>
+            <span>POR COBRAR</span>
             <strong id="saldosMostrados">Bs 0.00</strong>
         </div>
 
@@ -540,7 +542,7 @@ tr:hover td{background:#151515}
                     <th>Servicio</th>
                     <th>Total</th>
                     <th>Adelanto</th>
-                    <th>Saldo</th>
+                    <th>Por cobrar</th>
                     <th>Pago</th>
                     <th>Estado</th>
                     <th>Acciones</th>
@@ -591,7 +593,7 @@ tr:hover td{background:#151515}
             </div>
 
             <div class="fin-box">
-                <span>Saldo</span>
+                <span>Por cobrar</span>
                 <strong id="detalleSaldo">Bs 0.00</strong>
             </div>
 
@@ -603,7 +605,7 @@ tr:hover td{background:#151515}
         </div>
 
         <div class="detalle">
-            <strong>OBSERVACIONES</strong>
+            <strong>NOTAS</strong>
             <span id="detalleObservaciones">-</span>
         </div>
 
@@ -657,6 +659,7 @@ let filtroFechaActual="";
 let busquedaClienteActual="";
 let accionPendiente=null;
 let toastTimer=null;
+let adelantoObligatorio=true;
 
 function escapeHTML(texto){
     return String(texto ?? "")
@@ -699,19 +702,29 @@ async function cargarReservas(){
 
     try{
 
-        const respuesta=await fetch("/api/reservas");
+        const [respuestaReservas,respuestaConfiguracion] = await Promise.all([
+            fetch("/api/reservas"),
+            fetch("/api/configuracion")
+        ]);
 
-        if(!respuesta.ok){
+        if(!respuestaReservas.ok){
             throw new Error("No se pudieron obtener las reservas.");
         }
 
-        const datos=await respuesta.json();
+        const datos=await respuestaReservas.json();
 
         if(!Array.isArray(datos)){
             throw new Error("La respuesta de reservas no es válida.");
         }
 
         reservas=datos;
+
+        if(respuestaConfiguracion.ok){
+            const configuracion=await respuestaConfiguracion.json();
+
+            adelantoObligatorio =
+                Number(configuracion.adelanto_obligatorio) === 1;
+        }
 
         cargarFiltroBarberos();
         actualizarEstadisticas();
@@ -872,6 +885,10 @@ function mostrarReservas(){
         const saldo=numero(reserva.saldo);
         const pago=numero(reserva.adelanto_pagado)===1;
 
+        const textoPago = adelantoObligatorio
+            ? (pago ? "✓ ADELANTO RECIBIDO" : "PENDIENTE")
+            : "SIN ADELANTO";
+
         const fila=document.createElement("tr");
 
         fila.innerHTML=`
@@ -915,9 +932,13 @@ function mostrarReservas(){
 
             <td>
                 ${
-                    pago
-                    ? '<span class="pago-ok">✓ ADELANTO PAGADO</span>'
-                    : '<span class="pago-no">PENDIENTE</span>'
+                    adelantoObligatorio
+                    ? (
+                        pago
+                        ? '<span class="pago-ok">✓ ADELANTO RECIBIDO</span>'
+                        : '<span class="pago-no">PENDIENTE</span>'
+                      )
+                    : '<span class="pago-no">SIN ADELANTO</span>'
                 }
             </td>
 
@@ -1001,8 +1022,8 @@ function solicitarConfirmacion(id,accion){
 
         completada:{
             icono:"✔️",
-            titulo:"Completar reserva",
-            texto:"¿Deseas marcar esta reserva como completada?"
+            titulo:"Marcar como atendido",
+            texto:"¿El cliente ya recibió el servicio?"
         },
 
         cancelada:{
@@ -1119,8 +1140,10 @@ function verDetalle(id){
     document.getElementById("detalleTotal").textContent=dinero(total);
     document.getElementById("detalleAdelanto").textContent=dinero(adelanto);
     document.getElementById("detalleSaldo").textContent=dinero(saldo);
-    document.getElementById("detallePago").textContent=
-        pago ? "✓ PAGADO" : "PENDIENTE";
+    document.getElementById("detallePago").textContent =
+        adelantoObligatorio
+            ? (pago ? "✓ RECIBIDO" : "PENDIENTE")
+            : "SIN ADELANTO";
 
     document.getElementById("detalleObservaciones").textContent=
         reserva.observaciones||"Sin observaciones";

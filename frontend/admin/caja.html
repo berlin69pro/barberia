@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caja - Club Ponte Perro</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            color: #222;
+        }
+
+        header {
+            background: #111;
+            color: white;
+            padding: 20px;
+        }
+
+        header h1 {
+            font-size: 25px;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            color: #ccc;
+        }
+
+        .contenedor {
+            width: 95%;
+            max-width: 1200px;
+            margin: 25px auto;
+        }
+
+        .barra-superior {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .barra-superior h2 {
+            font-size: 24px;
+        }
+
+        .boton {
+            border: none;
+            padding: 12px 18px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .boton-cerrar {
+            background: #d32f2f;
+            color: white;
+        }
+
+        .boton-cerrar:hover {
+            background: #b71c1c;
+        }
+
+        .boton-recargar {
+            background: #333;
+            color: white;
+        }
+
+        .boton-recargar:hover {
+            background: #111;
+        }
+
+        .estado {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .abierta {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .cerrada {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .tarjetas {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .tarjeta {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .tarjeta h3 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .tarjeta .monto {
+            font-size: 27px;
+            font-weight: bold;
+        }
+
+        .tarjeta.total {
+            background: #111;
+            color: white;
+        }
+
+        .tarjeta.total h3 {
+            color: #ccc;
+        }
+
+        .informacion {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .informacion h2 {
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .fila-info {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .fila-info:last-child {
+            border-bottom: none;
+        }
+
+        .historial {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .historial h2 {
+            margin-bottom: 18px;
+        }
+
+        .tabla-contenedor {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px;
+        }
+
+        th {
+            background: #111;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:hover {
+            background: #f8f8f8;
+        }
+
+        .mensaje {
+            padding: 15px;
+            background: #fff3cd;
+            color: #856404;
+            border-radius: 7px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .sin-datos {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+        }
+
+        @media (max-width: 900px) {
+            .tarjetas {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 550px) {
+            .tarjetas {
+                grid-template-columns: 1fr;
+            }
+
+            .barra-superior {
+                align-items: flex-start;
+            }
+
+            .barra-superior h2 {
+                font-size: 21px;
+            }
+
+            .fila-info {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>💰 Caja</h1>
+    <p>Control de dinero recibido por las reservas</p>
+</header>
+
+<div class="contenedor">
+
+    <div id="mensaje" class="mensaje"></div>
+
+    <div class="barra-superior">
+        <div>
+            <h2>📅 Caja del día</h2>
+            <p id="fechaCaja">Cargando...</p>
+        </div>
+
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+            <span id="estadoCaja" class="estado">Cargando...</span>
+
+            <button
+                class="boton boton-recargar"
+                onclick="cargarCaja()">
+                🔄 ACTUALIZAR
+            </button>
+
+            <button
+                id="btnCerrar"
+                class="boton boton-cerrar"
+                onclick="cerrarCaja()">
+                🔒 CERRAR CAJA
+            </button>
+        </div>
+    </div>
+
+    <!-- RESUMEN -->
+    <div class="tarjetas">
+
+        <div class="tarjeta total">
+            <h3>💰 TOTAL RECIBIDO</h3>
+            <div class="monto" id="totalRecibido">0 Bs</div>
+        </div>
+
+        <div class="tarjeta">
+            <h3>💳 ADELANTOS</h3>
+            <div class="monto" id="totalAdelantos">0 Bs</div>
+        </div>
+
+        <div class="tarjeta">
+            <h3>💵 SALDOS</h3>
+            <div class="monto" id="totalSaldos">0 Bs</div>
+        </div>
+
+        <div class="tarjeta">
+            <h3>✅ PAGOS COMPLETOS</h3>
+            <div class="monto" id="totalCompletos">0 Bs</div>
+        </div>
+
+    </div>
+
+    <!-- INFORMACIÓN -->
+    <div class="informacion">
+
+        <h2>📋 Información de la caja</h2>
+
+        <div class="fila-info">
+            <strong>Número de caja:</strong>
+            <span id="idCaja">-</span>
+        </div>
+
+        <div class="fila-info">
+            <strong>Fecha:</strong>
+            <span id="fechaInfo">-</span>
+        </div>
+
+        <div class="fila-info">
+            <strong>Estado:</strong>
+            <span id="estadoInfo">-</span>
+        </div>
+
+        <div class="fila-info">
+            <strong>Fecha de cierre:</strong>
+            <span id="fechaCierre">Todavía no cerrada</span>
+        </div>
+
+    </div>
+
+    <!-- HISTORIAL -->
+    <div class="historial">
+
+        <h2>📚 Historial de cajas</h2>
+
+        <div class="tabla-contenedor">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Total recibido</th>
+                        <th>Adelantos</th>
+                        <th>Saldos</th>
+                        <th>Completos</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablaHistorial">
+                    <tr>
+                        <td colspan="6" class="sin-datos">
+                            Cargando historial...
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    const API = "/api/caja";
+
+
+    function mostrarMensaje(texto) {
+
+        const mensaje = document.getElementById("mensaje");
+
+        mensaje.textContent = texto;
+        mensaje.style.display = "block";
+
+        setTimeout(() => {
+            mensaje.style.display = "none";
+        }, 4000);
+    }
+
+
+    function formatoBs(valor) {
+
+        const numero = Number(valor || 0);
+
+        return numero.toLocaleString("es-BO", {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2
+        }) + " Bs";
+    }
+
+
+    function formatoFecha(fecha) {
+
+        if (!fecha) {
+            return "-";
+        }
+
+        const d = new Date(fecha);
+
+        if (isNaN(d.getTime())) {
+            return fecha;
+        }
+
+        return d.toLocaleDateString("es-BO", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric"
+        });
+    }
+
+
+    function formatoFechaHora(fecha) {
+
+        if (!fecha) {
+            return "Todavía no cerrada";
+        }
+
+        const d = new Date(fecha);
+
+        if (isNaN(d.getTime())) {
+            return fecha;
+        }
+
+        return d.toLocaleString("es-BO", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+    }
+
+
+    function actualizarEstado(estado) {
+
+        const estadoCaja = document.getElementById("estadoCaja");
+        const estadoInfo = document.getElementById("estadoInfo");
+        const btnCerrar = document.getElementById("btnCerrar");
+
+        if (estado === "cerrada") {
+
+            estadoCaja.textContent = "🔴 CAJA CERRADA";
+            estadoCaja.className = "estado cerrada";
+
+            estadoInfo.textContent = "🔴 Cerrada";
+
+            btnCerrar.style.display = "none";
+
+        } else {
+
+            estadoCaja.textContent = "🟢 CAJA ABIERTA";
+            estadoCaja.className = "estado abierta";
+
+            estadoInfo.textContent = "🟢 Abierta";
+
+            btnCerrar.style.display = "inline-block";
+        }
+    }
+
+
+    async function cargarCaja() {
+
+        try {
+
+            const respuesta = await fetch(API);
+
+            if (!respuesta.ok) {
+                throw new Error("No se pudo obtener la caja");
+            }
+
+            const caja = await respuesta.json();
+
+            document.getElementById("idCaja").textContent =
+                caja.id_caja ?? "-";
+
+            document.getElementById("fechaCaja").textContent =
+                formatoFecha(caja.fecha);
+
+            document.getElementById("fechaInfo").textContent =
+                formatoFecha(caja.fecha);
+
+            document.getElementById("totalRecibido").textContent =
+                formatoBs(caja.total_recibido);
+
+            document.getElementById("totalAdelantos").textContent =
+                formatoBs(caja.total_adelantos);
+
+            document.getElementById("totalSaldos").textContent =
+                formatoBs(caja.total_saldos);
+
+            document.getElementById("totalCompletos").textContent =
+                formatoBs(caja.total_completos);
+
+            document.getElementById("fechaCierre").textContent =
+                formatoFechaHora(caja.fecha_cierre);
+
+            actualizarEstado(caja.estado);
+
+            cargarHistorial();
+
+        } catch (error) {
+
+            console.error(error);
+
+            mostrarMensaje(
+                "❌ No se pudo cargar la información de la caja."
+            );
+        }
+    }
+
+
+    async function cargarHistorial() {
+
+        try {
+
+            const respuesta = await fetch(API + "/historial");
+
+            if (!respuesta.ok) {
+                throw new Error("No se pudo cargar el historial");
+            }
+
+            const datos = await respuesta.json();
+
+            const tabla = document.getElementById("tablaHistorial");
+
+            let historial = datos;
+
+            if (datos && Array.isArray(datos.cajas)) {
+                historial = datos.cajas;
+            }
+
+            if (!Array.isArray(historial) || historial.length === 0) {
+
+                tabla.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="sin-datos">
+                            No hay cajas anteriores.
+                        </td>
+                    </tr>
+                `;
+
+                return;
+            }
+
+
+            tabla.innerHTML = historial.map(caja => {
+
+                const estado = caja.estado === "cerrada"
+                    ? "🔴 Cerrada"
+                    : "🟢 Abierta";
+
+                return `
+                    <tr>
+
+                        <td>
+                            ${formatoFecha(caja.fecha)}
+                        </td>
+
+                        <td>
+                            <strong>
+                                ${formatoBs(caja.total_recibido)}
+                            </strong>
+                        </td>
+
+                        <td>
+                            ${formatoBs(caja.total_adelantos)}
+                        </td>
+
+                        <td>
+                            ${formatoBs(caja.total_saldos)}
+                        </td>
+
+                        <td>
+                            ${formatoBs(caja.total_completos)}
+                        </td>
+
+                        <td>
+                            ${estado}
+                        </td>
+
+                    </tr>
+                `;
+
+            }).join("");
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            document.getElementById("tablaHistorial").innerHTML = `
+                <tr>
+                    <td colspan="6" class="sin-datos">
+                        No se pudo cargar el historial.
+                    </td>
+                </tr>
+            `;
+        }
+    }
+
+
+    async function cerrarCaja() {
+
+        const confirmar = confirm(
+            "¿Seguro que quieres cerrar la caja de hoy?\n\n" +
+            "Después de cerrarla, esta caja quedará guardada en el historial."
+        );
+
+        if (!confirmar) {
+            return;
+        }
+
+
+        try {
+
+            const respuesta = await fetch(API + "/cerrar", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+
+            const resultado = await respuesta.json();
+
+
+            if (!respuesta.ok) {
+
+                throw new Error(
+                    resultado.error ||
+                    "No se pudo cerrar la caja."
+                );
+            }
+
+
+            alert(
+                "✅ Caja cerrada correctamente.\n\n" +
+                "Total recibido: " +
+                formatoBs(resultado.total_recibido)
+            );
+
+
+            await cargarCaja();
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(
+                "❌ " +
+                error.message
+            );
+        }
+    }
+
+
+    // CARGAR AL ABRIR LA PÁGINA
+    cargarCaja();
+
+</script>
+
+</body>
+</html>
