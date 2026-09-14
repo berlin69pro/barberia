@@ -11,9 +11,7 @@ const router = express.Router();
 router.get("/", (req, res) => {
 
     const sql = `
-
         SELECT
-
             r.id_reserva,
             r.id_cliente,
             r.id_barbero,
@@ -39,8 +37,6 @@ router.get("/", (req, res) => {
 
             s.nombre AS servicio_nombre,
 
-            /* IMPORTANTE:
-               mostrar el precio guardado en la reserva */
             r.total_servicio AS servicio_precio,
 
             s.duracion AS servicio_duracion
@@ -59,32 +55,24 @@ router.get("/", (req, res) => {
         ORDER BY
             r.fecha DESC,
             r.hora DESC
-
     `;
 
+    conexion.query(sql, (error, resultados) => {
 
-    conexion.query(
-        sql,
-        (error, resultados) => {
+        if (error) {
 
-            if (error) {
+            console.error(
+                "❌ Error al obtener reservas:",
+                error
+            );
 
-                console.error(
-                    "❌ Error al obtener reservas:",
-                    error
-                );
-
-                return res.status(500).json({
-                    error: "Error al obtener las reservas"
-                });
-
-            }
-
-            res.json(resultados);
-
+            return res.status(500).json({
+                error: "Error al obtener las reservas"
+            });
         }
-    );
 
+        res.json(resultados);
+    });
 });
 
 
@@ -95,9 +83,7 @@ router.get("/", (req, res) => {
 router.get("/:id", (req, res) => {
 
     const sql = `
-
         SELECT
-
             r.*,
 
             c.nombre AS cliente_nombre,
@@ -108,8 +94,6 @@ router.get("/:id", (req, res) => {
 
             s.nombre AS servicio_nombre,
 
-            /* IMPORTANTE:
-               mostrar el precio real guardado */
             r.total_servicio AS servicio_precio,
 
             s.duracion AS servicio_duracion
@@ -125,11 +109,8 @@ router.get("/:id", (req, res) => {
         LEFT JOIN servicios s
             ON r.id_servicio = s.id_servicio
 
-        WHERE
-            r.id_reserva = ?
-
+        WHERE r.id_reserva = ?
     `;
-
 
     conexion.query(
         sql,
@@ -146,24 +127,18 @@ router.get("/:id", (req, res) => {
                 return res.status(500).json({
                     error: "Error al obtener la reserva"
                 });
-
             }
-
 
             if (resultados.length === 0) {
 
                 return res.status(404).json({
                     error: "Reserva no encontrada"
                 });
-
             }
 
-
             res.json(resultados[0]);
-
         }
     );
-
 });
 
 
@@ -174,7 +149,6 @@ router.get("/:id", (req, res) => {
 router.post("/", (req, res) => {
 
     const {
-
         nombre_cliente,
         telefono,
 
@@ -191,13 +165,12 @@ router.post("/", (req, res) => {
         observaciones,
 
         adelanto_pagado
-
     } = req.body;
 
 
-    // ======================================================
-    // VALIDAR DATOS PRINCIPALES
-    // ======================================================
+    // ==================================================
+    // VALIDAR DATOS
+    // ==================================================
 
     if (
         !id_barbero ||
@@ -208,13 +181,12 @@ router.post("/", (req, res) => {
         return res.status(400).json({
             error: "Barbero, servicio y fecha son obligatorios"
         });
-
     }
 
 
-    // ======================================================
+    // ==================================================
     // VALIDAR CLIENTE
-    // ======================================================
+    // ==================================================
 
     if (
         !id_cliente &&
@@ -227,25 +199,23 @@ router.post("/", (req, res) => {
         return res.status(400).json({
             error: "El nombre y teléfono del cliente son obligatorios"
         });
-
     }
 
 
-    // ======================================================
-    // CONVERTIR ESTADO DEL PAGO
-    // ======================================================
+    // ==================================================
+    // CONVERTIR PAGO
+    // ==================================================
 
     const pagoConfirmado =
-
         adelanto_pagado === true ||
         adelanto_pagado === 1 ||
         adelanto_pagado === "1" ||
         adelanto_pagado === "true";
 
 
-    // ======================================================
-    // OBTENER HORA
-    // ======================================================
+    // ==================================================
+    // CONTINUAR CON HORA
+    // ==================================================
 
     function continuarConHora(horaReserva) {
 
@@ -254,7 +224,6 @@ router.post("/", (req, res) => {
             return res.status(400).json({
                 error: "Debe seleccionar un horario"
             });
-
         }
 
 
@@ -263,25 +232,17 @@ router.post("/", (req, res) => {
         // ==================================================
 
         const verificarBarbero = `
-
-            SELECT
-                id_barbero
-
+            SELECT id_barbero
             FROM barberos
-
             WHERE
                 id_barbero = ?
                 AND estado = 1
-
+            LIMIT 1
         `;
 
-
         conexion.query(
-
             verificarBarbero,
-
             [id_barbero],
-
             (error, barberos) => {
 
                 if (error) {
@@ -294,61 +255,49 @@ router.post("/", (req, res) => {
                     return res.status(500).json({
                         error: "No se pudo verificar el barbero"
                     });
-
                 }
-
 
                 if (barberos.length === 0) {
 
                     return res.status(400).json({
-                        error: "El barbero seleccionado no está disponible"
+                        error:
+                            "El barbero seleccionado no está disponible"
                     });
-
                 }
 
 
                 // ==================================================
-                // VERIFICAR SERVICIO Y PRECIO DEL BARBERO
+                // VERIFICAR SERVICIO
                 // ==================================================
 
                 const verificarServicio = `
-
                     SELECT
-
                         s.id_servicio,
-
                         s.precio AS precio_general,
-
                         s.duracion,
 
                         bs.precio AS precio_barbero,
-
                         bs.estado AS estado_barbero_servicio
 
                     FROM servicios s
 
                     LEFT JOIN barbero_servicio bs
-
                         ON bs.id_barbero = ?
                         AND bs.id_servicio = s.id_servicio
 
                     WHERE
-
                         s.id_servicio = ?
                         AND s.estado = 1
 
+                    LIMIT 1
                 `;
 
-
                 conexion.query(
-
                     verificarServicio,
-
                     [
                         id_barbero,
                         id_servicio
                     ],
-
                     (error, servicios) => {
 
                         if (error) {
@@ -359,18 +308,17 @@ router.post("/", (req, res) => {
                             );
 
                             return res.status(500).json({
-                                error: "No se pudo verificar el servicio"
+                                error:
+                                    "No se pudo verificar el servicio"
                             });
-
                         }
-
 
                         if (servicios.length === 0) {
 
                             return res.status(400).json({
-                                error: "El servicio seleccionado no está disponible"
+                                error:
+                                    "El servicio seleccionado no está disponible"
                             });
-
                         }
 
 
@@ -378,491 +326,438 @@ router.post("/", (req, res) => {
 
 
                         // ==================================================
-                        // PRECIO NORMAL
+                        // PRECIO NORMAL DEL BARBERO
                         // ==================================================
 
-                        const precioNormal =
+                        let precioNormal;
 
+                        if (
                             servicio.precio_barbero !== null &&
                             servicio.precio_barbero !== undefined &&
                             Number.isFinite(
                                 Number(servicio.precio_barbero)
                             )
+                        ) {
 
-                                ? Number(servicio.precio_barbero)
+                            precioNormal =
+                                Number(servicio.precio_barbero);
 
-                                : Number(servicio.precio_general);
+                        } else {
+
+                            precioNormal =
+                                Number(servicio.precio_general);
+                        }
 
 
                         if (
-
                             !Number.isFinite(precioNormal) ||
                             precioNormal <= 0
-
                         ) {
 
                             return res.status(400).json({
-                                error: "El precio del servicio no es válido"
+                                error:
+                                    "El precio del servicio no es válido"
                             });
-
                         }
 
 
                         // ==================================================
-                        // BUSCAR PROMOCIÓN ACTIVA
+                        // BUSCAR PROMOCIÓN
                         //
-                        // La promoción pertenece al SERVICIO,
-                        // no al barbero.
+                        // IMPORTANTE:
+                        // La promoción es OPCIONAL.
                         //
-                        // Por eso todos los barberos tendrán
-                        // el mismo precio promocional.
+                        // Si no existe promoción:
+                        // se utiliza el precio normal.
+                        //
+                        // Si la tabla promoción tiene algún problema:
+                        // NO se bloquea la reserva.
                         // ==================================================
 
                         const buscarPromocion = `
-
                             SELECT
-
                                 id_promocion,
-
                                 titulo,
-
                                 precio_promocion,
-
                                 fecha_inicio,
-
                                 fecha_fin
 
                             FROM promociones
 
                             WHERE
-
                                 id_servicio = ?
-
                                 AND estado = 1
-
                                 AND fecha_inicio <= ?
-
                                 AND fecha_fin >= ?
 
-                            ORDER BY
-                                id_promocion DESC
+                            ORDER BY id_promocion DESC
 
                             LIMIT 1
-
                         `;
 
 
                         conexion.query(
-
                             buscarPromocion,
-
                             [
                                 id_servicio,
                                 fecha,
                                 fecha
                             ],
-
                             (error, promociones) => {
+
+
+                                // ==================================================
+                                // SI HAY ERROR EN PROMOCIONES
+                                //
+                                // NO CANCELAMOS LA RESERVA.
+                                // USAMOS PRECIO NORMAL.
+                                // ==================================================
 
                                 if (error) {
 
-                                    console.error(
-                                        "❌ Error al buscar promoción:",
-                                        error
+                                    console.warn(
+                                        "⚠️ No se pudo consultar promociones. Se utilizará el precio normal del servicio."
                                     );
 
-                                    return res.status(500).json({
-                                        error: "No se pudo verificar la promoción"
-                                    });
+                                    continuarConPrecio(
+                                        precioNormal,
+                                        null
+                                    );
 
+                                    return;
                                 }
 
 
                                 // ==================================================
-                                // DETERMINAR PRECIO FINAL
-                                // ==================================================
-
-                                let precioTotal = precioNormal;
-
-                                let promocionAplicada = null;
-
-
-                                // ==================================================
-                                // SI EXISTE PROMOCIÓN
-                                // ==================================================
-
-                                if (promociones.length > 0) {
-
-                                    const promocion =
-                                        promociones[0];
-
-                                    const precioPromocion =
-                                        Number(
-                                            promocion.precio_promocion
-                                        );
-
-
-                                    if (
-
-                                        Number.isFinite(
-                                            precioPromocion
-                                        ) &&
-
-                                        precioPromocion > 0
-
-                                    ) {
-
-                                        precioTotal =
-                                            precioPromocion;
-
-                                        promocionAplicada =
-                                            promocion;
-
-                                    }
-
-                                }
-
-
-                                // ==================================================
-                                // VALIDAR PRECIO FINAL
+                                // NO HAY PROMOCIÓN
                                 // ==================================================
 
                                 if (
-
-                                    !Number.isFinite(
-                                        precioTotal
-                                    ) ||
-
-                                    precioTotal <= 0
-
+                                    !promociones ||
+                                    promociones.length === 0
                                 ) {
 
-                                    return res.status(400).json({
-                                        error: "El precio final del servicio no es válido"
-                                    });
+                                    continuarConPrecio(
+                                        precioNormal,
+                                        null
+                                    );
 
+                                    return;
                                 }
 
 
                                 // ==================================================
-                                // OBTENER CONFIGURACIÓN DEL ADELANTO
+                                // EXISTE PROMOCIÓN
                                 // ==================================================
 
-                                const obtenerConfiguracion = `
+                                const promocion =
+                                    promociones[0];
 
-                                    SELECT
-
-                                        qr_pago,
-
-                                        adelanto_obligatorio,
-
-                                        monto_adelanto
-
-                                    FROM configuracion
-
-                                    ORDER BY
-                                        id_configuracion ASC
-
-                                    LIMIT 1
-
-                                `;
+                                const precioPromocion =
+                                    Number(
+                                        promocion.precio_promocion
+                                    );
 
 
-                                conexion.query(
+                                // ==================================================
+                                // PROMOCIÓN VÁLIDA
+                                // ==================================================
 
-                                    obtenerConfiguracion,
+                                if (
+                                    Number.isFinite(
+                                        precioPromocion
+                                    ) &&
+                                    precioPromocion > 0
+                                ) {
 
-                                    (error, configuraciones) => {
+                                    continuarConPrecio(
+                                        precioPromocion,
+                                        promocion
+                                    );
 
-                                        if (error) {
-
-                                            console.error(
-                                                "❌ Error al obtener configuración de pago:",
-                                                error
-                                            );
-
-                                            return res.status(500).json({
-                                                error:
-                                                    "No se pudo verificar la configuración del adelanto"
-                                            });
-
-                                        }
-
-
-                                        // ==================================================
-                                        // VALORES POR DEFECTO
-                                        // ==================================================
-
-                                        let adelantoObligatorio = 0;
-
-                                        let montoAdelanto = 0;
-
-                                        let qrPago = null;
+                                    return;
+                                }
 
 
-                                        if (
-                                            configuraciones.length > 0
-                                        ) {
+                                // ==================================================
+                                // PROMOCIÓN INVÁLIDA
+                                //
+                                // VOLVER AL PRECIO NORMAL
+                                // ==================================================
 
-                                            const configuracion =
-                                                configuraciones[0];
+                                console.warn(
+                                    "⚠️ La promoción encontrada tiene un precio inválido. Se utilizará el precio normal."
+                                );
 
-
-                                            adelantoObligatorio =
-
-                                                Number(
-                                                    configuracion.adelanto_obligatorio
-                                                ) === 1
-
-                                                    ? 1
-                                                    : 0;
-
-
-                                            qrPago =
-                                                configuracion.qr_pago ||
-                                                null;
+                                continuarConPrecio(
+                                    precioNormal,
+                                    null
+                                );
+                            }
+                        );
 
 
-                                            if (
-                                                adelantoObligatorio === 1
-                                            ) {
+                        // ==================================================
+                        // CONTINUAR CON PRECIO
+                        // ==================================================
 
-                                                montoAdelanto =
-                                                    Number(
-                                                        configuracion.monto_adelanto
-                                                    );
+                        function continuarConPrecio(
+                            precioTotal,
+                            promocionAplicada
+                        ) {
 
-                                            }
+                            if (
+                                !Number.isFinite(
+                                    precioTotal
+                                ) ||
+                                precioTotal <= 0
+                            ) {
 
-                                        }
+                                return res.status(400).json({
+                                    error:
+                                        "El precio final del servicio no es válido"
+                                });
+                            }
 
 
-                                        // ==================================================
-                                        // SI EL ADELANTO ESTÁ ACTIVADO
-                                        // ==================================================
+                            // ==================================================
+                            // CONFIGURACIÓN ADELANTO
+                            // ==================================================
+
+                            const obtenerConfiguracion = `
+                                SELECT
+                                    qr_pago,
+                                    adelanto_obligatorio,
+                                    monto_adelanto
+
+                                FROM configuracion
+
+                                ORDER BY id_configuracion ASC
+
+                                LIMIT 1
+                            `;
+
+
+                            conexion.query(
+                                obtenerConfiguracion,
+                                (error, configuraciones) => {
+
+                                    if (error) {
+
+                                        console.error(
+                                            "❌ Error al obtener configuración de pago:",
+                                            error
+                                        );
+
+                                        return res.status(500).json({
+                                            error:
+                                                "No se pudo verificar la configuración del adelanto"
+                                        });
+                                    }
+
+
+                                    // ==================================================
+                                    // VALORES POR DEFECTO
+                                    // ==================================================
+
+                                    let adelantoObligatorio = 0;
+                                    let montoAdelanto = 0;
+                                    let qrPago = null;
+
+
+                                    if (
+                                        configuraciones.length > 0
+                                    ) {
+
+                                        const configuracion =
+                                            configuraciones[0];
+
+
+                                        adelantoObligatorio =
+                                            Number(
+                                                configuracion.adelanto_obligatorio
+                                            ) === 1
+                                                ? 1
+                                                : 0;
+
+
+                                        qrPago =
+                                            configuracion.qr_pago ||
+                                            null;
+
 
                                         if (
                                             adelantoObligatorio === 1
                                         ) {
 
-                                            // ------------------------------------------
-                                            // VALIDAR MONTO
-                                            // ------------------------------------------
-
-                                            if (
-
-                                                !Number.isFinite(
-                                                    montoAdelanto
-                                                ) ||
-
-                                                montoAdelanto <= 0
-
-                                            ) {
-
-                                                return res.status(400).json({
-                                                    error:
-                                                        "El monto del adelanto no está configurado correctamente"
-                                                });
-
-                                            }
-
-
-                                            // ------------------------------------------
-                                            // NO PUEDE SUPERAR EL PRECIO
-                                            // ------------------------------------------
-
-                                            if (
-                                                montoAdelanto >
-                                                precioTotal
-                                            ) {
-
-                                                return res.status(400).json({
-                                                    error:
-                                                        "El adelanto no puede ser mayor al precio del servicio"
-                                                });
-
-                                            }
-
-
-                                            // ------------------------------------------
-                                            // DEBE HABER QR
-                                            // ------------------------------------------
-
-                                            if (!qrPago) {
-
-                                                return res.status(400).json({
-                                                    error:
-                                                        "El dueño todavía no configuró el QR de pago"
-                                                });
-
-                                            }
-
-
-                                            // ------------------------------------------
-                                            // DEBE CONFIRMAR PAGO
-                                            // ------------------------------------------
-
-                                            if (!pagoConfirmado) {
-
-                                                return res.status(400).json({
-                                                    error:
-                                                        "El adelanto es obligatorio para confirmar la reserva"
-                                                });
-
-                                            }
-
-                                        }
-
-
-                                        // ==================================================
-                                        // SI EL ADELANTO ESTÁ DESACTIVADO
-                                        // ==================================================
-
-                                        else {
-
-                                            montoAdelanto = 0;
-
-                                        }
-
-
-                                        // ==================================================
-                                        // VERIFICAR RESERVA DUPLICADA
-                                        // ==================================================
-
-                                        const verificarReserva = `
-
-                                            SELECT
-                                                id_reserva
-
-                                            FROM reservas
-
-                                            WHERE
-
-                                                id_barbero = ?
-
-                                                AND fecha = ?
-
-                                                AND hora = ?
-
-                                                AND estado <> 'cancelada'
-
-                                            LIMIT 1
-
-                                        `;
-
-
-                                        conexion.query(
-
-                                            verificarReserva,
-
-                                            [
-                                                id_barbero,
-                                                fecha,
-                                                horaReserva
-                                            ],
-
-                                            (error, existentes) => {
-
-                                                if (error) {
-
-                                                    console.error(
-                                                        "❌ Error al verificar disponibilidad:",
-                                                        error
-                                                    );
-
-                                                    return res.status(500).json({
-                                                        error:
-                                                            "No se pudo verificar la disponibilidad"
-                                                    });
-
-                                                }
-
-
-                                                // ==================================================
-                                                // HORARIO OCUPADO
-                                                // ==================================================
-
-                                                if (
-                                                    existentes.length > 0
-                                                ) {
-
-                                                    return res.status(409).json({
-                                                        error:
-                                                            "El horario seleccionado ya está ocupado para este barbero"
-                                                    });
-
-                                                }
-
-
-                                                // ==================================================
-                                                // CALCULAR SALDO
-                                                // ==================================================
-
-                                                const saldo =
-
-                                                    Number(
-
-                                                        (
-                                                            precioTotal -
-                                                            montoAdelanto
-                                                        ).toFixed(2)
-
-                                                    );
-
-
-                                                // ==================================================
-                                                // CONTINUAR CON CLIENTE
-                                                // ==================================================
-
-                                                continuarConCliente(
-
-                                                    horaReserva,
-
-                                                    precioTotal,
-
-                                                    montoAdelanto,
-
-                                                    saldo,
-
-                                                    adelantoObligatorio,
-
-                                                    promocionAplicada
-
+                                            montoAdelanto =
+                                                Number(
+                                                    configuracion.monto_adelanto
                                                 );
+                                        }
+                                    }
 
-                                            }
 
-                                        );
+                                    // ==================================================
+                                    // ADELANTO ACTIVADO
+                                    // ==================================================
+
+                                    if (
+                                        adelantoObligatorio === 1
+                                    ) {
+
+                                        if (
+                                            !Number.isFinite(
+                                                montoAdelanto
+                                            ) ||
+                                            montoAdelanto <= 0
+                                        ) {
+
+                                            return res.status(400).json({
+                                                error:
+                                                    "El monto del adelanto no está configurado correctamente"
+                                            });
+                                        }
+
+
+                                        if (
+                                            montoAdelanto >
+                                            precioTotal
+                                        ) {
+
+                                            return res.status(400).json({
+                                                error:
+                                                    "El adelanto no puede ser mayor al precio del servicio"
+                                            });
+                                        }
+
+
+                                        if (!qrPago) {
+
+                                            return res.status(400).json({
+                                                error:
+                                                    "El dueño todavía no configuró el QR de pago"
+                                            });
+                                        }
+
+
+                                        if (!pagoConfirmado) {
+
+                                            return res.status(400).json({
+                                                error:
+                                                    "El adelanto es obligatorio para confirmar la reserva"
+                                            });
+                                        }
 
                                     }
 
-                                );
+                                    // ==================================================
+                                    // ADELANTO DESACTIVADO
+                                    // ==================================================
 
-                            }
+                                    else {
 
-                        );
+                                        montoAdelanto = 0;
+                                    }
 
+
+                                    // ==================================================
+                                    // VERIFICAR RESERVA DUPLICADA
+                                    // ==================================================
+
+                                    const verificarReserva = `
+                                        SELECT id_reserva
+                                        FROM reservas
+
+                                        WHERE
+                                            id_barbero = ?
+                                            AND fecha = ?
+                                            AND hora = ?
+                                            AND estado <> 'cancelada'
+
+                                        LIMIT 1
+                                    `;
+
+
+                                    conexion.query(
+                                        verificarReserva,
+                                        [
+                                            id_barbero,
+                                            fecha,
+                                            horaReserva
+                                        ],
+                                        (error, existentes) => {
+
+                                            if (error) {
+
+                                                console.error(
+                                                    "❌ Error al verificar disponibilidad:",
+                                                    error
+                                                );
+
+                                                return res.status(500).json({
+                                                    error:
+                                                        "No se pudo verificar la disponibilidad"
+                                                });
+                                            }
+
+
+                                            if (
+                                                existentes.length > 0
+                                            ) {
+
+                                                return res.status(409).json({
+                                                    error:
+                                                        "El horario seleccionado ya está ocupado para este barbero"
+                                                });
+                                            }
+
+
+                                            // ==================================================
+                                            // CALCULAR SALDO
+                                            // ==================================================
+
+                                            const saldo =
+                                                Number(
+                                                    (
+                                                        precioTotal -
+                                                        montoAdelanto
+                                                    ).toFixed(2)
+                                                );
+
+
+                                            // ==================================================
+                                            // CONTINUAR CLIENTE
+                                            // ==================================================
+
+                                            continuarConCliente(
+                                                horaReserva,
+                                                precioTotal,
+                                                montoAdelanto,
+                                                saldo,
+                                                adelantoObligatorio,
+                                                promocionAplicada
+                                            );
+                                        }
+                                    );
+                                }
+                            );
+                        }
                     }
-
                 );
-
             }
-
         );
-
     }
 
 
     // ======================================================
-    // OBTENER HORA DESDE HORARIO
+    // OBTENER HORA
     // ======================================================
 
     if (id_horario) {
 
         const buscarHorario = `
-
             SELECT
-
                 id_horario,
                 dia_semana,
                 hora_inicio,
@@ -872,19 +767,14 @@ router.post("/", (req, res) => {
             FROM horarios
 
             WHERE
-
                 id_horario = ?
                 AND estado = 1
-
         `;
 
 
         conexion.query(
-
             buscarHorario,
-
             [id_horario],
-
             (error, horarios) => {
 
                 if (error) {
@@ -895,9 +785,9 @@ router.post("/", (req, res) => {
                     );
 
                     return res.status(500).json({
-                        error: "No se pudo obtener el horario"
+                        error:
+                            "No se pudo obtener el horario"
                     });
-
                 }
 
 
@@ -907,30 +797,18 @@ router.post("/", (req, res) => {
                         error:
                             "El horario seleccionado no está disponible"
                     });
-
                 }
 
 
-                const horario =
-                    horarios[0];
-
-
                 continuarConHora(
-                    horario.hora_inicio
+                    horarios[0].hora_inicio
                 );
-
             }
-
         );
 
-    }
+    } else {
 
-    else {
-
-        continuarConHora(
-            hora
-        );
-
+        continuarConHora(hora);
     }
 
 
@@ -939,48 +817,32 @@ router.post("/", (req, res) => {
     // ======================================================
 
     function continuarConCliente(
-
         horaReserva,
-
         precioTotal,
-
         montoAdelanto,
-
         saldo,
-
         adelantoObligatorio,
-
         promocionAplicada
-
     ) {
 
 
         // ==================================================
-        // SI YA TENEMOS ID DEL CLIENTE
+        // CLIENTE EXISTENTE POR ID
         // ==================================================
 
         if (id_cliente) {
 
             insertarReserva(
-
                 id_cliente,
-
                 horaReserva,
-
                 precioTotal,
-
                 montoAdelanto,
-
                 saldo,
-
                 adelantoObligatorio,
-
                 promocionAplicada
-
             );
 
             return;
-
         }
 
 
@@ -989,26 +851,16 @@ router.post("/", (req, res) => {
         // ==================================================
 
         const buscarCliente = `
-
-            SELECT
-                id_cliente
-
+            SELECT id_cliente
             FROM clientes
-
-            WHERE
-                telefono = ?
-
+            WHERE telefono = ?
             LIMIT 1
-
         `;
 
 
         conexion.query(
-
             buscarCliente,
-
             [telefono],
-
             (error, clientes) => {
 
                 if (error) {
@@ -1022,7 +874,6 @@ router.post("/", (req, res) => {
                         error:
                             "No se pudo verificar el cliente"
                     });
-
                 }
 
 
@@ -1032,31 +883,17 @@ router.post("/", (req, res) => {
 
                 if (clientes.length > 0) {
 
-                    const cliente =
-                        clientes[0];
-
-
                     insertarReserva(
-
-                        cliente.id_cliente,
-
+                        clientes[0].id_cliente,
                         horaReserva,
-
                         precioTotal,
-
                         montoAdelanto,
-
                         saldo,
-
                         adelantoObligatorio,
-
                         promocionAplicada
-
                     );
 
-
                     return;
-
                 }
 
 
@@ -1065,30 +902,22 @@ router.post("/", (req, res) => {
                 // ==================================================
 
                 const crearCliente = `
-
                     INSERT INTO clientes
-
                     (
                         nombre,
                         telefono
                     )
-
                     VALUES
-
                     (?, ?)
-
                 `;
 
 
                 conexion.query(
-
                     crearCliente,
-
                     [
                         nombre_cliente,
                         telefono
                     ],
-
                     (error, resultado) => {
 
                         if (error) {
@@ -1102,36 +931,22 @@ router.post("/", (req, res) => {
                                 error:
                                     "No se pudo registrar el cliente"
                             });
-
                         }
 
 
                         insertarReserva(
-
                             resultado.insertId,
-
                             horaReserva,
-
                             precioTotal,
-
                             montoAdelanto,
-
                             saldo,
-
                             adelantoObligatorio,
-
                             promocionAplicada
-
                         );
-
                     }
-
                 );
-
             }
-
         );
-
     }
 
 
@@ -1140,21 +955,13 @@ router.post("/", (req, res) => {
     // ======================================================
 
     function insertarReserva(
-
         clienteId,
-
         horaReserva,
-
         precioTotal,
-
         montoAdelanto,
-
         saldo,
-
         adelantoObligatorio,
-
         promocionAplicada
-
     ) {
 
 
@@ -1165,39 +972,23 @@ router.post("/", (req, res) => {
 
 
         const sql = `
-
             INSERT INTO reservas
-
             (
-
                 id_cliente,
-
                 id_barbero,
-
                 id_servicio,
-
                 fecha,
-
                 hora,
-
                 estado,
-
                 observaciones,
-
                 total_servicio,
-
                 adelanto,
-
                 saldo,
-
                 adelanto_pagado
-
             )
 
             VALUES
-
             (
-
                 ?,
                 ?,
                 ?,
@@ -1209,18 +1000,13 @@ router.post("/", (req, res) => {
                 ?,
                 ?,
                 ?
-
             )
-
         `;
 
 
         conexion.query(
-
             sql,
-
             [
-
                 clienteId,
                 id_barbero,
                 id_servicio,
@@ -1228,16 +1014,14 @@ router.post("/", (req, res) => {
                 horaReserva,
                 observaciones || null,
 
-                // ESTE ES EL PRECIO REAL:
-                // normal del barbero o promoción
+                // PRECIO REAL:
+                // promoción o precio normal
                 precioTotal,
 
                 montoAdelanto,
                 saldo,
                 adelantoPagado
-
             ],
-
             (error, resultado) => {
 
                 if (error) {
@@ -1251,12 +1035,11 @@ router.post("/", (req, res) => {
                         error:
                             "No se pudo crear la reserva"
                     });
-
                 }
 
 
                 // ==================================================
-                // RESERVA CREADA
+                // RESPUESTA
                 // ==================================================
 
                 const respuesta = {
@@ -1295,13 +1078,15 @@ router.post("/", (req, res) => {
                         Number(saldo),
 
                     adelanto_pagado:
-                        adelantoPagado
+                        adelantoPagado,
 
+                    promocion_aplicada:
+                        false
                 };
 
 
                 // ==================================================
-                // INFORMAR SI SE APLICÓ PROMOCIÓN
+                // SI SE APLICÓ PROMOCIÓN
                 // ==================================================
 
                 if (promocionAplicada) {
@@ -1320,28 +1105,14 @@ router.post("/", (req, res) => {
                             Number(
                                 promocionAplicada.precio_promocion
                             )
-
                     };
-
-                }
-
-                else {
-
-                    respuesta.promocion_aplicada = false;
-
                 }
 
 
-                res.status(201).json(
-                    respuesta
-                );
-
+                res.status(201).json(respuesta);
             }
-
         );
-
     }
-
 });
 
 
@@ -1353,8 +1124,7 @@ router.patch(
     "/:id/estado",
     (req, res) => {
 
-        const id =
-            req.params.id;
+        const id = req.params.id;
 
         const {
             estado
@@ -1362,12 +1132,10 @@ router.patch(
 
 
         const estadosPermitidos = [
-
             "pendiente",
             "confirmada",
             "completada",
             "cancelada"
-
         ];
 
 
@@ -1378,34 +1146,25 @@ router.patch(
         ) {
 
             return res.status(400).json({
-                error: "Estado de reserva no válido"
+                error:
+                    "Estado de reserva no válido"
             });
-
         }
 
 
         const sql = `
-
             UPDATE reservas
-
-            SET
-                estado = ?
-
-            WHERE
-                id_reserva = ?
-
+            SET estado = ?
+            WHERE id_reserva = ?
         `;
 
 
         conexion.query(
-
             sql,
-
             [
                 estado,
                 id
             ],
-
             (error, resultado) => {
 
                 if (error) {
@@ -1419,7 +1178,6 @@ router.patch(
                         error:
                             "No se pudo cambiar el estado"
                     });
-
                 }
 
 
@@ -1431,26 +1189,19 @@ router.patch(
                         error:
                             "Reserva no encontrada"
                     });
-
                 }
 
 
                 res.json({
-
                     mensaje:
                         "Estado actualizado correctamente",
 
                     estado:
                         estado
-
                 });
-
             }
-
         );
-
     }
-
 );
 
 
@@ -1463,21 +1214,14 @@ router.delete(
     (req, res) => {
 
         const sql = `
-
             DELETE FROM reservas
-
-            WHERE
-                id_reserva = ?
-
+            WHERE id_reserva = ?
         `;
 
 
         conexion.query(
-
             sql,
-
             [req.params.id],
-
             (error, resultado) => {
 
                 if (error) {
@@ -1491,7 +1235,6 @@ router.delete(
                         error:
                             "No se pudo eliminar la reserva"
                     });
-
                 }
 
 
@@ -1503,7 +1246,6 @@ router.delete(
                         error:
                             "Reserva no encontrada"
                     });
-
                 }
 
 
@@ -1511,13 +1253,9 @@ router.delete(
                     mensaje:
                         "Reserva eliminada correctamente"
                 });
-
             }
-
         );
-
     }
-
 );
 
 
