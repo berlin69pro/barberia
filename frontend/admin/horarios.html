@@ -810,18 +810,12 @@
            HORARIOS
         ===================================================== */
 
-        .horas-grid {
+        .horas-grid { display:grid; grid-template-columns:1fr 1fr; gap:15px; }
 
-            display:
-                grid;
-
-            grid-template-columns:
-                1fr 1fr;
-
-            gap:
-                15px;
-
-        }
+        .bloque-horario { border:1px solid #333; background:#202020; border-radius:8px; padding:14px; }
+        .bloque-titulo { color:#d4af37; font-weight:bold; margin-bottom:12px; text-transform:uppercase; font-size:13px; }
+        .bloque-opcional { color:#888; font-weight:normal; font-size:11px; }
+        @media(max-width:700px){ .horas-grid{grid-template-columns:1fr;} }
 
 
         .hora-campo label {
@@ -1451,60 +1445,42 @@
 
 
 
-            <!-- HORAS -->
+            <!-- HORARIOS: DOS BLOQUES -->
 
             <div class="campo">
 
                 <div class="horas-grid">
 
-
-                    <div class="hora-campo">
-
-                        <label for="hora_inicio">
-
-                            Hora de apertura
-
-                        </label>
-
-
-                        <input
-                            type="time"
-                            id="hora_inicio"
-                            required
-                        >
-
+                    <div class="bloque-horario">
+                        <div class="bloque-titulo">HORARIO 1 <span class="bloque-opcional">(obligatorio)</span></div>
+                        <div class="hora-campo">
+                            <label for="hora_inicio">Hora de inicio</label>
+                            <input type="time" id="hora_inicio" required>
+                        </div>
+                        <div class="hora-campo" style="margin-top:12px;">
+                            <label for="hora_fin">Hora de fin</label>
+                            <input type="time" id="hora_fin" required>
+                        </div>
                     </div>
 
-
-
-                    <div class="hora-campo">
-
-                        <label for="hora_fin">
-
-                            Hora de cierre
-
-                        </label>
-
-
-                        <input
-                            type="time"
-                            id="hora_fin"
-                            required
-                        >
-
+                    <div class="bloque-horario">
+                        <div class="bloque-titulo">HORARIO 2 <span class="bloque-opcional">(opcional)</span></div>
+                        <div class="hora-campo">
+                            <label for="hora_inicio_2">Hora de inicio</label>
+                            <input type="time" id="hora_inicio_2">
+                        </div>
+                        <div class="hora-campo" style="margin-top:12px;">
+                            <label for="hora_fin_2">Hora de fin</label>
+                            <input type="time" id="hora_fin_2">
+                        </div>
                     </div>
-
 
                 </div>
 
-
                 <div class="ayuda">
-
-                    Ejemplo:
-                    marcar Lunes, Martes y Viernes
-                    y colocar 09:00 - 18:00.
-                    Se crearán los tres horarios.
-
+                    Ejemplo: Horario 1 <strong>09:00 - 12:00</strong> y Horario 2 <strong>14:00 - 21:00</strong>.
+                    El intervalo 12:00 - 14:00 quedará fuera de horario.
+                    Si no necesitas un segundo bloque, déjalo vacío.
                 </div>
 
             </div>
@@ -2362,70 +2338,26 @@ function obtenerDiasSeleccionados() {
 
 function actualizarResumen() {
 
+    const dias = obtenerDiasSeleccionados();
+    const inicio = document.getElementById("hora_inicio").value;
+    const fin = document.getElementById("hora_fin").value;
+    const inicio2 = document.getElementById("hora_inicio_2").value;
+    const fin2 = document.getElementById("hora_fin_2").value;
+    const resumen = document.getElementById("resumenSeleccion");
 
-    const dias =
-        obtenerDiasSeleccionados();
-
-
-    const inicio =
-        document.getElementById(
-            "hora_inicio"
-        ).value;
-
-
-    const fin =
-        document.getElementById(
-            "hora_fin"
-        ).value;
-
-
-    const resumen =
-        document.getElementById(
-            "resumenSeleccion"
-        );
-
-
-    if (
-        dias.length === 0
-    ) {
-
-        resumen.textContent =
-            "Selecciona uno o más días.";
-
+    if (dias.length === 0) {
+        resumen.textContent = "Selecciona uno o más días.";
         return;
-
     }
 
-
-    if (
-        !inicio ||
-        !fin
-    ) {
-
-        resumen.innerHTML =
-            `
-                ${dias.length}
-                día(s) seleccionado(s).
-                Falta indicar las horas.
-            `;
-
+    if (!inicio || !fin) {
+        resumen.innerHTML = `${dias.length} día(s) seleccionado(s). Falta indicar el Horario 1.`;
         return;
-
     }
 
-
-    resumen.innerHTML =
-        `
-            ${dias.length}
-            día(s):
-            <strong>
-                ${dias.join(", ")}
-            </strong>
-            ·
-            ${inicio}
-            - ${fin}
-        `;
-
+    let texto = `${dias.length} día(s): <strong>${dias.join(", ")}</strong> · ${inicio} - ${fin}`;
+    if (inicio2 || fin2) texto += ` · <strong>2.º bloque:</strong> ${inicio2 || "?"} - ${fin2 || "?"}`;
+    resumen.innerHTML = texto;
 }
 
 
@@ -2539,153 +2471,30 @@ function cerrarModal() {
 // =====================================================
 
 async function editarHorario(id) {
-
-
     try {
+        const respuesta = await fetch(`/api/horarios/${id}`);
+        const horario = await respuesta.json();
+        if (!respuesta.ok) { alert(horario.error || "No se pudo obtener el horario"); return; }
 
+        idEditando = id;
+        document.getElementById("tituloModal").textContent = "Editar Horario";
+        document.getElementById("id_barbero").value = horario.id_barbero ?? "";
 
-        const respuesta =
-            await fetch(
-                `/api/horarios/${id}`
-            );
+        document.querySelectorAll(".dias-semana input[type='checkbox']").forEach(c => c.checked = false);
+        const dia = normalizarDia(horario.dia_semana);
+        const checkboxDia = document.querySelector(`.dias-semana input[value="${dia}"]`);
+        if (checkboxDia) checkboxDia.checked = true;
 
-
-        const horario =
-            await respuesta.json();
-
-
-        if (!respuesta.ok) {
-
-            alert(
-                horario.error ||
-                "No se pudo obtener el horario"
-            );
-
-            return;
-
-        }
-
-
-        idEditando =
-            id;
-
-
-        document.getElementById(
-            "tituloModal"
-        ).textContent =
-            "Editar Horario";
-
-
-        document.getElementById(
-            "id_barbero"
-        ).value =
-            horario.id_barbero ?? "";
-
-
-        // Limpiar días
-
-        document
-            .querySelectorAll(
-                ".dias-semana input[type='checkbox']"
-            )
-            .forEach(
-                checkbox => {
-
-                    checkbox.checked =
-                        false;
-
-                }
-            );
-
-
-        // Marcar solamente el día editado
-
-        const dia =
-            normalizarDia(
-                horario.dia_semana
-            );
-
-
-        const checkboxDia =
-            document.querySelector(
-                `.dias-semana input[value="${dia}"]`
-            );
-
-
-        if (checkboxDia) {
-
-            checkboxDia.checked =
-                true;
-
-        }
-
-
-        document.getElementById(
-            "hora_inicio"
-        ).value =
-            String(
-                horario.hora_inicio
-            ).substring(
-                0,
-                5
-            );
-
-
-        document.getElementById(
-            "hora_fin"
-        ).value =
-            String(
-                horario.hora_fin
-            ).substring(
-                0,
-                5
-            );
-
-
-        document.getElementById(
-            "estado"
-        ).checked =
-            Number(
-                horario.estado
-            ) === 1;
-
-
-        document.getElementById(
-            "campoEstado"
-        ).style.display =
-            "block";
-
-
-        document.getElementById(
-            "mensajeFormulario"
-        ).textContent =
-            "";
-
-
+        document.getElementById("hora_inicio").value = String(horario.hora_inicio || "").substring(0,5);
+        document.getElementById("hora_fin").value = String(horario.hora_fin || "").substring(0,5);
+        document.getElementById("hora_inicio_2").value = "";
+        document.getElementById("hora_fin_2").value = "";
+        document.getElementById("estado").checked = Number(horario.estado) === 1;
+        document.getElementById("campoEstado").style.display = "block";
+        document.getElementById("mensajeFormulario").textContent = "Editar un bloque individual. Para agregar otro bloque usa + NUEVO HORARIO.";
         actualizarResumen();
-
-
-        document.getElementById(
-            "modal"
-        ).classList.add(
-            "mostrar"
-        );
-
-
-    } catch (error) {
-
-
-        console.error(
-            error
-        );
-
-
-        alert(
-            "❌ Error al obtener el horario"
-        );
-
-    }
-
+        document.getElementById("modal").classList.add("mostrar");
+    } catch (error) { console.error(error); alert("❌ Error al obtener el horario"); }
 }
 
 
@@ -2694,367 +2503,128 @@ async function editarHorario(id) {
 // GUARDAR FORMULARIO
 // =====================================================
 
-document.getElementById(
-    "formHorario"
-).addEventListener(
-    "submit",
-    async function(evento) {
-
-
-        evento.preventDefault();
-
-
-        const idBarbero =
-            document.getElementById(
-                "id_barbero"
-            ).value;
-
-
-        const dias =
-            obtenerDiasSeleccionados();
-
-
-        const inicio =
-            document.getElementById(
-                "hora_inicio"
-            ).value;
-
-
-        const fin =
-            document.getElementById(
-                "hora_fin"
-            ).value;
-
-
-        const estado =
-            document.getElementById(
-                "estado"
-            ).checked;
-
-
-        const mensaje =
-            document.getElementById(
-                "mensajeFormulario"
-            );
-
-
-        const boton =
-            document.getElementById(
-                "btnGuardar"
-            );
-
-
-
-        // =================================================
-        // VALIDACIONES
-        // =================================================
-
-        if (!idBarbero) {
-
-            mensaje.textContent =
-                "⚠️ Selecciona un barbero.";
-
-            return;
-
-        }
-
-
-        if (
-            dias.length === 0
-        ) {
-
-            mensaje.textContent =
-                "⚠️ Selecciona al menos un día.";
-
-            return;
-
-        }
-
-
-        if (
-            !inicio ||
-            !fin
-        ) {
-
-            mensaje.textContent =
-                "⚠️ Selecciona la hora de apertura y cierre.";
-
-            return;
-
-        }
-
-
-        if (
-            inicio >= fin
-        ) {
-
-            mensaje.textContent =
-                "⚠️ La hora de apertura debe ser menor que la hora de cierre.";
-
-            return;
-
-        }
-
-
-
-        boton.disabled =
-            true;
-
-
-        mensaje.textContent =
-            "Guardando...";
-
-
-
-        try {
-
-
-            // =================================================
-            // EDITAR
-            // =================================================
-
-            if (
-                idEditando !== null
-            ) {
-
-
-                const dia =
-                    dias[0];
-
-
-                const respuesta =
-                    await fetch(
-                        `/api/horarios/${idEditando}`,
-                        {
-
-                            method:
-                                "PUT",
-
-                            headers: {
-                                "Content-Type":
-                                    "application/json"
-                            },
-
-                            body:
-                                JSON.stringify({
-
-                                    id_barbero:
-                                        Number(
-                                            idBarbero
-                                        ),
-
-                                    dia_semana:
-                                        dia,
-
-                                    hora_inicio:
-                                        inicio,
-
-                                    hora_fin:
-                                        fin,
-
-                                    estado:
-                                        estado
-
-                                })
-
-                        }
-                    );
-
-
-                const resultado =
-                    await respuesta.json();
-
-
-                if (!respuesta.ok) {
-
+document.getElementById("formHorario").addEventListener("submit", async function(evento) {
+    evento.preventDefault();
+
+    const idBarbero = document.getElementById("id_barbero").value;
+    const dias = obtenerDiasSeleccionados();
+    const inicio = document.getElementById("hora_inicio").value;
+    const fin = document.getElementById("hora_fin").value;
+    const inicio2 = document.getElementById("hora_inicio_2").value;
+    const fin2 = document.getElementById("hora_fin_2").value;
+    const estado = document.getElementById("estado").checked;
+    const mensaje = document.getElementById("mensajeFormulario");
+    const boton = document.getElementById("btnGuardar");
+
+    if (!idBarbero) { mensaje.textContent = "⚠️ Selecciona un barbero."; return; }
+    if (!dias.length) { mensaje.textContent = "⚠️ Selecciona al menos un día."; return; }
+    if (!inicio || !fin) { mensaje.textContent = "⚠️ Completa el Horario 1."; return; }
+    if (inicio >= fin) { mensaje.textContent = "⚠️ En el Horario 1, la hora inicial debe ser menor que la final."; return; }
+    if ((inicio2 && !fin2) || (!inicio2 && fin2)) { mensaje.textContent = "⚠️ Completa las dos horas del Horario 2 o déjalo totalmente vacío."; return; }
+    if (inicio2 && fin2 && inicio2 >= fin2) { mensaje.textContent = "⚠️ En el Horario 2, la hora inicial debe ser menor que la final."; return; }
+    if (inicio2 && fin2 && inicio2 < fin && inicio < fin2) { mensaje.textContent = "⚠️ Los dos horarios no pueden superponerse."; return; }
+
+    boton.disabled = true;
+    mensaje.textContent = "Guardando...";
+
+    try {
+        // EDITAR: actualiza el bloque existente y, si se escribió un
+        // Horario 2, lo crea como un segundo registro para el mismo día.
+        if (idEditando !== null) {
+            const dia = dias[0];
+
+            const respuesta = await fetch(`/api/horarios/${idEditando}`, {
+                method:"PUT",
+                headers:{"Content-Type":"application/json"},
+                body:JSON.stringify({
+                    id_barbero:Number(idBarbero),
+                    dia_semana:dia,
+                    hora_inicio:inicio,
+                    hora_fin:fin,
+                    estado:estado
+                })
+            });
+
+            const resultado = await respuesta.json();
+            if (!respuesta.ok) {
+                throw new Error(resultado.error || "No se pudo actualizar el Horario 1");
+            }
+
+            // Si el usuario llenó Horario 2, se guarda como otra fila.
+            if (inicio2 && fin2) {
+                const respuesta2 = await fetch("/api/horarios", {
+                    method:"POST",
+                    headers:{"Content-Type":"application/json"},
+                    body:JSON.stringify({
+                        id_barbero:Number(idBarbero),
+                        dia_semana:dia,
+                        hora_inicio:inicio2,
+                        hora_fin:fin2,
+                        estado:estado ? 1 : 0
+                    })
+                });
+
+                const resultado2 = await respuesta2.json();
+
+                if (!respuesta2.ok) {
                     throw new Error(
-                        resultado.error ||
-                        "No se pudo actualizar"
+                        resultado2.error ||
+                        "El Horario 1 se actualizó, pero no se pudo guardar el Horario 2"
                     );
-
                 }
-
-
-                mensaje.textContent =
-                    "✅ Horario actualizado correctamente";
-
-
-                await cargarHorarios();
-
-
-                setTimeout(
-                    () => {
-
-                        cerrarModal();
-
-                    },
-                    500
-                );
-
-
-                return;
-
             }
-
-
-
-            // =================================================
-            // CREAR VARIOS DÍAS
-            // =================================================
-
-            let creados = 0;
-
-            let errores = [];
-
-
-            for (
-                const dia of dias
-            ) {
-
-
-                const respuesta =
-                    await fetch(
-                        "/api/horarios",
-                        {
-
-                            method:
-                                "POST",
-
-                            headers: {
-                                "Content-Type":
-                                    "application/json"
-                            },
-
-                            body:
-                                JSON.stringify({
-
-                                    id_barbero:
-                                        Number(
-                                            idBarbero
-                                        ),
-
-                                    dia_semana:
-                                        dia,
-
-                                    hora_inicio:
-                                        inicio,
-
-                                    hora_fin:
-                                        fin,
-
-                                    estado:
-                                        1
-
-                                })
-
-                        }
-                    );
-
-
-                const resultado =
-                    await respuesta.json();
-
-
-                if (
-                    respuesta.ok
-                ) {
-
-                    creados++;
-
-                } else {
-
-                    errores.push(
-                        `${dia}: ${
-                            resultado.error ||
-                            "No se pudo guardar"
-                        }`
-                    );
-
-                }
-
-            }
-
-
-
-            // =================================================
-            // RESULTADO
-            // =================================================
 
             await cargarHorarios();
+            mensaje.textContent = inicio2 && fin2
+                ? "✅ Se guardaron los dos horarios del día correctamente."
+                : "✅ Horario actualizado correctamente.";
 
-
-            if (
-                creados === dias.length
-            ) {
-
-                mensaje.textContent =
-                    `✅ Se guardaron ${creados} día(s) correctamente.`;
-
-
-                setTimeout(
-                    () => {
-
-                        cerrarModal();
-
-                    },
-                    700
-                );
-
-
-            } else if (
-                creados > 0
-            ) {
-
-                mensaje.innerHTML =
-                    `
-                        ⚠️ Se guardaron
-                        ${creados}
-                        de
-                        ${dias.length}
-                        días.
-                        <br>
-                        ${escapeHtml(
-                            errores.join(" | ")
-                        )}
-                    `;
-
-            } else {
-
-                mensaje.innerHTML =
-                    `
-                        ❌ No se pudo guardar.
-                        <br>
-                        ${escapeHtml(
-                            errores.join(" | ")
-                        )}
-                    `;
-
-            }
-
-
-        } catch (error) {
-
-
-            console.error(
-                "❌ Error guardando:",
-                error
-            );
-
-
-            mensaje.textContent =
-                `❌ ${error.message}`;
-
-
-        } finally {
-
-
-            boton.disabled =
-                false;
-
+            setTimeout(cerrarModal, 800);
+            return;
         }
 
+        let creados = 0;
+        let errores = [];
+        const bloques = [{inicio, fin}];
+        if (inicio2 && fin2) bloques.push({inicio:inicio2, fin:fin2});
+
+        // CREA CADA BLOQUE COMO UN REGISTRO SEPARADO.
+        for (const dia of dias) {
+            for (const bloque of bloques) {
+                const respuesta = await fetch("/api/horarios", {
+                    method:"POST",
+                    headers:{"Content-Type":"application/json"},
+                    body:JSON.stringify({
+                        id_barbero:Number(idBarbero),
+                        dia_semana:dia,
+                        hora_inicio:bloque.inicio,
+                        hora_fin:bloque.fin,
+                        estado:1
+                    })
+                });
+                const resultado = await respuesta.json();
+                if (respuesta.ok) creados++;
+                else errores.push(`${dia} ${bloque.inicio}-${bloque.fin}: ${resultado.error || "No se pudo guardar"}`);
+            }
+        }
+
+        await cargarHorarios();
+        const esperados = dias.length * bloques.length;
+        if (creados === esperados) {
+            mensaje.textContent = `✅ Se guardaron ${creados} bloque(s) correctamente.`;
+            setTimeout(cerrarModal, 700);
+        } else if (creados > 0) {
+            mensaje.innerHTML = `⚠️ Se guardaron ${creados} de ${esperados} bloques.<br>${escapeHtml(errores.join(" | "))}`;
+        } else {
+            mensaje.innerHTML = `❌ No se pudo guardar.<br>${escapeHtml(errores.join(" | "))}`;
+        }
+    } catch (error) {
+        console.error("❌ Error guardando:", error);
+        mensaje.textContent = `❌ ${error.message}`;
+    } finally {
+        boton.disabled = false;
     }
-);
+});
 
 
 
