@@ -2042,6 +2042,20 @@ footer{
     border-top:1px solid #3a3a3a !important;
 }
 
+/* ---------- TARJETAS DE CONTACTO CLICKEABLES ---------- */
+.tarjeta-contacto-clic{
+    cursor:pointer !important;
+    transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+.tarjeta-contacto-clic:hover{
+    transform:translateY(-3px);
+    border-color:#d8af2c !important;
+    box-shadow:0 8px 24px rgba(0,0,0,.28);
+}
+.tarjeta-contacto-clic:active{
+    transform:translateY(-1px);
+}
+
 /* ---------- RESPONSIVE ---------- */
 @media(max-width:900px){
     .navbar{
@@ -4840,7 +4854,7 @@ html, body {
     <div class="contacto-grid">
 
 
-        <div class="contacto-card">
+        <div class="contacto-card tarjeta-contacto-clic" id="cardDireccion" onclick="abrirTarjetaContacto('direccion')">
 
             <div class="icono">
                 📍
@@ -4850,14 +4864,24 @@ html, body {
                 Dirección
             </h3>
 
-            <p id="contactoDireccion">
-                Dirección de CLUB PONTE PERRO
+            <p>
+                <a
+                    onclick="event.stopPropagation();"
+                    id="contactoDireccion"
+                    class="red-social"
+                    href="#"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style="display:inline-block;"
+                >
+                    Dirección de CLUB PONTE PERRO
+                </a>
             </p>
 
         </div>
 
 
-        <div class="contacto-card">
+        <div class="contacto-card tarjeta-contacto-clic" id="cardWhatsapp" onclick="abrirTarjetaContacto('whatsapp')">
 
             <div class="icono">
                 📞
@@ -4870,6 +4894,7 @@ html, body {
             <p>
 
                 <a
+                    onclick="event.stopPropagation();"
                     id="contactoWhatsapp"
                     class="red-social"
                     href="#"
@@ -4882,7 +4907,7 @@ html, body {
         </div>
 
 
-        <div class="contacto-card">
+        <div class="contacto-card tarjeta-contacto-clic" id="cardHorario" onclick="abrirTarjetaContacto('horario')">
 
             <div class="icono">
                 🕐
@@ -4899,7 +4924,7 @@ html, body {
         </div>
 
 
-        <div class="contacto-card">
+        <div class="contacto-card tarjeta-contacto-clic" id="contactoRedesCard" onclick="abrirTarjetaContacto('redes')">
 
             <div class="icono">
                 🌐
@@ -4912,6 +4937,7 @@ html, body {
             <div class="contacto-redes">
 
                 <a
+                    onclick="event.stopPropagation();"
                     id="linkInstagram"
                     class="red-social social-instagram"
                     href="#"
@@ -4927,6 +4953,7 @@ html, body {
                 </a>
 
                 <a
+                    onclick="event.stopPropagation();"
                     id="linkFacebook"
                     class="red-social social-facebook"
                     href="#"
@@ -4942,6 +4969,7 @@ html, body {
                 </a>
 
                 <a
+                    onclick="event.stopPropagation();"
                     id="linkTikTok"
                     class="red-social social-tiktok"
                     href="#"
@@ -4956,35 +4984,9 @@ html, body {
                     </svg>
                 </a>
 
-                <a
-                    id="linkWhatsApp"
-                    class="red-social social-whatsapp"
-                    href="#"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style="display:none;"
-                    title="WhatsApp"
-                    aria-label="WhatsApp"
-                >
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M20.5 3.5A11.3 11.3 0 0 0 12.5 0C6.3 0 1.2 5 1.2 11.2c0 2 .5 3.9 1.5 5.6L1 24l7.4-1.9a11.2 11.2 0 0 0 4.1.8h.1c6.2 0 11.2-5 11.2-11.2 0-3-1.2-6-3.3-8.2ZM12.6 20.8h-.1c-1.3 0-2.6-.3-3.8-.8l-.5-.2-4.4 1.1 1.2-4.3-.3-.5a9.4 9.4 0 0 1-1.4-5c0-5.2 4.2-9.4 9.4-9.4 2.5 0 4.9 1 6.6 2.8a9.4 9.4 0 0 1 2.8 6.7c0 5.3-4.2 9.6-9.5 9.6Zm5.2-7.1c-.3-.2-1.7-.8-2-.9-.3-.1-.5-.2-.7.2-.2.3-.7.9-.8 1.1-.2.2-.3.2-.6.1-1.6-.8-2.7-1.4-3.8-3.2-.3-.5.3-.5.8-1.7.1-.2.1-.4 0-.6-.1-.2-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.6 0 1.5 1.1 3 1.2 3.2.1.2 2.1 3.3 5.2 4.6 1.9.8 2.4.9 3.3.8.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.1-1.4-.1-.1-.3-.2-.6-.3Z"/>
-                    </svg>
-                </a>
 
-                <a
-                    id="linkGoogleMaps"
-                    class="red-social social-maps"
-                    href="#"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style="display:none;"
-                    title="Google Maps"
-                    aria-label="Google Maps"
-                >
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5Z"/>
-                    </svg>
-                </a>
+
+
 
             </div>
 
@@ -5336,11 +5338,34 @@ async function cargarConfiguracion() {
         // DIRECCIÓN
         // ==============================================
 
-        document.getElementById(
-            "contactoDireccion"
-        ).textContent =
-            configuracion.direccion ||
-            "Dirección no configurada";
+        const contactoDireccion =
+            document.getElementById("contactoDireccion");
+
+        const direccion = String(
+            configuracion.direccion || ""
+        ).trim();
+
+        if (contactoDireccion) {
+            if (direccion) {
+                contactoDireccion.textContent = direccion;
+
+                const mapaConfigurado = String(
+                    configuracion.google_maps || ""
+                ).trim();
+
+                const urlUbicacion = mapaConfigurado
+                    ? normalizarUrlRedSocial(mapaConfigurado)
+                    : "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(direccion);
+
+                contactoDireccion.href = urlUbicacion;
+                contactoDireccion.target = "_blank";
+                contactoDireccion.rel = "noopener noreferrer";
+                contactoDireccion.style.display = "inline-block";
+            } else {
+                contactoDireccion.textContent = "Dirección no configurada";
+                contactoDireccion.removeAttribute("href");
+            }
+        }
 
 
         // ==============================================
@@ -5372,8 +5397,14 @@ async function cargarConfiguracion() {
                 );
 
 
+            const mensajeAtencion =
+                "Hola 👋, tengo una duda y quisiera recibir información sobre los servicios, horarios y reservas de CLUB PONTE PERRO.";
+
             contactoWhatsapp.href =
-                `https://wa.me/${numero}`;
+                `https://wa.me/${numero}?text=${encodeURIComponent(mensajeAtencion)}`;
+
+            contactoWhatsapp.target = "_blank";
+            contactoWhatsapp.rel = "noopener noreferrer";
 
         }
         else {
@@ -5400,17 +5431,8 @@ async function cargarConfiguracion() {
 
 
         // ==============================================
-        // GOOGLE MAPS
-        // ==============================================
-
-        configurarRedSocial(
-            "linkGoogleMaps",
-            configuracion.google_maps
-        );
-
-
-        // ==============================================
-        // REDES
+        // REDES SOCIALES
+        // Solo se muestran las redes configuradas por el dueño.
         // ==============================================
 
         configurarRedSocial(
@@ -5418,39 +5440,36 @@ async function cargarConfiguracion() {
             configuracion.instagram
         );
 
-
         configurarRedSocial(
             "linkFacebook",
             configuracion.facebook
         );
-
 
         configurarRedSocial(
             "linkTikTok",
             configuracion.tiktok
         );
 
+        const contactoRedesCard =
+            document.getElementById("contactoRedesCard");
 
-        // WHATSAPP COMO RED SOCIAL
-        const linkWhatsApp =
-            document.getElementById("linkWhatsApp");
+        if (contactoRedesCard) {
+            const tieneInstagram = !!String(configuracion.instagram || "").trim();
+            const tieneFacebook = !!String(configuracion.facebook || "").trim();
+            const tieneTikTok = !!String(configuracion.tiktok || "").trim();
 
-        if (linkWhatsApp && whatsapp) {
-
-            let numeroWhatsApp =
-                String(whatsapp).replace(/[^0-9]/g, "");
-
-            if (numeroWhatsApp.length === 8 && !numeroWhatsApp.startsWith("591")) {
-                numeroWhatsApp = "591" + numeroWhatsApp;
-            }
-
-            linkWhatsApp.href =
-                `https://wa.me/${numeroWhatsApp}`;
-
-            linkWhatsApp.style.display = "inline-flex";
-
+            contactoRedesCard.style.display =
+                (tieneInstagram || tieneFacebook || tieneTikTok)
+                    ? "flex"
+                    : "none";
         }
 
+
+        // ==============================================
+        // ACCIÓN AL HACER CLIC EN TODA LA TARJETA
+        // ==============================================
+
+        window.configuracionContactoActual = configuracion;
 
         // ==============================================
         // LOGO
@@ -6846,153 +6865,110 @@ function renderHorasReserva() {
     if (!box) return;
 
     if (!seleccionReserva.servicio) {
-        box.innerHTML = `<div class="vacio">Primero selecciona un servicio.</div>`;
+
+        box.innerHTML =
+            `<div class="vacio">Primero selecciona un servicio.</div>`;
+
         return;
     }
 
     if (!seleccionReserva.barbero) {
-        box.innerHTML = `<div class="vacio">Selecciona un barbero para consultar sus horarios.</div>`;
+
+        box.innerHTML =
+            `<div class="vacio">Selecciona un barbero para consultar sus horarios.</div>`;
+
         return;
     }
 
     if (!seleccionReserva.fecha) {
-        box.innerHTML = `<div class="vacio">Selecciona un día.</div>`;
+
+        box.innerHTML =
+            `<div class="vacio">Selecciona un día.</div>`;
+
         return;
     }
 
-    const diaSeleccionado = normalizarDiaHorario(
-        obtenerDiaSemana(seleccionReserva.fecha)
-    );
+    const horario = obtenerHorarioDelDia(seleccionReserva.fecha);
 
-    const idBarberoSeleccionado = String(
-        seleccionReserva.barbero.id_barbero
-    );
+    if (!horario) {
 
-    // IMPORTANTE:
-    // Un mismo barbero puede tener VARIOS bloques el mismo día.
-    // Ejemplo:
-    // 09:00 - 12:00
-    // 14:00 - 21:00
-    // El intervalo 12:00 - 14:00 queda automáticamente fuera.
-    const horariosDelDia =
-        (Array.isArray(horariosDisponibles) ? horariosDisponibles : [])
-            .filter(h => {
-
-                const activo =
-                    Number(h.estado) === 1 ||
-                    h.estado === true;
-
-                const propio =
-                    h.id_barbero !== null &&
-                    h.id_barbero !== undefined &&
-                    String(h.id_barbero).trim() === idBarberoSeleccionado;
-
-                return (
-                    activo &&
-                    propio &&
-                    normalizarDiaHorario(h.dia_semana) === diaSeleccionado
-                );
-            })
-            .sort((a, b) =>
-                minutosHora(a.hora_inicio || a.hora_apertura || "00:00") -
-                minutosHora(b.hora_inicio || b.hora_apertura || "00:00")
-            );
-
-    if (!horariosDelDia.length) {
-        box.innerHTML = `
-            <div class="vacio">
+        box.innerHTML =
+            `<div class="vacio">
                 El ${escapeHTML(obtenerDiaSemana(seleccionReserva.fecha))}
                 no tiene horario de atención configurado.
-            </div>
-        `;
+            </div>`;
+
         return;
     }
+
+    const inicio = minutosHora(
+        horario.hora_inicio ||
+        horario.hora_apertura ||
+        "08:00"
+    );
+
+    const fin = minutosHora(
+        horario.hora_fin ||
+        horario.hora_cierre ||
+        "20:00"
+    );
 
     const duracionNueva =
         Number(seleccionReserva.servicio.duracion || 30) || 30;
 
     const botones = [];
 
-    // Recorremos CADA bloque de horario por separado.
-    for (const horario of horariosDelDia) {
+    // Horarios solamente en horas completas.
+    // Ejemplo: 08:00, 09:00, 10:00, 11:00...
+    // Ya no se muestran 08:30, 09:30, etc.
+    for (let t = Math.ceil(inicio / 60) * 60; t < fin; t += 60) {
 
-        const inicio = minutosHora(
-            horario.hora_inicio ||
-            horario.hora_apertura ||
-            "08:00"
-        );
+        const hora =
+            `${String(Math.floor(t / 60)).padStart(2,"0")}:${String(t % 60).padStart(2,"0")}`;
 
-        const fin = minutosHora(
-            horario.hora_fin ||
-            horario.hora_cierre ||
-            "20:00"
-        );
+        const fuera =
+            t + duracionNueva > fin;
 
-        if (fin <= inicio) continue;
+        const horaPasada =
+            horaYaPasoHoy(t);
 
-        // Solo horas completas: 09:00, 10:00, 11:00...
-        // No genera ninguna hora entre el fin de este bloque
-        // y el inicio del siguiente.
-        for (
-            let t = Math.ceil(inicio / 60) * 60;
-            t < fin;
-            t += 60
-        ) {
+        const ocupado =
+            !fuera &&
+            !horaPasada &&
+            reservasActuales.some(reserva =>
+                reservaBloqueaHorario(
+                    reserva,
+                    seleccionReserva.fecha,
+                    seleccionReserva.barbero.id_barbero,
+                    t,
+                    duracionNueva
+                )
+            );
 
-            const hora =
-                `${String(Math.floor(t / 60)).padStart(2,"0")}:${String(t % 60).padStart(2,"0")}`;
+        const bloqueado =
+            fuera ||
+            horaPasada ||
+            ocupado;
 
-            const fuera =
-                t + duracionNueva > fin;
+        let motivo = "DISPONIBLE";
 
-            const horaPasada =
-                horaYaPasoHoy(t);
+        if (fuera) motivo = "FUERA DE HORARIO";
+        else if (horaPasada) motivo = "HORA PASADA";
+        else if (ocupado) motivo = "OCUPADO";
 
-            const ocupado =
-                !fuera &&
-                !horaPasada &&
-                reservasActuales.some(reserva =>
-                    reservaBloqueaHorario(
-                        reserva,
-                        seleccionReserva.fecha,
-                        seleccionReserva.barbero.id_barbero,
-                        t,
-                        duracionNueva
-                    )
-                );
+        botones.push(`
+            <button type="button"
+                class="reserva-hora ${bloqueado ? (fuera || horaPasada ? "fuera" : "ocupado") : ""} ${seleccionReserva.hora === hora ? "seleccionado" : ""}"
+                ${bloqueado ? "disabled" : ""}
+                data-reserva-hora="${hora}">
 
-            const bloqueado =
-                fuera ||
-                horaPasada ||
-                ocupado;
-
-            let motivo = "DISPONIBLE";
-
-            if (fuera) motivo = "FUERA DE HORARIO";
-            else if (horaPasada) motivo = "HORA PASADA";
-            else if (ocupado) motivo = "OCUPADO";
-
-            botones.push({
-                minutos: t,
-                html: `
-                    <button type="button"
-                        class="reserva-hora ${bloqueado ? (fuera || horaPasada ? "fuera" : "ocupado") : ""} ${seleccionReserva.hora === hora ? "seleccionado" : ""}"
-                        ${bloqueado ? "disabled" : ""}
-                        data-reserva-hora="${hora}">
-
-                        ${hora}
-                        <small>${motivo}</small>
-                    </button>
-                `
-            });
-        }
+                ${hora}
+                <small>${motivo}</small>
+            </button>
+        `);
     }
 
-    botones.sort((a, b) => a.minutos - b.minutos);
-
-    box.innerHTML = botones.length
-        ? botones.map(b => b.html).join("")
-        : `<div class="vacio">No hay horas disponibles para este día.</div>`;
+    box.innerHTML = botones.join("");
 
     box.querySelectorAll("[data-reserva-hora]").forEach(btn => {
 
@@ -7004,8 +6980,11 @@ function renderHorasReserva() {
             actualizarResumenReserva();
             actualizarPreviewWhatsApp();
         });
+
     });
 }
+
+
 
 function fechaBonitaReserva(fecha) {
 
@@ -7948,21 +7927,6 @@ document.addEventListener("DOMContentLoaded",()=>{
             configurarRed("footerInstagram", cfg.instagram || cfg.instagram_url);
             configurarRed("footerFacebook", cfg.facebook || cfg.facebook_url);
             configurarRed("footerTikTok", cfg.tiktok || cfg.tiktok_url);
-
-            const wa = cfg.whatsapp || cfg.telefono || cfg.whatsapp_numero;
-            const waEl = document.getElementById("footerWhatsApp");
-
-            if (waEl && wa) {
-                let numero = String(wa).replace(/[^0-9]/g, "");
-                if (numero.length === 8 && !numero.startsWith("591")) {
-                    numero = "591" + numero;
-                }
-
-                waEl.href = "https://wa.me/" + numero;
-                waEl.style.display = "inline-flex";
-            } else if (waEl) {
-                waEl.style.display = "none";
-            }
         } catch (error) {
             console.warn("No se pudieron cargar las redes de la barbería:", error);
         }
@@ -8058,6 +8022,65 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 });
+</script>
+
+
+<script>
+function abrirTarjetaContacto(tipo) {
+    const cfg = window.configuracionContactoActual || {};
+
+    if (tipo === "direccion") {
+        const direccion = String(cfg.direccion || "").trim();
+        if (!direccion) return;
+
+        const mapaConfigurado = String(cfg.google_maps || "").trim();
+        const url = mapaConfigurado
+            ? (typeof normalizarUrlRedSocial === "function" ? normalizarUrlRedSocial(mapaConfigurado) : mapaConfigurado)
+            : "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(direccion);
+
+        window.open(url, "_blank", "noopener,noreferrer");
+        return;
+    }
+
+    if (tipo === "whatsapp") {
+        const whatsapp = String(cfg.whatsapp || cfg.telefono || "").trim();
+        const numero = whatsapp.replace(/\D/g, "");
+        if (!numero) return;
+
+        const mensaje = "Hola 👋, tengo una duda y quisiera recibir información sobre los servicios, horarios y reservas de CLUB PONTE PERRO.";
+        window.open("https://wa.me/" + numero + "?text=" + encodeURIComponent(mensaje), "_blank", "noopener,noreferrer");
+        return;
+    }
+
+    if (tipo === "horario") {
+        const reserva = document.getElementById("reserva") || document.getElementById("reservar") || document.querySelector("[id*=reserva]");
+        if (reserva) {
+            reserva.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        return;
+    }
+
+    if (tipo === "redes") {
+        // Si se hace clic fuera de los iconos, abre la primera red configurada.
+        const redes = [
+            cfg.instagram,
+            cfg.facebook,
+            cfg.tiktok
+        ].map(v => String(v || "").trim()).filter(Boolean);
+
+        if (!redes.length) return;
+
+        let valor = redes[0];
+        let url = valor;
+        if (typeof prepararUrl === "function") {
+            // La función existente recibe el tipo de red; probamos por orden.
+            if (String(cfg.instagram || "").trim()) url = prepararUrl(cfg.instagram, "instagram");
+            else if (String(cfg.facebook || "").trim()) url = prepararUrl(cfg.facebook, "facebook");
+            else url = prepararUrl(cfg.tiktok, "tiktok");
+        }
+        window.open(url, "_blank", "noopener,noreferrer");
+    }
+}
 </script>
 
 </body>
