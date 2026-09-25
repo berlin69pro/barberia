@@ -7172,7 +7172,7 @@ function actualizarPreviewWhatsApp() {
 ✂️ Servicio: ${servicio.nombre}
 💈 Barbero: ${barbero.nombre}
 📅 Fecha: ${fechaBonitaReserva(seleccionReserva.fecha)}
-🕐 Hora: ${seleccionReserva.hora}
+🕐 Hora: ${formatearHora24ConPeriodo(seleccionReserva.hora)}
 👤 Cliente: ${nombre}
 📱 WhatsApp: ${telefono}` +
         (observaciones ? `\n📝 Observaciones: ${observaciones}` : "") +
@@ -7239,7 +7239,22 @@ function obtenerNumeroWhatsApp(configuracion) {
 
     return String(numero).replace(/\D/g, "");
 }
+function formatearHora24ConPeriodo(hora) {
 
+    if (!hora) return "—";
+
+    const partes = String(hora).split(":");
+    const horas = Number(partes[0]);
+    const minutos = partes[1] || "00";
+
+    if (Number.isNaN(horas)) {
+        return hora;
+    }
+
+    const periodo = horas < 12 ? "AM" : "PM";
+
+    return `${String(horas).padStart(2, "0")}:${minutos} ${periodo}`;
+}
 
 function crearMensajeWhatsApp(datos) {
 
