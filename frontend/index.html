@@ -6693,16 +6693,39 @@ function minutosHora(hora) {
 
 
 function obtenerHorarioDelDia(fecha) {
-    if (!seleccionReserva.barbero || !fecha) return null;
-    const dia = normalizarDiaHorario(obtenerDiaSemana(fecha));
-    const idBarbero = String(seleccionReserva.barbero.id_barbero).trim();
-    const horarios = Array.isArray(horariosDisponibles) ? horariosDisponibles : [];
+    if (!seleccionReserva.barbero || !fecha) return [];
 
-    return horarios.find(h => {
-        const activo = Number(h.estado) === 1 || h.estado === true;
-        const propio = h.id_barbero !== null && h.id_barbero !== undefined && String(h.id_barbero).trim() === idBarbero;
-        return activo && propio && normalizarDiaHorario(h.dia_semana) === dia;
-    }) || null;
+    const dia = normalizarDiaHorario(obtenerDiaSemana(fecha));
+    const idBarbero = String(
+        seleccionReserva.barbero.id_barbero
+    ).trim();
+
+    const horarios = Array.isArray(horariosDisponibles)
+        ? horariosDisponibles
+        : [];
+
+    return horarios
+        .filter(h => {
+            const activo =
+                Number(h.estado) === 1 ||
+                h.estado === true;
+
+            const propio =
+                h.id_barbero !== null &&
+                h.id_barbero !== undefined &&
+                String(h.id_barbero).trim() === idBarbero;
+
+            return (
+                activo &&
+                propio &&
+                normalizarDiaHorario(h.dia_semana) === dia
+            );
+        })
+        .sort((a, b) =>
+            String(a.hora_inicio).localeCompare(
+                String(b.hora_inicio)
+            )
+        );
 }
 
 function reservaBloqueaHorario(reserva, fecha, idBarbero, horaInicio, duracionNueva) {
@@ -6784,8 +6807,7 @@ function renderDiasReserva() {
     for(let d=1; d<=diasMes; d++) {
         const fecha = new Date(anio, numeroMes, d, 12);
         const iso = `${anio}-${String(numeroMes+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
-        const trabaja = !!seleccionReserva.barbero && !!obtenerHorarioDelDia(iso);
-        const pasado = fecha < hoy;
+const trabaja = !!seleccionReserva.barbero && obtenerHorarioDelDia(iso).length > 0;        const pasado = fecha < hoy;
         const seleccionado = String(seleccionReserva.fecha||"") === iso;
         const disabled = !seleccionReserva.barbero || pasado || !trabaja;
         const etiqueta = !seleccionReserva.barbero ? "ELIGE BARBERO" : pasado ? "PASADO" : trabaja ? (fecha.getTime()===hoy.getTime()?"HOY · DISPONIBLE":"DISPONIBLE") : "NO TRABAJA";
@@ -6865,126 +6887,158 @@ function renderHorasReserva() {
     if (!box) return;
 
     if (!seleccionReserva.servicio) {
-
         box.innerHTML =
             `<div class="vacio">Primero selecciona un servicio.</div>`;
-
         return;
     }
 
     if (!seleccionReserva.barbero) {
-
         box.innerHTML =
             `<div class="vacio">Selecciona un barbero para consultar sus horarios.</div>`;
-
         return;
     }
 
     if (!seleccionReserva.fecha) {
-
         box.innerHTML =
             `<div class="vacio">Selecciona un día.</div>`;
-
         return;
     }
 
-    const horario = obtenerHorarioDelDia(seleccionReserva.fecha);
+    const horariosDelDia =
+        obtenerHorarioDelDia(seleccionReserva.fecha);
 
-    if (!horario) {
-
+    if (!horariosDelDia.length) {
         box.innerHTML =
             `<div class="vacio">
                 El ${escapeHTML(obtenerDiaSemana(seleccionReserva.fecha))}
                 no tiene horario de atención configurado.
             </div>`;
-
         return;
     }
-
-    const inicio = minutosHora(
-        horario.hora_inicio ||
-        horario.hora_apertura ||
-        "08:00"
-    );
-
-    const fin = minutosHora(
-        horario.hora_fin ||
-        horario.hora_cierre ||
-        "20:00"
-    );
 
     const duracionNueva =
         Number(seleccionReserva.servicio.duracion || 30) || 30;
 
     const botones = [];
 
-    // Horarios solamente en horas completas.
-    // Ejemplo: 08:00, 09:00, 10:00, 11:00...
-    // Ya no se muestran 08:30, 09:30, etc.
-    for (let t = Math.ceil(inicio / 60) * 60; t < fin; t += 60) {
+    // RECORRER TODOS LOS BLOQUES DEL DÍA
+    horariosDelDia.forEach(horario => {
 
-        const hora =
-            `${String(Math.floor(t / 60)).padStart(2,"0")}:${String(t % 60).padStart(2,"0")}`;
+        const inicio = minutosHora(
+            horario.hora_inicio ||
+            horario.hora_apertura ||
+            "08:00"
+        );
 
-        const fuera =
-            t + duracionNueva > fin;
+        const fin = minutosHora(
+            horario.hora_fin ||
+            horario.hora_cierre ||
+            "20:00"
+        );
 
-        const horaPasada =
-            horaYaPasoHoy(t);
+        // Genera horas solamente dentro de este bloque.
+        for (
+            let t = Math.ceil(inicio / 60) * 60;
+            t < fin;
+            t += 60
+        ) {
 
-        const ocupado =
-            !fuera &&
-            !horaPasada &&
-            reservasActuales.some(reserva =>
-                reservaBloqueaHorario(
-                    reserva,
-                    seleccionReserva.fecha,
-                    seleccionReserva.barbero.id_barbero,
-                    t,
-                    duracionNueva
-                )
-            );
+            const hora =
+                `${String(Math.floor(t / 60)).padStart(2, "0")}:${String(t % 60).padStart(2, "0")}`;
 
-        const bloqueado =
-            fuera ||
-            horaPasada ||
-            ocupado;
+            const fuera =
+                t + duracionNueva > fin;
 
-        let motivo = "DISPONIBLE";
+            const horaPasada =
+                horaYaPasoHoy(t);
 
-        if (fuera) motivo = "FUERA DE HORARIO";
-        else if (horaPasada) motivo = "HORA PASADA";
-        else if (ocupado) motivo = "OCUPADO";
+            const ocupado =
+                !fuera &&
+                !horaPasada &&
+                reservasActuales.some(reserva =>
+                    reservaBloqueaHorario(
+                        reserva,
+                        seleccionReserva.fecha,
+                        seleccionReserva.barbero.id_barbero,
+                        t,
+                        duracionNueva
+                    )
+                );
 
-        botones.push(`
-            <button type="button"
-                class="reserva-hora ${bloqueado ? (fuera || horaPasada ? "fuera" : "ocupado") : ""} ${seleccionReserva.hora === hora ? "seleccionado" : ""}"
-                ${bloqueado ? "disabled" : ""}
-                data-reserva-hora="${hora}">
+            const bloqueado =
+                fuera ||
+                horaPasada ||
+                ocupado;
 
-                ${hora}
-                <small>${motivo}</small>
-            </button>
-        `);
-    }
+            let motivo = "DISPONIBLE";
 
-    box.innerHTML = botones.join("");
+            if (fuera) {
+                motivo = "FUERA DE HORARIO";
+            } else if (horaPasada) {
+                motivo = "HORA PASADA";
+            } else if (ocupado) {
+                motivo = "OCUPADO";
+            }
+
+            botones.push(`
+                <button
+                    type="button"
+                    class="reserva-hora ${
+                        bloqueado
+                            ? (fuera || horaPasada
+                                ? "fuera"
+                                : "ocupado")
+                            : ""
+                    } ${
+                        seleccionReserva.hora === hora
+                            ? "seleccionado"
+                            : ""
+                    }"
+                    ${bloqueado ? "disabled" : ""}
+                    data-reserva-hora="${hora}"
+                >
+                    ${hora}
+                    <small>${motivo}</small>
+                </button>
+            `);
+        }
+    });
+
+    // Evitar duplicados por seguridad
+    const botonesUnicos = [];
+    const horasVistas = new Set();
+
+    botones.forEach(html => {
+        const coincidencia =
+            html.match(/data-reserva-hora="([^"]+)"/);
+
+        if (!coincidencia) return;
+
+        const hora = coincidencia[1];
+
+        if (!horasVistas.has(hora)) {
+            horasVistas.add(hora);
+            botonesUnicos.push(html);
+        }
+    });
+
+    box.innerHTML = botonesUnicos.join("");
 
     box.querySelectorAll("[data-reserva-hora]").forEach(btn => {
 
         btn.addEventListener("click", () => {
 
-            seleccionReserva.hora = btn.dataset.reservaHora;
+            seleccionReserva.hora =
+                btn.dataset.reservaHora;
 
             renderHorasReserva();
             actualizarResumenReserva();
             actualizarPreviewWhatsApp();
+
         });
 
     });
 }
-
-
 
 function fechaBonitaReserva(fecha) {
 
@@ -7699,43 +7753,26 @@ document.getElementById("formReserva")?.addEventListener(
                 const url =
                     `https://wa.me/${numero}?text=${encodeURIComponent(texto)}`;
 
-                const enlace =
-                    document.createElement("a");
+                
 
-                enlace.href =
-                    url;
+try {
 
-                enlace.target =
-                    "_blank";
+    window.open(
+        url,
+        "_blank"
+    );
 
-                enlace.rel =
-                    "noopener noreferrer";
+}
+catch (e) {
 
-                enlace.className =
-                    "wa-enlace";
+    console.warn(
+        "El navegador bloqueó la apertura automática de WhatsApp."
+    );
 
-                enlace.textContent =
-                    "ABRIR WHATSAPP Y ENVIAR";
-
-                mensaje.appendChild(
-                    enlace
-                );
-
-                try {
-
-                    window.open(
-                        url,
-                        "_blank"
-                    );
-
-                }
-                catch (e) {
-
-                    console.warn(
-                        "El navegador bloqueó la apertura automática de WhatsApp."
-                    );
-
-                }
+}
+                
+                     
+                
 
             }
             else {
