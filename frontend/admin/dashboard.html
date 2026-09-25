@@ -1406,6 +1406,234 @@ td strong{
 }
 
 
+
+/* =========================================================
+   DISPONIBILIDAD DE BARBEROS
+========================================================= */
+
+.disponibilidad-panel{
+    margin-top:28px;
+    background:white;
+    border:1px solid var(--borde);
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 3px 12px rgba(0,0,0,.035);
+}
+
+.disponibilidad-head{
+    padding:20px;
+    border-bottom:1px solid var(--borde);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+.disponibilidad-title small{
+    display:block;
+    color:var(--accent-dark);
+    font:10px 'Oswald';
+    letter-spacing:2px;
+}
+
+.disponibilidad-title h3{
+    margin-top:4px;
+    font:30px 'Bebas Neue';
+    letter-spacing:1px;
+}
+
+.disponibilidad-controles{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+.disponibilidad-fecha{
+    min-height:38px;
+    padding:0 11px;
+    background:white;
+    border:1px solid #ddd;
+    border-radius:7px;
+    color:#444;
+    font:700 11px 'Oswald';
+}
+
+.btn-disponibilidad{
+    min-height:38px;
+    padding:0 14px;
+    background:white;
+    border:1px solid #ddd;
+    border-radius:7px;
+    color:#555;
+    font:700 10px 'Oswald';
+    letter-spacing:.7px;
+    text-transform:uppercase;
+}
+
+.btn-disponibilidad:hover{
+    border-color:var(--accent);
+    color:var(--accent-dark);
+}
+
+.btn-disponibilidad.principal{
+    background:var(--accent);
+    border-color:var(--accent);
+    color:#222;
+}
+
+.disponibilidad-info{
+    padding:13px 20px;
+    color:#777;
+    font-size:10px;
+    border-bottom:1px solid #eee;
+}
+
+.disponibilidad-wrap{
+    overflow-x:auto;
+    padding:0 20px 20px;
+}
+
+.disponibilidad-tabla{
+    min-width:760px;
+    border-collapse:separate;
+    border-spacing:0;
+    width:100%;
+}
+
+.disponibilidad-tabla th{
+    padding:12px 8px;
+    background:#f7f7f7;
+    border-bottom:1px solid #ddd;
+    color:#777;
+    font:700 9px 'Oswald';
+    letter-spacing:.7px;
+    text-align:center;
+    white-space:nowrap;
+}
+
+.disponibilidad-tabla th:first-child{
+    text-align:left;
+    position:sticky;
+    left:0;
+    z-index:3;
+}
+
+.disponibilidad-tabla td{
+    padding:7px 5px;
+    border-bottom:1px solid #eee;
+    text-align:center;
+    font-size:10px;
+    min-width:58px;
+}
+
+.disponibilidad-tabla td:first-child{
+    text-align:left;
+    position:sticky;
+    left:0;
+    z-index:2;
+    background:white;
+    min-width:130px;
+    font:700 12px 'Oswald';
+    color:#333;
+}
+
+.disponibilidad-celda{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:38px;
+    border-radius:7px;
+    font:700 9px 'Oswald';
+    letter-spacing:.3px;
+    border:1px solid transparent;
+}
+
+.disponibilidad-celda.libre{
+    background:var(--verde-soft);
+    border-color:#c9ead9;
+    color:#20794c;
+}
+
+.disponibilidad-celda.ocupado{
+    background:var(--rojo-soft);
+    border-color:#f0cccc;
+    color:#b13e3e;
+}
+
+.disponibilidad-celda.no-trabaja{
+    background:#f2f2f2;
+    border-color:#e3e3e3;
+    color:#999;
+}
+
+.disponibilidad-celda.fuera{
+    background:white;
+    color:#ddd;
+}
+
+.disponibilidad-leyenda{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    flex-wrap:wrap;
+    padding:0 20px 20px;
+    color:#666;
+    font:700 10px 'Oswald';
+    text-transform:uppercase;
+}
+
+.leyenda-item{
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+
+.leyenda-punto{
+    width:11px;
+    height:11px;
+    border-radius:3px;
+}
+
+.leyenda-punto.libre{ background:#bde6d0; }
+.leyenda-punto.ocupado{ background:#f1c5c5; }
+.leyenda-punto.no-trabaja{ background:#ddd; }
+
+.disponibilidad-cargando,
+.disponibilidad-error,
+.disponibilidad-vacio{
+    padding:35px 20px;
+    text-align:center;
+    color:#777;
+    font-size:11px;
+}
+
+.disponibilidad-error{
+    color:#a33;
+    background:var(--rojo-soft);
+}
+
+@media(max-width:600px){
+    .disponibilidad-head{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .disponibilidad-controles{
+        width:100%;
+    }
+
+    .disponibilidad-fecha{
+        flex:1;
+    }
+
+    .btn-disponibilidad{
+        flex:1;
+    }
+}
+
+
 /* =========================================================
    RESPONSIVE
 ========================================================= */
@@ -1570,6 +1798,84 @@ td strong{
         grid-template-columns:1fr;
     }
 }
+
+/* =========================================================
+   MENSAJES BARBER URBANO
+========================================================= */
+.barber-mensaje-overlay{
+    position:fixed;
+    inset:0;
+    z-index:99999;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:rgba(0,0,0,.72);
+    backdrop-filter:blur(5px);
+}
+.barber-mensaje{
+    width:min(430px,92vw);
+    background:#111;
+    border:1px solid #3a3a3a;
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:0 25px 70px rgba(0,0,0,.55);
+    animation:barberMensajeEntrada .18s ease-out;
+}
+.barber-mensaje-linea{
+    height:5px;
+    background:linear-gradient(90deg,#b21f2d,#d4af37,#b21f2d);
+}
+.barber-mensaje-contenido{
+    padding:26px 26px 22px;
+    text-align:center;
+}
+.barber-mensaje-icono{
+    width:54px;
+    height:54px;
+    margin:0 auto 14px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#d4af37;
+    color:#111;
+    font-size:25px;
+    font-weight:900;
+}
+.barber-mensaje h4{
+    margin:0 0 8px;
+    color:#fff;
+    font-size:20px;
+    font-weight:900;
+}
+.barber-mensaje p{
+    margin:0;
+    color:#bdbdbd;
+    font-size:14px;
+    line-height:1.55;
+}
+.barber-mensaje-boton{
+    margin-top:20px;
+    min-width:130px;
+    padding:11px 22px;
+    border:0;
+    border-radius:9px;
+    background:#d4af37;
+    color:#111;
+    font-weight:900;
+    cursor:pointer;
+    transition:.18s ease;
+}
+.barber-mensaje-boton:hover{
+    transform:translateY(-1px);
+    filter:brightness(1.08);
+}
+@keyframes barberMensajeEntrada{
+    from{opacity:0;transform:translateY(10px) scale(.98)}
+    to{opacity:1;transform:translateY(0) scale(1)}
+}
+
 </style>
 </head>
 
@@ -2314,6 +2620,90 @@ td strong{
 
     </section>
 
+
+
+
+    <!-- =================================================
+         DISPONIBILIDAD DE BARBEROS
+    ================================================= -->
+
+    <section class="disponibilidad-panel">
+
+        <div class="disponibilidad-head">
+
+            <div class="disponibilidad-title">
+
+                <small>
+                    AGENDA DEL DÍA
+                </small>
+
+                <h3>
+                    DISPONIBILIDAD DE BARBEROS
+                </h3>
+
+            </div>
+
+            <div class="disponibilidad-controles">
+
+                <input
+                    type="date"
+                    id="fechaDisponibilidad"
+                    class="disponibilidad-fecha">
+
+                <button
+                    type="button"
+                    class="btn-disponibilidad"
+                    id="btnActualizarDisponibilidad">
+                    ↻ ACTUALIZAR
+                </button>
+
+                <button
+                    type="button"
+                    class="btn-disponibilidad principal"
+                    id="btnDescargarDisponibilidad">
+                    📥 DESCARGAR JPG ESTILO BARBER
+                </button>
+
+            </div>
+
+        </div>
+
+        <div
+            id="disponibilidadInfo"
+            class="disponibilidad-info">
+            Selecciona una fecha para ver las horas libres y ocupadas de todos los barberos.
+        </div>
+
+        <div
+            id="disponibilidadTabla"
+            class="disponibilidad-wrap">
+
+            <div class="disponibilidad-cargando">
+                Cargando disponibilidad...
+            </div>
+
+        </div>
+
+        <div class="disponibilidad-leyenda">
+
+            <div class="leyenda-item">
+                <span class="leyenda-punto libre"></span>
+                LIBRE
+            </div>
+
+            <div class="leyenda-item">
+                <span class="leyenda-punto ocupado"></span>
+                OCUPADO
+            </div>
+
+            <div class="leyenda-item">
+                <span class="leyenda-punto no-trabaja"></span>
+                NO TRABAJA
+            </div>
+
+        </div>
+
+    </section>
 
 
     <!-- =================================================
@@ -3905,6 +4295,1015 @@ document
         );
 
     });
+
+
+
+/* =====================================================
+   DISPONIBILIDAD DE BARBEROS
+===================================================== */
+
+let disponibilidadActual = {
+    fecha: "",
+    barberos: [],
+    horarios: [],
+    reservas: [],
+    horas: []
+};
+
+
+function minutosDisponibilidad(hora){
+    const partes = String(hora || "00:00").substring(0,5).split(":");
+    return (Number(partes[0]) || 0) * 60 + (Number(partes[1]) || 0);
+}
+
+
+function isoFechaDisponibilidad(fecha){
+    return String(fecha || "").substring(0,10);
+}
+
+
+function diaSemanaNombreDisponibilidad(fecha){
+    const d = new Date(fecha + "T00:00:00");
+    const nombres = [
+        "Domingo",
+        "Lunes",
+        "Martes",
+        "Miércoles",
+        "Jueves",
+        "Viernes",
+        "Sábado"
+    ];
+    return nombres[d.getDay()];
+}
+
+
+function normalizarDiaDisponibilidad(valor){
+    const texto = String(valor || "")
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+
+    const mapa = {
+        domingo:"Domingo",
+        lunes:"Lunes",
+        martes:"Martes",
+        miercoles:"Miércoles",
+        jueves:"Jueves",
+        viernes:"Viernes",
+        sabado:"Sábado"
+    };
+
+    return mapa[texto] || String(valor || "").trim();
+}
+
+
+function estadoBarberoActivoDisponibilidad(barbero){
+    return (
+        Number(barbero.estado) === 1 ||
+        barbero.estado === true
+    );
+}
+
+
+function horarioActivoDisponibilidad(horario){
+    return (
+        Number(horario.estado) === 1 ||
+        horario.estado === true
+    );
+}
+
+
+function horarioPerteneceBarberoDisponibilidad(horario, idBarbero){
+    return (
+        horario.id_barbero !== null &&
+        horario.id_barbero !== undefined &&
+        String(horario.id_barbero) === String(idBarbero)
+    );
+}
+
+
+function trabajaEnHoraDisponibilidad(
+    barbero,
+    horarios,
+    fecha,
+    minuto
+){
+    const dia = diaSemanaNombreDisponibilidad(fecha);
+
+    return horarios.some(h => {
+
+        if(!horarioActivoDisponibilidad(h))
+            return false;
+
+        if(!horarioPerteneceBarberoDisponibilidad(h, barbero.id_barbero))
+            return false;
+
+        if(
+            normalizarDiaDisponibilidad(h.dia_semana)
+            !== dia
+        ){
+            return false;
+        }
+
+        const inicio =
+            minutosDisponibilidad(h.hora_inicio);
+
+        const fin =
+            minutosDisponibilidad(h.hora_fin);
+
+        return minuto >= inicio && minuto < fin;
+    });
+}
+
+
+function reservaOcupaHoraDisponibilidad(
+    reserva,
+    idBarbero,
+    fecha,
+    minuto
+){
+    if(
+        String(reserva.id_barbero) !==
+        String(idBarbero)
+    ){
+        return false;
+    }
+
+    if(
+        isoFechaDisponibilidad(reserva.fecha) !==
+        isoFechaDisponibilidad(fecha)
+    ){
+        return false;
+    }
+
+    const estado =
+        String(reserva.estado || "").toLowerCase();
+
+    if(
+        estado === "cancelada" ||
+        estado === "cancelado"
+    ){
+        return false;
+    }
+
+    const inicioReserva =
+        minutosDisponibilidad(reserva.hora);
+
+    let duracion =
+        Number(reserva.servicio_duracion || 60);
+
+    if(!Number.isFinite(duracion) || duracion <= 0)
+        duracion = 60;
+
+    const finReserva =
+        inicioReserva + duracion;
+
+    return (
+        minuto < finReserva &&
+        minuto + 60 > inicioReserva
+    );
+}
+
+
+function horasDisponibilidadDelDia(
+    barberos,
+    horarios,
+    fecha
+){
+    const dia =
+        diaSemanaNombreDisponibilidad(fecha);
+
+    const minutos = new Set();
+
+    horarios.forEach(h => {
+
+        if(!horarioActivoDisponibilidad(h))
+            return;
+
+        if(
+            normalizarDiaDisponibilidad(h.dia_semana)
+            !== dia
+        ){
+            return;
+        }
+
+        const inicio =
+            minutosDisponibilidad(h.hora_inicio);
+
+        const fin =
+            minutosDisponibilidad(h.hora_fin);
+
+        for(
+            let minuto = Math.ceil(inicio / 60) * 60;
+            minuto < fin;
+            minuto += 60
+        ){
+            minutos.add(minuto);
+        }
+
+    });
+
+    return [...minutos].sort((a,b) => a-b);
+}
+
+
+function horaBonitaDisponibilidad(minuto){
+    return (
+        String(Math.floor(minuto / 60)).padStart(2,"0")
+        +
+        ":"
+        +
+        String(minuto % 60).padStart(2,"0")
+    );
+}
+
+
+async function cargarDisponibilidadBarberos(){
+
+    const fechaInput =
+        document.getElementById(
+            "fechaDisponibilidad"
+        );
+
+    const contenedor =
+        document.getElementById(
+            "disponibilidadTabla"
+        );
+
+    const info =
+        document.getElementById(
+            "disponibilidadInfo"
+        );
+
+    if(!fechaInput || !contenedor)
+        return;
+
+    const fecha =
+        fechaInput.value;
+
+    if(!fecha){
+        contenedor.innerHTML =
+            '<div class="disponibilidad-vacio">Selecciona una fecha.</div>';
+        return;
+    }
+
+    contenedor.innerHTML =
+        '<div class="disponibilidad-cargando">Cargando disponibilidad...</div>';
+
+    try{
+
+        const [
+            respuestaBarberos,
+            respuestaHorarios,
+            respuestaReservas
+        ] = await Promise.all([
+
+            fetch("/api/barberos"),
+
+            fetch("/api/horarios"),
+
+            fetch("/api/reservas")
+
+        ]);
+
+        if(
+            !respuestaBarberos.ok ||
+            !respuestaHorarios.ok ||
+            !respuestaReservas.ok
+        ){
+            throw new Error(
+                "No se pudieron cargar los datos de disponibilidad."
+            );
+        }
+
+        const [
+            barberosData,
+            horariosData,
+            reservasData
+        ] = await Promise.all([
+
+            respuestaBarberos.json(),
+
+            respuestaHorarios.json(),
+
+            respuestaReservas.json()
+
+        ]);
+
+        const barberos =
+            Array.isArray(barberosData)
+                ? barberosData.filter(
+                    estadoBarberoActivoDisponibilidad
+                )
+                : [];
+
+        const horarios =
+            Array.isArray(horariosData)
+                ? horariosData
+                : [];
+
+        const reservas =
+            Array.isArray(reservasData)
+                ? reservasData
+                : [];
+
+        const horas =
+            horasDisponibilidadDelDia(
+                barberos,
+                horarios,
+                fecha
+            );
+
+        disponibilidadActual = {
+            fecha,
+            barberos,
+            horarios,
+            reservas,
+            horas
+        };
+
+        if(!barberos.length){
+
+            contenedor.innerHTML =
+                '<div class="disponibilidad-vacio">No hay barberos activos registrados.</div>';
+
+            info.textContent =
+                fechaTexto(fecha) +
+                " · No hay barberos activos.";
+
+            return;
+        }
+
+        if(!horas.length){
+
+            contenedor.innerHTML =
+                '<div class="disponibilidad-vacio">Ningún barbero tiene horario configurado para este día.</div>';
+
+            info.textContent =
+                fechaTexto(fecha) +
+                " · Todos los barberos están sin horario.";
+
+            return;
+        }
+
+        let tabla = `
+            <table class="disponibilidad-tabla">
+                <thead>
+                    <tr>
+                        <th>BARBERO</th>
+        `;
+
+        horas.forEach(minuto => {
+
+            tabla += `
+                <th>${horaBonitaDisponibilidad(minuto)}</th>
+            `;
+
+        });
+
+        tabla += `
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        barberos.forEach(barbero => {
+
+            tabla += `
+                <tr>
+                    <td>
+                        ${escapeHTML(
+                            barbero.nombre ||
+                            "Sin nombre"
+                        )}
+                    </td>
+            `;
+
+            horas.forEach(minuto => {
+
+                const trabaja =
+                    trabajaEnHoraDisponibilidad(
+                        barbero,
+                        horarios,
+                        fecha,
+                        minuto
+                    );
+
+                if(!trabaja){
+
+                    tabla += `
+                        <td>
+                            <div class="disponibilidad-celda no-trabaja">
+                                NO TRABAJA
+                            </div>
+                        </td>
+                    `;
+
+                    return;
+                }
+
+                const ocupado =
+                    reservas.some(reserva =>
+                        reservaOcupaHoraDisponibilidad(
+                            reserva,
+                            barbero.id_barbero,
+                            fecha,
+                            minuto
+                        )
+                    );
+
+                if(ocupado){
+
+                    tabla += `
+                        <td>
+                            <div
+                                class="disponibilidad-celda ocupado"
+                                title="Horario ocupado">
+                                OCUPADO
+                            </div>
+                        </td>
+                    `;
+
+                }else{
+
+                    tabla += `
+                        <td>
+                            <div
+                                class="disponibilidad-celda libre"
+                                title="Horario libre">
+                                LIBRE
+                            </div>
+                        </td>
+                    `;
+
+                }
+
+            });
+
+            tabla += `
+                </tr>
+            `;
+
+        });
+
+        tabla += `
+                </tbody>
+            </table>
+        `;
+
+        contenedor.innerHTML = tabla;
+
+        info.textContent =
+            fechaTexto(fecha)
+            +
+            " · "
+            +
+            diaSemanaNombreDisponibilidad(fecha)
+            +
+            " · "
+            +
+            barberos.length
+            +
+            " barbero(s) activo(s)";
+
+    }catch(error){
+
+        console.error(
+            "Error disponibilidad:",
+            error
+        );
+
+        contenedor.innerHTML =
+            '<div class="disponibilidad-error">No se pudo cargar la disponibilidad. Revisa que el servidor esté funcionando.</div>';
+
+        info.textContent =
+            "Error al cargar la disponibilidad.";
+    }
+}
+
+
+function mostrarMensajeBarberia(titulo, mensaje, icono = "💈") {
+    const anterior = document.getElementById("barberMensajeOverlay");
+    if (anterior) anterior.remove();
+
+    const overlay = document.createElement("div");
+    overlay.id = "barberMensajeOverlay";
+    overlay.className = "barber-mensaje-overlay";
+
+    overlay.innerHTML = `
+        <div class="barber-mensaje" role="dialog" aria-modal="true">
+            <div class="barber-mensaje-linea"></div>
+            <div class="barber-mensaje-contenido">
+                <div class="barber-mensaje-icono">${icono}</div>
+                <h4>${escapeHTML(titulo)}</h4>
+                <p>${escapeHTML(mensaje)}</p>
+                <button type="button" class="barber-mensaje-boton">ENTENDIDO</button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    const cerrar = () => overlay.remove();
+
+    overlay.querySelector(".barber-mensaje-boton")
+        .addEventListener("click", cerrar);
+
+    overlay.addEventListener("click", (evento) => {
+        if (evento.target === overlay) cerrar();
+    });
+
+    document.addEventListener("keydown", function cerrarTecla(e) {
+        if (e.key === "Escape") {
+            cerrar();
+            document.removeEventListener("keydown", cerrarTecla);
+        }
+    });
+}
+
+function descargarDisponibilidadJPG() {
+    const tabla = document.querySelector(
+        "#disponibilidadTabla table.disponibilidad-tabla"
+    );
+
+    const fechaInput =
+        document.getElementById("fechaDisponibilidad");
+
+    const fecha =
+        fechaInput ? fechaInput.value : "";
+
+    if (!fecha) {
+        mostrarMensajeBarberia(
+            "FECHA NO SELECCIONADA",
+            "Selecciona una fecha para generar la hoja de disponibilidad.",
+            "📅"
+        );
+        return;
+    }
+
+    if (!tabla) {
+        mostrarMensajeBarberia(
+            "AGENDA NO LISTA",
+            "Primero espera a que cargue la disponibilidad de los barberos y vuelve a intentarlo.",
+            "⏳"
+        );
+        return;
+    }
+
+    const filas = [...tabla.querySelectorAll("tr")];
+
+    const encabezados = filas[0]
+        ? [...filas[0].querySelectorAll("th,td")]
+            .map(c => c.innerText.trim())
+        : [];
+
+    if (!encabezados.length || filas.length < 2) {
+        mostrarMensajeBarberia(
+            "SIN DISPONIBILIDAD",
+            "No hay datos de disponibilidad para generar la imagen.",
+            "💈"
+        );
+        return;
+    }
+
+    const fechaBonita =
+        new Date(fecha + "T00:00:00")
+            .toLocaleDateString("es-BO", {
+                weekday: "long",
+                day: "2-digit",
+                month: "long",
+                year: "numeric"
+            });
+
+    const canvas =
+        document.createElement("canvas");
+
+    const ctx =
+        canvas.getContext("2d");
+
+    const margen = 55;
+    const altoTitulo = 175;
+    const altoEncabezado = 58;
+    const altoFila = 62;
+    const anchoBarbero = 190;
+    const anchoHora = 92;
+
+    const columnas =
+        Math.max(1, encabezados.length - 1);
+
+    const ancho =
+        Math.max(
+            1200,
+            margen * 2 +
+            anchoBarbero +
+            columnas * anchoHora
+        );
+
+    const alto =
+        altoTitulo +
+        altoEncabezado +
+        (filas.length - 1) * altoFila +
+        150;
+
+    canvas.width = ancho;
+    canvas.height = alto;
+
+    // Fondo urbano.
+    ctx.fillStyle = "#101010";
+    ctx.fillRect(0, 0, ancho, alto);
+
+    // Textura diagonal.
+    ctx.save();
+    ctx.globalAlpha = 0.07;
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 2;
+
+    for (
+        let x = -alto;
+        x < ancho + alto;
+        x += 32
+    ) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x - alto, alto);
+        ctx.stroke();
+    }
+
+    ctx.restore();
+
+    // Cabecera.
+    ctx.fillStyle = "#050505";
+    ctx.fillRect(
+        0,
+        0,
+        ancho,
+        altoTitulo
+    );
+
+    ctx.fillStyle = "#d4af37";
+    ctx.fillRect(0, 0, ancho, 9);
+
+    ctx.fillStyle = "#b21f2d";
+    ctx.fillRect(0, 9, ancho, 5);
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font =
+        "900 34px Arial, sans-serif";
+    ctx.textAlign = "left";
+
+    ctx.fillText(
+        "CLUB PONTE PERRO",
+        margen,
+        55
+    );
+
+    ctx.fillStyle = "#d4af37";
+    ctx.font =
+        "900 21px Arial, sans-serif";
+
+    ctx.fillText(
+        "BARBER SHOP • AGENDA DIARIA",
+        margen,
+        88
+    );
+
+    ctx.fillStyle = "#dddddd";
+    ctx.font =
+        "600 19px Arial, sans-serif";
+
+    ctx.fillText(
+        fechaBonita.toUpperCase(),
+        margen,
+        124
+    );
+
+    ctx.fillStyle = "#777777";
+    ctx.font =
+        "700 13px Arial, sans-serif";
+
+    ctx.fillText(
+        "DISPONIBILIDAD DE BARBEROS",
+        margen,
+        149
+    );
+
+    let y = altoTitulo;
+
+    // Encabezados de horas.
+    ctx.fillStyle = "#181818";
+    ctx.fillRect(
+        margen,
+        y,
+        ancho - margen * 2,
+        altoEncabezado
+    );
+
+    let x = margen;
+
+    encabezados.forEach(
+        (texto, index) => {
+
+            const w =
+                index === 0
+                    ? anchoBarbero
+                    : anchoHora;
+
+            ctx.strokeStyle = "#3a3a3a";
+            ctx.lineWidth = 1;
+
+            ctx.strokeRect(
+                x,
+                y,
+                w,
+                altoEncabezado
+            );
+
+            ctx.fillStyle =
+                index === 0
+                    ? "#d4af37"
+                    : "#ffffff";
+
+            ctx.font =
+                index === 0
+                    ? "900 16px Arial, sans-serif"
+                    : "900 15px Arial, sans-serif";
+
+            ctx.textAlign = "center";
+
+            ctx.fillText(
+                texto.toUpperCase(),
+                x + w / 2,
+                y + 35
+            );
+
+            x += w;
+        }
+    );
+
+    y += altoEncabezado;
+
+    // Filas de barberos.
+    filas.slice(1).forEach(
+        (fila, filaIndex) => {
+
+            const celdas =
+                [...fila.querySelectorAll("td")];
+
+            x = margen;
+
+            celdas.forEach(
+                (celda, index) => {
+
+                    const w =
+                        index === 0
+                            ? anchoBarbero
+                            : anchoHora;
+
+                    ctx.fillStyle =
+                        filaIndex % 2 === 0
+                            ? "#171717"
+                            : "#202020";
+
+                    ctx.fillRect(
+                        x,
+                        y,
+                        w,
+                        altoFila
+                    );
+
+                    ctx.strokeStyle =
+                        "#383838";
+
+                    ctx.strokeRect(
+                        x,
+                        y,
+                        w,
+                        altoFila
+                    );
+
+                    const texto =
+                        celda.innerText
+                            .trim()
+                            .toUpperCase();
+
+                    if (index === 0) {
+
+                        ctx.fillStyle =
+                            "#ffffff";
+
+                        ctx.font =
+                            "900 16px Arial, sans-serif";
+
+                        ctx.textAlign =
+                            "left";
+
+                        ctx.fillText(
+                            texto,
+                            x + 15,
+                            y + 37
+                        );
+
+                    } else {
+
+                        let bg = "#444444";
+                        let fg = "#ffffff";
+                        let label = texto;
+
+                        if (
+                            texto.includes("LIBRE")
+                        ) {
+                            bg = "#218739";
+                            label = "LIBRE";
+                        } else if (
+                            texto.includes("OCUPADO")
+                        ) {
+                            bg = "#b21f2d";
+                            label = "OCUPADO";
+                        } else if (
+                            texto.includes("NO TRABAJA")
+                        ) {
+                            bg = "#444444";
+                            fg = "#bbbbbb";
+                            label = "NO TRABAJA";
+                        }
+
+                        ctx.fillStyle = bg;
+
+                        ctx.fillRect(
+                            x + 5,
+                            y + 6,
+                            w - 10,
+                            altoFila - 12
+                        );
+
+                        ctx.fillStyle = fg;
+
+                        ctx.font =
+                            label === "NO TRABAJA"
+                                ? "800 10px Arial, sans-serif"
+                                : "900 11px Arial, sans-serif";
+
+                        ctx.textAlign = "center";
+
+                        ctx.fillText(
+                            label,
+                            x + w / 2,
+                            y + 36
+                        );
+                    }
+
+                    x += w;
+                }
+            );
+
+            y += altoFila;
+        }
+    );
+
+    // Leyenda.
+    const legendY = y + 32;
+
+    const items = [
+        ["#218739", "LIBRE"],
+        ["#b21f2d", "OCUPADO"],
+        ["#555555", "NO TRABAJA"]
+    ];
+
+    ctx.textAlign = "left";
+    ctx.font =
+        "800 14px Arial, sans-serif";
+
+    let lx = margen;
+
+    items.forEach(
+        ([color, label]) => {
+
+            ctx.fillStyle = color;
+
+            ctx.fillRect(
+                lx,
+                legendY,
+                20,
+                20
+            );
+
+            ctx.fillStyle = "#eeeeee";
+
+            ctx.fillText(
+                label,
+                lx + 30,
+                legendY + 15
+            );
+
+            lx += 170;
+        }
+    );
+
+    // Pie.
+    ctx.fillStyle = "#777777";
+    ctx.font =
+        "600 11px Arial, sans-serif";
+
+    ctx.fillText(
+        "Horarios y reservas registrados en el sistema • CLUB PONTE PERRO",
+        margen,
+        alto - 18
+    );
+
+    const nombre =
+        `disponibilidad_barberos_${fecha}.jpg`;
+
+    canvas.toBlob(
+        blob => {
+
+            if (!blob) {
+
+                mostrarMensajeBarberia(
+                    "NO SE PUDO GENERAR",
+                    "La imagen no pudo ser creada. Inténtalo nuevamente.",
+                    "⚠️"
+                );
+
+                return;
+            }
+
+            const url =
+                URL.createObjectURL(blob);
+
+            const enlace =
+                document.createElement("a");
+
+            enlace.href = url;
+            enlace.download = nombre;
+
+            document.body.appendChild(
+                enlace
+            );
+
+            enlace.click();
+            enlace.remove();
+
+            setTimeout(
+                () => URL.revokeObjectURL(url),
+                1000
+            );
+
+            mostrarMensajeBarberia(
+                "IMAGEN LISTA",
+                "La hoja de disponibilidad se descargó correctamente como JPG.",
+                "✓"
+            );
+        },
+        "image/jpeg",
+        0.94
+    );
+}
+
+
+document
+    .getElementById(
+        "fechaDisponibilidad"
+    )
+    ?.addEventListener(
+        "change",
+        cargarDisponibilidadBarberos
+    );
+
+
+document
+    .getElementById(
+        "btnActualizarDisponibilidad"
+    )
+    ?.addEventListener(
+        "click",
+        cargarDisponibilidadBarberos
+    );
+
+
+document
+    .getElementById(
+        "btnDescargarDisponibilidad"
+    )
+    ?.addEventListener(
+        "click",
+        descargarDisponibilidadJPG
+    );
+
+
+const fechaDisponibilidad =
+    document.getElementById(
+        "fechaDisponibilidad"
+    );
+
+if(fechaDisponibilidad){
+
+    fechaDisponibilidad.value =
+        hoyLocal();
+
+    cargarDisponibilidadBarberos();
+}
+
 
 
 /* =====================================================
