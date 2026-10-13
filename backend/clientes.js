@@ -125,9 +125,53 @@ router.get("/", (req, res) => {
 });
 
 
-// ======================================================
-// OBTENER CLIENTE POR ID + HISTORIAL
-// ======================================================
+router.post("/:id/cancelar-reservas", (req, res) => {
+    const idCliente = Number(req.params.id);
+
+    if (!Number.isInteger(idCliente) || idCliente <= 0) {
+        return res.status(400).json({ error: "ID de cliente no válido." });
+    }
+
+    conexion.query(
+        "SELECT id_cliente FROM clientes WHERE id_cliente = ? LIMIT 1",
+        [idCliente],
+        (error, filas) => {
+            if (error) {
+                console.error(error);
+                return res.status(500).json({ error: "Error al comprobar el cliente." });
+            }
+
+            if (!filas.length) {
+                return res.status(404).json({ error: "Cliente no encontrado." });
+            }
+
+            const sql = `
+                UPDATE reservas
+                SET estado = 'cancelada'
+                WHERE id_cliente = ?
+                  AND LOWER(COALESCE(estado, '')) NOT IN (
+                      'cancelada', 'cancelado',
+                      'completada', 'completado',
+                      'atendida', 'atendido'
+                  )
+            `;
+
+            conexion.query(sql, [idCliente], (err, resultado) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({
+                        error: "No se pudieron cancelar las reservas."
+                    });
+                }
+
+                return res.json({
+                    mensaje: "Reservas canceladas correctamente.",
+                    reservas_canceladas: resultado.affectedRows
+                });
+            });
+        }
+    );
+});
 
 router.get("/:id", (req, res) => {
 

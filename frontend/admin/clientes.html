@@ -2172,7 +2172,15 @@ function mostrarClientes(
 
                             👁️ Ver
 
-                        </button>
+                            <button
+    class="btn btn-eliminar"
+    onclick="cancelarReservasCliente(
+        ${Number(cliente.id_cliente)}
+    )"
+    title="Cancelar las reservas activas de este cliente"
+>
+    🚫 CANCELAR RESERVAS
+</button>
 
 
                         ${
@@ -3085,6 +3093,7 @@ function cerrarModalDetalle(){
 }
 
 
+
 // =====================================
 // ELIMINAR
 // =====================================
@@ -3329,6 +3338,68 @@ window.addEventListener(
 // =====================================
 
 cargarClientes();
+
+
+
+async function cancelarReservasCliente(id) {
+    const cliente = clientes.find(
+        c => Number(c.id_cliente) === Number(id)
+    );
+
+    if (!cliente) {
+        mostrarToast("Cliente no encontrado.", true);
+        return;
+    }
+
+    const confirmar = confirm(
+        `¿Cancelar todas las reservas activas de ${cliente.nombre}?\n\n` +
+        "Las reservas completadas y atendidas se conservarán."
+    );
+
+    if (!confirmar) return;
+
+    try {
+        const respuesta = await fetch(
+            `/api/clientes/${id}/cancelar-reservas`,
+            { method: "POST" }
+        );
+
+        const resultado = await respuesta.json();
+
+        if (!respuesta.ok) {
+            throw new Error(
+                resultado.error ||
+                "No se pudieron cancelar las reservas."
+            );
+        }
+
+        mostrarToast(
+            `Se cancelaron ${resultado.reservas_canceladas} reservas.`
+        );
+
+        await cargarClientes();
+
+        // Si el detalle del cliente está abierto,
+        // actualizamos su historial.
+        if (
+            document.getElementById("modalDetalle")
+                .classList.contains("mostrar")
+        ) {
+            await verCliente(id);
+        }
+
+    } catch (error) {
+        console.error(error);
+
+        mostrarToast(
+            "Error: " + error.message,
+            true
+        );
+    }
+}
+// ======================================================
+// OBTENER CLIENTE POR ID + HISTORIAL
+// ======================================================
 
 </script>
 
